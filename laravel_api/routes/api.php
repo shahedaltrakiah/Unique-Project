@@ -8,7 +8,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CategoryController;
 
-Route::get('/order/{id}', [OrderController::class, 'getOrder']);
 
 
 // register user
@@ -48,8 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('orders', [OrderController::class, 'userOrders']);
 
     // get order
+    Route::get('/order/{id}', [OrderController::class, 'getOrder']);
 
-    // get all orders
+    // add new order
     Route::post('orders', [OrderController::class, 'store']);
 
     // remove product from favorites

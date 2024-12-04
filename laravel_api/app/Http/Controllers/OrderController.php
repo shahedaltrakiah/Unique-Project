@@ -51,24 +51,24 @@ class OrderController extends Controller
     public function getOrder($id)
     {
         try {
-            // Find the order by ID with related products
+            // Retrieve the order with its associated products
             $order = Order::with('products')->find($id);
-
-            // If the order is not found, return a 404 error
+    
+            // Check if the order exists
             if (!$order) {
                 return response()->json(['error' => 'Order not found'], 404);
             }
-
-            // Return the order data
+    
             return response()->json([
                 'message' => 'Order data retrieved successfully',
                 'data' => $order
             ], 200);
-
+    
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve order data', 'message' => $e->getMessage()], 500);
         }
     }
+    
 
 
 
