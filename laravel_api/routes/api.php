@@ -7,7 +7,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CategoryController;
 
-Route::post('orders', [OrderController::class, 'store']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -20,6 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('products', [ProductController::class, 'store']);
 
     Route::get('orders', [OrderController::class, 'userOrders']);
+    Route::post('orders', [OrderController::class, 'store']);
+
 
     Route::post('favorites', [FavoriteController::class, 'store']);
     Route::delete('favorites/{productId}', [FavoriteController::class, 'destroy']);
