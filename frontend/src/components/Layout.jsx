@@ -18,6 +18,13 @@ const Layout = () => {
     "/login": "Login",
     "/register": "Register",
     "/wishlist": "Wishlist",
+    "/profile": "profile",
+    "/productdetails": "product details",
+    "/profileinfo": "Profile Info",
+    "/profilemanage": "Profile Manage",
+    "/profileorder": "Profile Order",
+    "/profileupdate": "Profile Update",
+    "/sell": "sell",
   };
 
   return (
