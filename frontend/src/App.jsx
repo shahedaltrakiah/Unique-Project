@@ -5,13 +5,7 @@ import Home from './components/pages/home/Home';
 function App() {
   return (
     <>
-      <Head 
-        title="Home - Unique"
-        description="Welcome to Unique, your go-to shop for stationery!"
-      />
       <Home/>
-
-
     </>
   );
 }

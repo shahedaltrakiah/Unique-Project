@@ -1,14 +1,13 @@
 import About from "../components/pages/About";
+// import NavBar from "../components/NavBar";
 // import Breadcrumb from "../components/Breadcrumb";
 import Cart from "../components/pages/Cart";
 import Checkout from "../components/pages/Checkout";
 import Contact from "../components/pages/Contact";
 // import Footer from "../components/Footer";
-import Head from "../components/utils/Head";
 // import Hero from "../components/Hero";
 import Home from "../components/pages/home/Home";
 import Login from "../components/auth/Login";
-// import NavBar from "../components/NavBar";
 import ProductDetails from "../components/pages/ProductDetails";
 import Profile from "../components/profile/Profile";
 import ProfileInfo from "../components/profile/ProfileInfo";

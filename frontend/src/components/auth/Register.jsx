@@ -37,12 +37,15 @@ const Register = () => {
         <section className="bg0 p-t-104 p-b-116">
             <div className="container">
                 <div className="flex-w flex-tr">
+                    {/* Registration Form */}
                     <div className="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
                         <form onSubmit={handleSubmit}>
                             <h4 className="mtext-105 cl2 txt-center p-b-30">
                                 Register
                             </h4>
+                            {/* Name */}
                             <div className="bor8 m-b-20 how-pos4-parent">
+                                <i className="fa fa-user how-pos4"></i>
                                 <input
                                     className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
                                     type="text"
@@ -52,9 +55,10 @@ const Register = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                <img className="how-pos4 pointer-none" src="/assets/icons/user-icon.png" alt="User Icon" />
                             </div>
+                            {/* Email */}
                             <div className="bor8 m-b-20 how-pos4-parent">
+                                <i className="fa fa-envelope how-pos4"></i>
                                 <input
                                     className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
                                     type="email"
@@ -64,9 +68,10 @@ const Register = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                <img className="how-pos4 pointer-none" src="/assets/icons/email-icon.png" alt="Email Icon" />
                             </div>
+                            {/* Password */}
                             <div className="bor8 m-b-20 how-pos4-parent">
+                                <i className="fa fa-lock how-pos4"></i>
                                 <input
                                     className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
                                     type="password"
@@ -76,9 +81,10 @@ const Register = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                <img className="how-pos4 pointer-none" src="/assets/icons/password-icon.png" alt="Password Icon" />
                             </div>
+                            {/* Confirm Password */}
                             <div className="bor8 m-b-20 how-pos4-parent">
+                                <i className="fa fa-lock how-pos4"></i>
                                 <input
                                     className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
                                     type="password"
@@ -88,9 +94,10 @@ const Register = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                <img className="how-pos4 pointer-none" src="/assets/icons/confirm-password-icon.png" alt="Confirm Password Icon" />
                             </div>
+                            {/* Address */}
                             <div className="bor8 m-b-20 how-pos4-parent">
+                                <i className="fa fa-map-marker how-pos4"></i>
                                 <input
                                     className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
                                     type="text"
@@ -100,9 +107,10 @@ const Register = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                <img className="how-pos4 pointer-none" src="/assets/icons/address-icon.png" alt="Address Icon" />
                             </div>
+                            {/* Phone */}
                             <div className="bor8 m-b-20 how-pos4-parent">
+                                <i className="fa fa-phone how-pos4"></i>
                                 <input
                                     className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
                                     type="tel"
@@ -112,7 +120,6 @@ const Register = () => {
                                     onChange={handleChange}
                                     required
                                 />
-                                <img className="how-pos4 pointer-none" src="/assets/icons/phone-icon.png" alt="Phone Icon" />
                             </div>
                             <button
                                 type="submit"
@@ -122,12 +129,19 @@ const Register = () => {
                             </button>
                         </form>
                     </div>
-                    <div className="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">
-                        <img src="/assets/images/register-img.png" alt="Register Illustration" />
+
+                    {/* Image Section */}
+                    <div className="size-210 bor10 flex-w flex-col-m p-lr-1  w-full-md">
+                        <img
+                            src="../public/assets/images/login.jpg"
+                            alt="Login Illustration"
+                            style={{ width: '590px', height: '100%', objectFit: 'fill'}}
+                        />
                     </div>
                 </div>
             </div>
         </section>
     );
 };
+
 export default Register;
