@@ -6,8 +6,8 @@ function App() {
   return (
     <>
       <Head 
-        title="Home - Pen & Paper"
-        description="Welcome to Pen & Paper, your go-to shop for stationery!"
+        title="Home - Unique"
+        description="Welcome to Unique, your go-to shop for stationery!"
       />
       <Home/>
 
