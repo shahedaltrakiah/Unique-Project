@@ -46,9 +46,26 @@ const Root = () => {
        <Routes>
         <Route path="/" element={ <App />}></Route>
         <Route path="/about" element={ <About />}></Route>
+        <Route path="/breadcrumb" element={ <Breadcrumb />}></Route>
         <Route path="/cart" element={ <Cart />}></Route>
+        <Route path="/checkout" element={ <Checkout />}></Route>
         <Route path="/contact" element={ <Contact />}></Route>
+        <Route path="/footer" element={ <Footer />}></Route>
+        <Route path="/head" element={ <Head />}></Route>
+        <Route path="/hero" element={ <Hero />}></Route>
+        <Route path="/home" element={ <Home />}></Route>
+        <Route path="/login" element={ <Login />}></Route>
+        <Route path="/navbar" element={ <NavBar />}></Route>
+        <Route path="/productDetails" element={ <ProductDetails />}></Route>
+        <Route path="/profile" element={ <Profile />}></Route>
+        <Route path="/profileInfo" element={ <ProfileInfo />}></Route>
+        <Route path="/profileManage" element={ <ProfileManage />}></Route>
+        <Route path="/profileOrder" element={ <ProfileOrder />}></Route>
+        <Route path="/profileUpdate" element={ <ProfileUpdate />}></Route>
+        <Route path="/register" element={ <Register />}></Route>
+        <Route path="/sell" element={ <Sell />}></Route>
         <Route path="/shop" element={ <Shop />}></Route>
+        <Route path="/wishlist" element={ <Wishlist />}></Route>
        </Routes>
 
     </BrowserRouter>
