@@ -1,0 +1,29 @@
+  .slick-prev:before,
+.slick-next:before {
+  font-family: 'Arial'; /* Prevent default slick font loading */
+  color: black; /* Optional: Adjust arrow color */
+}
+
+.slide-1 {
+    background-image: url("/assets/images/slide-01.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .slide-2 {
+    background-image: url("/assets/images/slide-02.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .slide-3 {
+    background-image: url("/assets/images/slide-03.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .wrap-slick1 {
+    overflow: hidden;
+    width: 100%; /* Ensure it doesn't overflow */
+  }
+  
+  
+  

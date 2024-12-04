@@ -3,7 +3,7 @@ import Head from "../utils/Head";
 import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import Hero from "./Hero";
+import Hero from "../pages/home/Hero";
 import Breadcrumb from "./Breadcrumb";
 
 const Layout = () => {

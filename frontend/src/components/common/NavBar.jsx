@@ -7,7 +7,7 @@ function NavBar() {
           <nav className="limiter-menu-desktop container">
             {/* Logo desktop */}
             <a href="#" className="logo">
-              <img src="images/icons/logo-01.png" alt="IMG-LOGO" />
+              <img src="../public/assets/images/icons/logo-01.png" alt="IMG-LOGO" />
             </a>
             {/* Menu desktop */}
             <div className="menu-desktop">
@@ -70,7 +70,7 @@ function NavBar() {
         {/* Logo moblie */}
         <div className="logo-mobile">
           <a href="index.html">
-            <img src="images/icons/logo-01.png" alt="IMG-LOGO" />
+            <img src="../public/assets/images/icons/logo-01.png" alt="IMG-LOGO" />
           </a>
         </div>
         {/* Icon header */}
@@ -146,7 +146,7 @@ function NavBar() {
       <div className="modal-search-header flex-c-m trans-04 js-hide-modal-search">
         <div className="container-search-header">
           <button className="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-            <img src="images/icons/icon-close2.png" alt="CLOSE" />
+            <img src="../public/assets/images/icons/icon-close2.png" alt="CLOSE" />
           </button>
           <form className="wrap-search-header flex-w p-l-15">
             <button className="flex-c-m trans-04">
