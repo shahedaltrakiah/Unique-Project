@@ -77,6 +77,29 @@ class ProductController extends Controller
         }
     }
 
+    public function getProduct($id)
+{
+    try {
+        // Find the product by ID
+        $product = Product::find($id);
+
+        // If the product is not found, return a 404 error
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        // Return the product data
+        return response()->json([
+            'message' => 'Product data retrieved successfully',
+            'data' => $product
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to retrieve product data', 'message' => $e->getMessage()], 500);
+    }
+}
+
+
     public function update(Request $request, $id)
     {
         try {

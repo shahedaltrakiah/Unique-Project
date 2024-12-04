@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CategoryController;
 
+Route::get('/order/{id}', [OrderController::class, 'getOrder']);
 
 
 // register user
@@ -22,6 +23,9 @@ Route::post('/messages', [MessageController::class, 'store']);
 // auth routes
 Route::middleware('auth:sanctum')->group(function () {
 
+    // get user data
+    Route::get('/user/{id}', [UserController::class, 'getUserData']);
+
     // update user 
     Route::put('user', [UserController::class, 'update']);
 
@@ -34,11 +38,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // add new product
     Route::post('products', [ProductController::class, 'store']);
 
+    // get product
+    Route::get('/product/{id}', [ProductController::class, 'getProduct']);
+
     // update product
     Route::put('/products/{id}', [ProductController::class, 'update']);
 
     // get all the orders for one user
     Route::get('orders', [OrderController::class, 'userOrders']);
+
+    // get order
 
     // get all orders
     Route::post('orders', [OrderController::class, 'store']);
