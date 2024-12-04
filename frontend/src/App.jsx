@@ -1,6 +1,6 @@
 import React from "react";
-import Head from './components/Head';
-import Home from './components/Home';
+// import Head from './components/Head';
+import Home from './components/pages/Home';
 
 function App() {
   return (
