@@ -131,11 +131,11 @@ const Register = () => {
                     </div>
 
                     {/* Image Section */}
-                    <div className="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md">
+                    <div className="size-210 bor10 flex-w flex-col-m p-lr-1  w-full-md">
                         <img
-                            src="../public/assets/images/login-image.jpg"
+                            src="../public/assets/images/login.jpg"
                             alt="Login Illustration"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            style={{ width: '590px', height: '100%', objectFit: 'fill'}}
                         />
                     </div>
                 </div>

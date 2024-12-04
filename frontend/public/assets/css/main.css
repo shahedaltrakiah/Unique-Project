@@ -3330,3 +3330,16 @@ input.num-product::-webkit-inner-spin-button {
   }
 
 }
+
+textarea.stext-11
+input.stext-11 {
+    height: 50px; /* Consistent height */
+    padding: 10px 15px; /* Consistent padding */
+    line-height: 1.5; /* Match line height */
+    box-sizing: border-box; /* Include padding in height/width */
+}
+
+textarea.stext-111 {
+    min-height: 100px; /* Specific for textarea */
+    resize: vertical; /* Allow resizing */
+}
