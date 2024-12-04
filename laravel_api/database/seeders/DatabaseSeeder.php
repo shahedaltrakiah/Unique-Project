@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
 use App\Models\Favorite;
+use App\Models\Message;
 use App\Models\Order;
 use App\Models\Order_product;
 use App\Models\Product;
@@ -26,6 +27,8 @@ class DatabaseSeeder extends Seeder
         Order_product::factory()->count(10)->create();
         Favorite::factory()->count(10)->create();
         Product_image::factory()->count(10)->create();
+        Message::factory()->count(10)->create();
+
 
 
 

@@ -1,6 +1,9 @@
-function Breadcrumb(){
-    return(
-    <h1>breadcrumb</h1>
-    );
-    }
-    export default Breadcrumb
+import React from "react";
+
+const Breadcrumb = ({ text }) => (
+  <div className="breadcrumb">
+    <p>{text}</p>
+  </div>
+);
+
+export default Breadcrumb;

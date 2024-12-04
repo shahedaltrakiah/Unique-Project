@@ -27,6 +27,7 @@ class ProductFactory extends Factory
             'string_size' => $this->faker->randomElement(['Small', 'Medium', 'Large', null]), // Random size or null
             'number_size' => $this->faker->randomFloat(1, 1, 100), // Random float number or nullable
             'price' => $this->faker->randomFloat(2, 5, 500), // Random price between 5 and 500
+            'status' => $this->faker->randomElement(['available','sold']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

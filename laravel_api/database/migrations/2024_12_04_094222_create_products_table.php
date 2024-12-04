@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('string_size')->nullable();
             $table->float('number_size')->nullable();
             $table->float('price');
+            $table->enum('status', ['available', 'sold'])->default('available');
             $table->timestamps();
         });
     }
