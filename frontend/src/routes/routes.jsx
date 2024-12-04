@@ -41,6 +41,7 @@ const routes = [
         { path: "/profileorder", element: <ProfileOrder /> },
         { path: "/profileupdate", element: <ProfileUpdate /> },
         { path: "/productdetails", element: <ProductDetails /> },
+        { path: "/sell", element: <Sell /> },
       ],
     },
   ];
