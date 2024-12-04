@@ -17,7 +17,8 @@ class Product extends Model
         'image',
         'string_size',
         'number_size',
-        'price'
+        'price',
+        'status',
     ];
 
     // Product belongs to a category
@@ -43,5 +44,10 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'favorites', 'product_id', 'user_id');
     }
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_products', 'product_id', 'order_id');
+    }
+
 }
 
