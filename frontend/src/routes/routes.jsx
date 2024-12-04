@@ -1,5 +1,6 @@
 import About from "../components/About";
-// import Breadcrumb from "../components/Breadcrumb";
+import NavBar from "../components/NavBar";
+import Breadcrumb from "../components/Breadcrumb";
 import Cart from "../components/Cart";
 import Checkout from "../components/Checkout";
 import Contact from "../components/Contact";
@@ -8,7 +9,6 @@ import Head from "../components/Head";
 // import Hero from "../components/Hero";
 import Home from "../components/Home";
 import Login from "../components/Login";
-// import NavBar from "../components/NavBar";
 import ProductDetails from "../components/ProductDetails";
 import Profile from "../components/Profile";
 import ProfileInfo from "../components/ProfileInfo";
