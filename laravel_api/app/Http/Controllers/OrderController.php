@@ -28,12 +28,15 @@ class OrderController extends Controller
                 'total_amount' => $totalAmount,
             ]);
     
-            // Create order-product entries
+            // Create order-product entries and update product status
             foreach ($validated['products'] as $productId) {
                 Order_product::create([
                     'order_id' => $order->id,
                     'product_id' => $productId,
                 ]);
+    
+                // Update product status to 'sold'
+                Product::where('id', $productId)->update(['status' => 'sold']);
             }
     
             // Return success response
@@ -44,6 +47,7 @@ class OrderController extends Controller
             return response()->json(['error' => 'Failed to create order', 'message' => $e->getMessage()], 500);
         }
     }
+    
     
     
 

@@ -17,7 +17,8 @@ class Product extends Model
         'image',
         'string_size',
         'number_size',
-        'price'
+        'price',
+        'status',
     ];
 
     // Product belongs to a category
