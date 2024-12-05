@@ -20,6 +20,8 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::factory(), // Creates or associates a user
             'total_amount' => $this->faker->randomFloat(2, 20, 1000), // Random total amount between 20 and 1000
+            'address' => $this->faker->address,
+            'phone' => $this->faker->phoneNumber,
             'created_at' => now(),
             'updated_at' => now(),
         ];
