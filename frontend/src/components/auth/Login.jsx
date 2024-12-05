@@ -1,28 +1,42 @@
 import React, { useState } from "react";
-import axios from "../../axios";
 import { Link } from "react-router-dom";
+import apiService from "../../services/API";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false); 
 
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsLoading(true); // Start loading
+
     try {
-      const response = await axios.post("/login", formData);
-      console.log(response.data.message);
+      const response = await apiService.loginUser(formData); // Use the loginUser service
+      console.log(response.message); // You can log the success message or handle further
+
+      // Handle successful login (e.g., store token, redirect user)
       alert("Login successful!");
+      // For example, store the token:
+      // localStorage.setItem("token", response.token);
+      // Redirect the user (if needed):
+      // history.push("/dashboard");
+
     } catch (error) {
-      console.error(error.response?.data || "Error during login");
+      console.error(error);
       alert("Login failed. Please check your credentials.");
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -60,7 +74,8 @@ const Login = () => {
                   required
                 />
               </div>
-              {/* Don't Have an Account and Forgot Password Links */}
+
+              {/* Links for Forgot Password and Register */}
               <div
                 className="flex-sb-m p-t-15 p-b-25"
                 style={{
@@ -69,7 +84,6 @@ const Login = () => {
                   alignItems: "flex-start", // Aligns the text to the left
                   gap: "10px", // Adds spacing between the sections
                 }}
-                
               >
                 <Link
                   to="/forgot-password"
@@ -97,11 +111,13 @@ const Login = () => {
                 </span>
               </div>
 
+              {/* Submit Button */}
               <button
                 type="submit"
                 className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
+                disabled={isLoading} // Disable button while loading
               >
-                Submit
+                {isLoading ? "Logging in..." : "Submit"}
               </button>
             </form>
           </div>
@@ -109,7 +125,7 @@ const Login = () => {
           {/* Image Section */}
           <div className="size-210 bor10 flex-w flex-col-m p-lr-1 w-full-md">
             <img
-              src="../public/assets/images/login.jpg"
+              src="/assets/images/login.jpg"
               alt="Login Illustration"
               style={{ width: "580px", height: "100%", objectFit: "fill" }}
             />

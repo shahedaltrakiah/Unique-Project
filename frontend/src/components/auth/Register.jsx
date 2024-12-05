@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import axios from "../../axios";
 import { Link } from "react-router-dom";
-
+import apiService from "../../services/API";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -20,21 +19,40 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      Swal.fire({
+        icon: "error",
+        title: "Passwords do not match!",
+        text: "Please make sure both passwords are the same.",
+      });
       return;
     }
 
     try {
-      const response = await axios.post("/register", formData);
-      console.log(response.data.message);
-      alert("Registration successful!");
+      // Register user
+      await apiService.registerUser(formData);
+
+      Swal.fire({
+        icon: "success",
+        title: "Registration Successful!",
+        text: "You have been registered successfully.",
+      });
+
+      // Clear form
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        address: "",
+        phone: "",
+      });
     } catch (error) {
-      console.error(error.response?.data || "Error during registration");
-      alert("Registration failed.");
+      // Error handling is centralized in `apiService`
     }
   };
-
+  
   return (
     <section className="bg0 p-t-104 p-b-116">
       <div className="container">

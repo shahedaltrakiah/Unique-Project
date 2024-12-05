@@ -8,8 +8,8 @@ function NavBar() {
             {/* Logo desktop */}
             <a href="/" className="logo">
               <img
-                src="../public/assets/images/icons/logo-01.png"
-                alt="IMG-LOGO"
+                src="../public/assets/images/logo.png"
+                alt="IMG-LOGO" style={{maxWidth:'180px'}}
               />
             </a>
             {/* Menu desktop */}

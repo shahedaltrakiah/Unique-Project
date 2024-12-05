@@ -1,66 +1,62 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:8000/api'; // Replace with your API base URL
+const apiClient = axios.create({
+  baseURL: "http://localhost:8000/api", // Update with your actual API base URL
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-// Get all products
-export const getAllProducts = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/products`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    throw error;
+const apiService = {
+  // Register User
+  registerUser: async (data) => {
+    try {
+      const response = await apiClient.post("/register", data);
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error; 
+    }
+  },
+
+  // Login User
+  loginUser: async (data) => {
+    try {
+      const response = await apiClient.post("/login", data); 
+      return response.data; 
+    } catch (error) {
+      handleApiError(error);
+      throw error; 
+    }
+  },
+};
+
+// Error Handler
+const handleApiError = (error) => {
+  if (error.response) {
+    // Server responded with a status outside 2xx
+    const errorMessage =
+      error.response.data?.message || "An error occurred. Please try again.";
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: errorMessage,
+    });
+  } else if (error.request) {
+    // Request was made but no response received
+    Swal.fire({
+      icon: "error",
+      title: "Network Error",
+      text: "Unable to reach the server. Please check your internet connection.",
+    });
+  } else {
+    // Other errors (e.g., during request setup)
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message || "An unexpected error occurred.",
+    });
   }
 };
 
-// Get a single product by ID
-export const getProductById = async (id) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/products/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching product with ID ${id}:`, error);
-    throw error;
-  }
-};
-
-// Create a new product
-export const createProduct = async (product) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/products`, product);
-    return response.data;
-  } catch (error) {
-    console.error('Error creating product:', error);
-    throw error;
-  }
-};
-
-// Update a product by ID
-export const updateProduct = async (id, updatedProduct) => {
-  try {
-    const response = await axios.put(`${API_BASE_URL}/products/${id}`, updatedProduct);
-    return response.data;
-  } catch (error) {
-    console.error(`Error updating product with ID ${id}:`, error);
-    throw error;
-  }
-};
-
-// Delete a product by ID
-export const deleteProduct = async (id) => {
-  try {
-    const response = await axios.delete(`${API_BASE_URL}/products/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error deleting product with ID ${id}:`, error);
-    throw error;
-  }
-};
-
-export default {
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-};
+export default apiService;

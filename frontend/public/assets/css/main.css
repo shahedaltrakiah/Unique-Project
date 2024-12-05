@@ -3343,3 +3343,8 @@ textarea.stext-111 {
     min-height: 100px; /* Specific for textarea */
     resize: vertical; /* Allow resizing */
 }
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
