@@ -1,3 +1,11 @@
+.slick-prev:before,
+.slick-next:before {
+  font-family: 'Arial';
+  /* Prevent default slick font loading */
+  color: black;
+  /* Optional: Adjust arrow color */
+}
+
 .slide-1 {
   background-image: url("/assets/images/slide-01.jpg");
   background-size: cover;
@@ -14,4 +22,9 @@
   background-image: url("/assets/images/slide-03.jpg");
   background-size: cover;
   background-position: center;
+}
+
+.wrap-slick1 {
+  overflow: hidden;
+  width: 100%;
 }

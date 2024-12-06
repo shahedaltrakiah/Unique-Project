@@ -13,6 +13,8 @@ const apiService = {
   registerUser: async (data) => {
     try {
       const response = await apiClient.post("/register", data);
+      // Store token (In localStorage)
+      localStorage.setItem("auth_token", response.data.token);
       return response.data;
     } catch (error) {
       handleApiError(error);

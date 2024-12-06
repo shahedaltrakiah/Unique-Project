@@ -3410,3 +3410,15 @@ textarea.stext-111 {
   background-color: #717fe0;
 }
 
+body a {
+  text-decoration: none !important;
+}
+
+ul {
+  list-style-type: none !important; /* Removes bullets or numbers */
+}
+
+li {
+  text-decoration: none !important; /* Ensures no underline */
+}
+

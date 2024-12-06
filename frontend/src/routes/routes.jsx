@@ -17,7 +17,7 @@ import OrderDetails from "../components/profile/OrderDetails";
 const routes = [
     {
       path: "/",
-      element: <Layout />, // Wrap all routes with the Layout
+      element: <Layout />, 
       children: [
         { path: "/", element: <Home /> },
         { path: "/about", element: <About /> },

@@ -19,12 +19,10 @@ const Layout = () => {
     "/login": "Login",
     "/register": "Register",
     "/wishlist": "Wishlist",
-    "/profile": "Your Profile",
-    "/productdetails": "product details",
-    "/profileinfo": "Profile Info",
-    "/profilemanage": "Profile Manage",
-    "/profileorder": "Profile Order",
-    "/profileupdate": "Profile Update",
+    "/Profile": " My Profile",
+    "/profileOrder": "My Order",
+    "/orderDetails": "",
+    "/MyProducts": "My Products" ,
     "/sell": "Sell Your Product",
   };
 
