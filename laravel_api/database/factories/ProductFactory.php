@@ -24,8 +24,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->unique()->words(3, true), // Generates a unique 3-word product name
             'description' => $this->faker->sentence(), // Generates a random sentence as description
             'image' => $this->faker->imageUrl(640, 480, 'products', true, 'Product'), // Placeholder product image URL
-            'string_size' => $this->faker->randomElement(['Small', 'Medium', 'Large', null]), // Random size or null
-            'number_size' => $this->faker->randomFloat(1, 1, 100), // Random float number or nullable
+            'size' => $this->faker->numberBetween(30,46),
             'price' => $this->faker->randomFloat(2, 5, 500), // Random price between 5 and 500
             'status' => $this->faker->randomElement(['available','sold']),
             'created_at' => now(),
