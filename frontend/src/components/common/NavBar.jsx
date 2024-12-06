@@ -1,4 +1,22 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 function NavBar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Tracks login status
+  const [token, setToken] = useState(localStorage.getItem("token")); // Tracks token
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Update login status whenever the token changes
+    setIsLoggedIn(!!token);
+  }, [token]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token
+    setToken(null); // Clear token in state
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <header>
       {/* Header desktop */}
@@ -9,7 +27,8 @@ function NavBar() {
             <a href="/" className="logo">
               <img
                 src="../public/assets/images/logo.png"
-                alt="IMG-LOGO" style={{maxWidth:'180px'}}
+                alt="IMG-LOGO"
+                style={{ maxWidth: "180px" }}
               />
             </a>
             {/* Menu desktop */}
@@ -33,7 +52,10 @@ function NavBar() {
               </ul>
             </div>
             {/* Icon header */}
-            <div className="wrap-icon-header flex-w flex-r-m">
+            <div
+              className="wrap-icon-header flex-w flex-r-m"
+              style={{ gap: "15px" }}
+            >
               <div className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
                 <i className="zmdi zmdi-search" />
               </div>
@@ -45,18 +67,44 @@ function NavBar() {
               </div>
               <a
                 href="/wishlist"
-                className="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
+                className="icon-header-item cl2 hov-cl1 trans-04 p-r-11 icon-header-noti icon-header-noti"
                 data-notify={0}
               >
                 <i className="zmdi zmdi-favorite-outline" />
               </a>
-              <a
-                href="/login"
-                className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 "
-                data-notify={0}
-              >
-                <i class="zmdi zmdi-square-right"></i>{" "}
-              </a>
+              {/* Login/Profile Icon */}
+              {isLoggedIn ? (
+                <div className="dropdown">
+                  <a
+                    href="#"
+                    className="icon-header-item cl2 hov-cl1 trans-04"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <img
+                      src="../public/assets/images/icons/profile.png"
+                      alt="PROFILE"
+                      style={{ maxWidth: "20px", marginRight: "8px" }}
+                    />
+                  </a>
+                  <div className="dropdown-content">
+                    <a href="/profile">My Profile</a>
+                    <a href="#" onClick={handleLogout}>
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <a
+                  href="/login"
+                  className="icon-header-item cl2 hov-cl1 trans-04"
+                >
+                  <img
+                    src="../public/assets/images/icons/login.png"
+                    alt="LOGIN"
+                    style={{ maxWidth: "25px" }}
+                  />
+                </a>
+              )}
             </div>
           </nav>
         </div>
@@ -64,13 +112,10 @@ function NavBar() {
 
       {/* Header Mobile */}
       <div className="wrap-header-mobile">
-        {/* Logo moblie */}
+        {/* Logo mobile */}
         <div className="logo-mobile">
           <a href="/">
-            <img
-              src="../public/assets/images/icons/logo-01.png"
-              alt="IMG-LOGO"
-            />
+            <img src="../public/assets/images/logo.png" alt="IMG-LOGO" />
           </a>
         </div>
         {/* Icon header */}
@@ -92,13 +137,36 @@ function NavBar() {
             <i className="zmdi zmdi-favorite-outline" />
           </a>
 
-          <a
-            href="/login"
-            className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 "
-            data-notify={0}
-          >
-            <i class="zmdi zmdi-square-right"></i>{" "}
-          </a>
+          {/* Login/Profile Icon */}
+          {isLoggedIn ? (
+            <div className="dropdown">
+              <a
+                href="#"
+                className="icon-header-item cl2 hov-cl1 trans-04"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <img
+                  src="../public/assets/images/icons/profile.png"
+                  alt="PROFILE"
+                  style={{ maxWidth: "20px", marginRight: "8px" }}
+                />
+              </a>
+              <div className="dropdown-content">
+                <a href="/profile">My Profile</a>
+                <a href="#" onClick={handleLogout}>
+                  Logout
+                </a>
+              </div>
+            </div>
+          ) : (
+            <a
+              href="/login"
+              className="icon-header-item cl2 hov-cl1 trans-04"
+              data-notify={0}
+            >
+              <img src="../public/assets/images/icons/login.png" />
+            </a>
+          )}
         </div>
         {/* Button show menu */}
         <div className="btn-show-menu-mobile hamburger hamburger--squeeze">
@@ -107,49 +175,9 @@ function NavBar() {
           </span>
         </div>
       </div>
-      {/* Menu Mobile */}
-      <div className="menu-mobile">
-        <ul className="main-menu-m">
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/shop">Shop</a>
-          </li>
-          <li>
-            <a href="/sell">Sell</a>
-          </li>
-          <li>
-            <a href="/about">About</a>
-          </li>
-          <li>
-            <a href="/contact">Contact</a>
-          </li>
-        </ul>
-      </div>
-      {/* Modal Search */}
-      <div className="modal-search-header flex-c-m trans-04 js-hide-modal-search">
-        <div className="container-search-header">
-          <button className="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-            <img
-              src="../public/assets/images/icons/icon-close2.png"
-              alt="CLOSE"
-            />
-          </button>
-          <form className="wrap-search-header flex-w p-l-15">
-            <button className="flex-c-m trans-04">
-              <i className="zmdi zmdi-search" />
-            </button>
-            <input
-              className="plh3"
-              type="text"
-              name="search"
-              placeholder="Search..."
-            />
-          </form>
-        </div>
-      </div>
     </header>
+    
   );
 }
+
 export default NavBar;

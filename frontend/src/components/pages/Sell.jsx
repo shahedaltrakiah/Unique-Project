@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import apiService from "../../services/API";
 
 const Sell = () => {
   const [formData, setFormData] = useState({
@@ -6,6 +7,7 @@ const Sell = () => {
     size: "",
     name: "",
     image: null,
+    sub_images: [],
     description: "",
     price: "",
   });
@@ -14,61 +16,80 @@ const Sell = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
 
-    // Dynamically update size options based on category
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
     if (name === "category") {
       if (value === "Shoes") {
         setSizeOptions(["37", "38", "39", "40", "41", "42", "43"]);
-      } else if (value === "Clothes") {
+      } else if (value === "Tops") {
         setSizeOptions(["S", "M", "L", "XL", "XXL"]);
+      } else if (value === "Pants") {
+        setSizeOptions(["32", "34", "36", "38", "40", "42", "44", "46"]);
       } else {
         setSizeOptions([]);
       }
-      setFormData({ ...formData, size: "" }); // Reset size when category changes
     }
   };
 
   const handleImageChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted: ", formData);
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
+      if (key === "sub_images" && Array.isArray(formData[key])) {
+        formData[key].forEach((image, index) => {
+          formDataToSend.append(`sub_images[${index}]`, image);
+        });
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
     });
 
     try {
-      // Replace '/sell-product' with your API endpoint
-      const response = await fetch("/sell-product", {
-        method: "POST",
-        body: formDataToSend,
-      });
+      const response = await apiService.createProduct(formDataToSend);
 
-      if (response.ok) {
-        alert("Product listed successfully!");
-      } else {
-        alert("Failed to list the product.");
+      if (response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Product listed successfully!",
+        });
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while listing the product.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error,
+      });
     }
   };
 
   return (
-    <section className="bg0 p-t-104 p-b-116">
+    <section className="bg0 p-t-40 p-b-116">
       <div className="container">
-        <div className="flex-w flex-tr" style={{ width: "2350px" }}>
-          {/* Sell Product Form */}
-          <div className="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md">
+        <div className="flex-w flex-tr">
+          <div
+            className="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md"
+            style={{ width: "2350px" }}
+          >
             <form onSubmit={handleSubmit} encType="multipart/form-data">
               <h4 className="mtext-105 cl2 txt-center p-b-30">
                 Sell a Product
               </h4>
+
               {/* Product Name */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <i className="fa fa-tag how-pos4"></i>
@@ -82,6 +103,7 @@ const Sell = () => {
                   required
                 />
               </div>
+
               {/* Category Dropdown */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <i className="fa fa-list how-pos4"></i>
@@ -95,12 +117,13 @@ const Sell = () => {
                   <option value="" disabled>
                     Select Category
                   </option>
-                  <option value="Clothes">Clothes</option>
+                  <option value="Tops">Tops</option>
+                  <option value="Pants">Pants</option>
+                  <option value="Bags">Bags</option>
                   <option value="Shoes">Shoes</option>
-                  <option value="Accessories">Accessories</option>
-                  <option value="Other">Other</option>
                 </select>
               </div>
+
               {/* Size Dropdown */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <i className="fa fa-arrows-alt how-pos4"></i>
@@ -122,19 +145,33 @@ const Sell = () => {
                   ))}
                 </select>
               </div>
+
               {/* Price */}
-              <div className="bor8 m-b-20 how-pos4-parent">
+              <div
+                className="bor8 m-b-20 how-pos4-parent"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <img
+                  src="public/assets/images/icons/price.png"
+                  alt="Price"
+                  style={{
+                    marginLeft: "25px",
+                    maxWidth: "20px",
+                    marginTop: "10px",
+                  }}
+                />
                 <input
-                  className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
+                  className="stext-111 cl2 plh3 size-116 p-l-20 p-r-30"
                   type="number"
                   name="price"
                   placeholder="Price (JD)"
                   value={formData.price}
                   onChange={handleChange}
                   required
+                  style={{ marginTop: "10px" }}
                 />
-                <i class="zmdi zmdi-money-box" style={{marginLeft:'25px'}}></i>
               </div>
+
               {/* Description */}
               <div
                 className="bor8 m-b-20 how-pos4-parent"
@@ -159,23 +196,91 @@ const Sell = () => {
                 />
               </div>
 
-              {/* Image Upload */}
+              {/* Main Image Upload */}
               <div
-                className="bor8 m-b-20 how-pos4-parent"
-                style={{ display: "flex", alignItems: "center" }}
+                className="bor8 m-b-50 how-pos4-parent"
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "row",
+                  gap: "10px",
+                }}
               >
-                <i
-                  className="fa fa-image how-pos4"
-                  style={{ marginRight: "10px" }}
-                ></i>
-                <input
-                  className="stext-1111 cl2 plh3 size-116 p-l-62 p-r-30"
-                  type="file"
-                  name="image"
-                  onChange={handleImageChange}
-                  required
-                  style={{ flex: "1", padding: "10px 60px" }}
-                />
+                <label
+                  htmlFor="main-image"
+                  style={{
+                    fontWeight: "bold",
+                    marginRight: "10px",
+                    color: "#333",
+                  }}
+                >
+                  Main Image{" "}
+                  <span style={{ fontSize: "12px", color: "#888" }}>
+                    (required)
+                  </span>
+                </label>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <i
+                    className="fa fa-image how-pos4"
+                    style={{ marginRight: "10px" }}
+                  ></i>
+                  <input
+                    id="main-image"
+                    className="stext-1111 cl2 plh3 size-116 p-l-62 p-r-30"
+                    type="file"
+                    name="image"
+                    placeholder="Main image"
+                    onChange={handleImageChange}
+                    required
+                    style={{ flex: "1", padding: "10px 60px" }}
+                  />
+                </div>
+              </div>
+
+              {/* Sub-Images Upload */}
+              <div
+                className="bor8 m-b-50 how-pos4-parent"
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "row",
+                  gap: "10px",
+                }}
+              >
+                <label
+                  htmlFor="sub-images"
+                  style={{
+                    fontWeight: "bold",
+                    marginRight: "10px",
+                    color: "#333",
+                  }}
+                >
+                  Additional Images{" "}
+                  <span style={{ fontSize: "12px", color: "#888" }}>
+                    (optional)
+                  </span>
+                </label>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <i
+                    className="fa fa-images how-pos4"
+                    style={{ marginRight: "10px" }}
+                  ></i>
+                  <input
+                    id="sub-images"
+                    className="stext-1111 cl2 plh3 size-116 p-l-62 p-r-30"
+                    type="file"
+                    name="sub_images"
+                    placeholder="Sub images"
+                    multiple
+                    onChange={(e) => {
+                      setFormData((prevData) => ({
+                        ...prevData,
+                        sub_images: [...e.target.files],
+                      }));
+                    }}
+                    style={{ flex: "1", padding: "10px 60px" }}
+                  />
+                </div>
               </div>
 
               <button

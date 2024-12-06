@@ -48,31 +48,42 @@ class ProductController extends Controller
                 'description' => 'required|string',
                 'price' => 'required|numeric',
                 'category_id' => 'required|exists:categories,id',
-                'status' => 'required|in:available,sold', // Validate status
+                'status' => 'required|in:available,sold',
+                'size' => 'required|string|max:50',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            // Store the image in the public storage (Optional: Uncomment if adding image upload later)
-            $path = $request->file('image')->store('products', 'public');
+            // Store the main image
+            $mainImagePath = $request->file('image')->store('products', 'public');
 
-            // Create the new product in the database
+            // Create the product in the database
             $product = Product::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'price' => $validated['price'],
-                'image' => $path, // Placeholder for now
+                'size' => $validated['size'],
+                'image' => $mainImagePath,
                 'category_id' => $validated['category_id'],
-                'status' => $validated['status'], // Add status to the product
-                'user_id' => Auth::id(), // Logged-in user's ID
+                'status' => $validated['status'],
+                'user_id' => Auth::id(),
             ]);
 
-            // Return a success response
+            // Handle sub-images if provided
+            if ($request->has('sub_images')) {
+                foreach ($request->file('sub_images') as $subImage) {
+                    $subImagePath = $subImage->store('product_sub_images', 'public');
+                    $product->subImages()->create([
+                        'path' => $subImagePath,
+                    ]);
+                }
+            }
+
             return response()->json(['message' => 'Product added successfully', 'product' => $product], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Return validation errors
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
-            // Catch any other exceptions
             return response()->json(['error' => 'An error occurred while adding the product.', 'message' => $e->getMessage()], 500);
         }
     }
