@@ -32,11 +32,16 @@ const Register = () => {
     try {
       await apiService.registerUser(formData);
 
+      // Save token in localStorage
+      localStorage.setItem("token", response.token);
+
       Swal.fire({
         icon: "success",
         title: "Registration Successful!",
         text: "You have been registered successfully.",
-      });
+      }).then(() => {
+        window.location.href = "/";
+    });
 
       setFormData({
         name: "",

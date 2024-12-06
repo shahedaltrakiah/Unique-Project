@@ -1,146 +1,30 @@
 .slick-prev:before,
 .slick-next:before {
-  font-family: 'Arial'; /* Prevent default slick font loading */
-  color: black; /* Optional: Adjust arrow color */
+  font-family: 'Arial';
+  /* Prevent default slick font loading */
+  color: black;
+  /* Optional: Adjust arrow color */
 }
 
 .slide-1 {
-    background-image: url("/assets/images/slide-01.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-  .slide-2 {
-    background-image: url("/assets/images/slide-02.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .slide-3 {
-    background-image: url("/assets/images/slide-03.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-  .wrap-slick1 {
-    overflow: hidden;
-    width: 100%; /* Ensure it doesn't overflow */
-  }
-
-  /* ****************************************/
-  html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Disable horizontal scrolling */
-  }
-  
-  * {
-    box-sizing: border-box;
-  }
-  .container {
-    max-width: 100%; /* Prevent exceeding viewport width */
-    overflow: hidden; /* Hide content that overflows */
-  }
-  
-  .row {
-    display: flex; /* Flexbox prevents horizontal scroll */
-    flex-wrap: wrap; /* Ensure content wraps to the next line */
-    margin: 0 auto; /* Center content */
-  }
-  
-  @font-face {
-    font-family: "slick";
-    src: url("/assets/fonts/slick.woff") format("woff"),
-         url("/assets/fonts/slick.ttf") format("truetype");
-  }
-
-  /* details styling */
-  /* Container */
-.product-details-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  background-image: url("/assets/images/slide-01.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
-/* Row Layout */
-.product-details-row {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  margin-left: 155px;
-  margin-bottom: 50px;
+.slide-2 {
+  background-image: url("/assets/images/slide-02.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
-/* Product Images */
-/* Product Images */
-.product-images {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.slide-3 {
+  background-image: url("/assets/images/slide-03.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
-.product-main-image {
-  width: 70%; /* Reduce the size of the image */
-  max-width: 400px; /* Add a maximum width */
-  height: auto; /* Maintain the aspect ratio */
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-/* Product Info */
-.product-info {
-  flex: 1;
-}
-
-.product-name {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.product-description {
-  font-size: 1rem;
-  margin-bottom: 20px;
-  color: #666;
-}
-
-.product-price {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-/* Actions */
-.product-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-add-to-cart,
-.btn-add-to-wishlist {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #717fe0;
-  transition: background-color 0.3s ease;
-}
-
-.btn-add-to-cart:hover,
-.btn-add-to-wishlist:hover {
-  background-color: #5b68b3;
-}
-
-.btn-add-to-wishlist {
-  background-color: #e63946;
-}
-
-.btn-add-to-wishlist:hover {
-  background-color: #a32634;
+.wrap-slick1 {
+  overflow: hidden;
+  width: 100%;
 }

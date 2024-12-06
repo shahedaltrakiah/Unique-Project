@@ -2,9 +2,9 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-import Hero from "../pages/home/Hero";
 import Breadcrumb from "./Breadcrumb";
 import CartSidebar from "./CartSidebar";
+import Hero from "../pages/home/Hero";
 
 const Layout = () => {
   const location = useLocation();
@@ -19,21 +19,20 @@ const Layout = () => {
     "/login": "Login",
     "/register": "Register",
     "/wishlist": "Wishlist",
-    "/profile": "profile",
-    "/productdetails": "product details",
-    "/profileinfo": "Profile Info",
-    "/profilemanage": "Profile Manage",
-    "/profileorder": "Profile Order",
-    "/profileupdate": "Profile Update",
-    "/sell": "sell",
+    "/Profile": " My Profile",
+    "/profileOrder": "My Order",
+    "/orderDetails": "",
+    "/MyProducts": "My Products" ,
+    "/sell": "Sell Your Product",
   };
 
   return (
     <>
       <NavBar />
       <CartSidebar />
-      {/* Show Hero only on the Home page */}
-      {location.pathname === "/" && <Hero />}
+
+      {/* Render Hero only on the Home Page */}
+      {location.pathname === "/" && <Hero />}{" "}
 
       {/* Breadcrumb for all other pages */}
       {location.pathname !== "/" && (
@@ -46,6 +45,7 @@ const Layout = () => {
         {/* Render the content for the current route */}
         <Outlet />
       </main>
+      
       <Footer />
     </>
   );

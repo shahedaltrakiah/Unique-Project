@@ -7,11 +7,25 @@ const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token'); // Adjust with your token storage mechanism
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; // Add token to request headers
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+
 const apiService = {
+  
   // Register User
   registerUser: async (data) => {
     try {
       const response = await apiClient.post("/register", data);
+      // Store token (In localStorage)
+      localStorage.setItem("auth_token", response.data.token);
       return response.data;
     } catch (error) {
       handleApiError(error);
@@ -69,9 +83,10 @@ const apiService = {
   // get user orders
   getUserOrders: async () => {
     try {
+      const token = localStorage.getItem("auth_token"); // Ensure the token name matches
       const response = await apiClient.get("/orders", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include auth token if needed
+          Authorization: `Bearer ${token}`, // Include the correct auth token
         },
       });
       return response.data;
@@ -102,7 +117,7 @@ const apiService = {
       const response = await apiClient.get("/products/user");
       return response.data; // Return the products
     } catch (error) {
-      console.error("Error fetching user products:", error.response || error);
+      handleApiError(error);
       throw error; // Rethrow to handle in components
     }
   },
@@ -165,14 +180,14 @@ const apiService = {
   // Fetch a single product by ID
   getProductById: async (id) => {
     try {
-      const response = await apiClient.get(`/product/${id}`);
+      const response = await apiClient.get("/product",id);
       return response.data;
     } catch (error) {
       handleApiError(error);
       throw error;
     }
   },
-  
+
 };
 
 // Error Handler

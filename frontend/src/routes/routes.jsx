@@ -6,6 +6,7 @@ import Home from "../components/pages/home/Home";
 import Login from "../components/auth/Login";
 import Profile from "../components/profile/Profile";
 import ProfileOrder from "../components/profile/ProfileOrder";
+import MyProducts from "../components/profile/MyProducts";
 import Register from "../components/auth/Register";
 import Sell from "../components/pages/Sell";
 import Shop from "../components/pages/Shop";
@@ -18,7 +19,7 @@ import ProductDetails from "../components/pages/ProductDetails";
 const routes = [
     {
       path: "/",
-      element: <Layout />, // Wrap all routes with the Layout
+      element: <Layout />, 
       children: [
         { path: "/", element: <Home /> },
         { path: "/about", element: <About /> },
@@ -32,6 +33,7 @@ const routes = [
         { path: "/profile", element: <Profile /> },
         { path: "/profileOrder", element: <ProfileOrder /> },
         { path: "/orderDetails", element: <OrderDetails /> },
+        { path: "/MyProducts", element: <MyProducts /> },
         { path: "/sell", element: <Sell /> },
         { path: "/product/:id", element: <ProductDetails /> },
       ],

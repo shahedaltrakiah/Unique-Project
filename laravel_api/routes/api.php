@@ -9,7 +9,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CategoryController;
 
-Route::post('orders', [OrderController::class, 'store']);
 
 
 
@@ -31,14 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // update user 
     Route::put('user', [UserController::class, 'update']);
 
-    // get all products
-    //Route::get('products', [ProductController::class, 'index']);
-
-    // get product
-    //Route::get('/product/{id}', [ProductController::class, 'getProduct']);
-
     // get all products for one user
-    Route::get('products/user', [ProductController::class, 'userProducts']);
+    Route::get('orders', [OrderController::class, 'userOrders']);
 
     // add new product
     Route::post('products', [ProductController::class, 'store']);
@@ -50,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'delete']);
 
     // get all the orders for one user
-    Route::get('orders', [OrderController::class, 'userOrders']);
+    Route::get('products/user', [ProductController::class, 'userProducts']);
 
     // get order
     Route::get('/order/{id}', [OrderController::class, 'getOrder']);
@@ -62,13 +55,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('favorites/{productId}', [FavoriteController::class, 'destroy']);
 
     // add product to favorites
-    Route::post('favorites', [FavoriteController::class, 'store']);
 
     // get all categories
     Route::get('categories', [CategoryController::class, 'index']);
 
 
 });
+
+
+Route::post('favorites', [FavoriteController::class, 'store']);
 
  // get all products
  Route::get('products', [ProductController::class, 'index']);

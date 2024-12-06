@@ -1,93 +1,142 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import ProfileSidebar from "./ProfileSidebar";
+import apiService from "../../services/API"; // Adjust path as needed
 
 function ProfileOrder() {
+  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  // Fetch orders on component mount
+  useEffect(() => {
+    apiService
+      .getUserOrders()
+      .then(setOrders)
+      .catch((err) => {
+        console.error("Error fetching orders:", err);
+        setError("Failed to load orders.");
+      });
+  }, []);
+
+  // Handle selecting an order for the modal
+  const handleViewDetails = (order) => {
+    setSelectedOrder(order);
+  };
+
   return (
-    <>
-    <div class="main-container mt-5">
-        <ProfileSidebar/>
-        <h4>Order History</h4>
-        <table className="table order-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Total</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#order_id</td>
-              <td>order_date </td>
-              <td>status</td>
-              <td> JDtotal_amount</td>
+    <div className="main-container mt-5">
+      <ProfileSidebar />
+      <h4>Order History</h4>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <table className="table order-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.map((order) => (
+            <tr key={order.id}>
+              <td>#{order.id}</td>
+              <td>{order.address}</td>
+              <td>{order.phone}</td>
+              <td>JD {order.total_amount.toFixed(2)}</td>
               <td>
-                <button className="view-details-btn">View Details</button>
+                <button
+                  className="view-details-btn"
+                  onClick={() => handleViewDetails(order)} // This sets the selected order
+                  data-bs-toggle="modal"
+                  data-bs-target="#orderDetailsModal" // Ensure this ID matches the modal ID
+                >
+                  View Details
+                </button>
               </td>
             </tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="modal fade">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Order Details</h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
-            </div>
-            <div className="modal-body">
-              <div className="order-details">
-                <h5>
-                  Order ID
-                  <span className="text-primary"></span>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Modal for editing order details */}
+      {selectedOrder && (
+        <div
+          className="modal fade"
+          id="orderDetailsModal"
+          tabIndex="-1"
+          aria-labelledby="orderDetailsModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="orderDetailsModalLabel">
+                  Order Details
                 </h5>
-                <p>
-                  <strong>Date:</strong> <span className="text-muted"></span>
-                </p>
-                <p>
-                  <strong>Status:</strong>
-                </p>
-                <p>
-                  <strong>Total:</strong>
-                  <span className="text-danger">JD</span>
-                </p>
-                <p>
-                  <strong>Shipping Address:</strong>
-                  <span className="text-muted"></span>
-                </p>
-                <p>
-                  <strong>Items Ordered:</strong>
-                </p>
-                <div className="order-items">
-                  <ul className="list-group">
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                      product_name
-                      <span className="badge bg-secondary">JD</span>
-                    </li>
-                  </ul>
-                </div>
-                <p>
-                  <strong>Time Left to Cancel:</strong>{" "}
-                </p>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-danger">Cancel Order</button>
+              <div className="modal-body">
+                <div className="order-details">
+                  <p>
+                    <strong>Order ID:</strong> {selectedOrder.id}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {selectedOrder.address}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {selectedOrder.phone}
+                  </p>
+                  <p>
+                    <strong>Total Amount:</strong> JD{" "}
+                    {selectedOrder.total_amount.toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Products:</strong>
+                  </p>
+                  <div className="order-items">
+                    <ul className="list-group">
+                      {selectedOrder.products.map((product, index) => (
+                        <li
+                          key={index}
+                          className="list-group-item d-flex justify-content-between align-items-start"
+                        >
+                          <div className="ms-2 me-auto">
+                            <div className="fw-bold">{product.name}</div>
+                            <p>Size: {product.size}</p>
+                            <p>Price: JD {product.price.toFixed(2)}</p>
+                          </div>
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="img-thumbnail"
+                            style={{ width: "80px", height: "80px" }}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" data-bs-dismiss="modal">
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        </div>
-
-        </>
-        
+      )}
+    </div>
   );
 }
 

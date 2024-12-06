@@ -202,27 +202,33 @@ const Sell = () => {
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  flexDirection: "row",
+                  flexDirection: "column", // Stack elements vertically
                   gap: "10px",
                 }}
               >
-                <label
-                  htmlFor="main-image"
+                <div
                   style={{
                     fontWeight: "bold",
-                    marginRight: "10px",
+                    marginBottom: "5px", // Space between the text and input
                     color: "#333",
+                    fontSize: "14px",
                   }}
                 >
                   Main Image{" "}
                   <span style={{ fontSize: "12px", color: "#888" }}>
                     (required)
                   </span>
-                </label>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                  }}
+                >
                   <i
                     className="fa fa-image how-pos4"
-                    style={{ marginRight: "10px" }}
+                    style={{ marginBottom: "10px" }} // Space between icon and input
                   ></i>
                   <input
                     id="main-image"
@@ -232,7 +238,7 @@ const Sell = () => {
                     placeholder="Main image"
                     onChange={handleImageChange}
                     required
-                    style={{ flex: "1", padding: "10px 60px" }}
+                    style={{ padding: "10px 60px", width: "100%" }} // Ensure input takes full width
                   />
                 </div>
               </div>
@@ -243,27 +249,33 @@ const Sell = () => {
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  flexDirection: "row",
+                  flexDirection: "column", // Stack elements vertically
                   gap: "10px",
                 }}
               >
-                <label
-                  htmlFor="sub-images"
+                <div
                   style={{
                     fontWeight: "bold",
-                    marginRight: "10px",
+                    marginBottom: "5px", // Space between the text and input
                     color: "#333",
+                    fontSize: "14px",
                   }}
                 >
                   Additional Images{" "}
                   <span style={{ fontSize: "12px", color: "#888" }}>
                     (optional)
                   </span>
-                </label>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                  }}
+                >
                   <i
                     className="fa fa-images how-pos4"
-                    style={{ marginRight: "10px" }}
+                    style={{ marginBottom: "10px" }} // Space between icon and input
                   ></i>
                   <input
                     id="sub-images"
@@ -278,7 +290,7 @@ const Sell = () => {
                         sub_images: [...e.target.files],
                       }));
                     }}
-                    style={{ flex: "1", padding: "10px 60px" }}
+                    style={{ padding: "10px 60px", width: "100%" }} // Ensure input takes full width
                   />
                 </div>
               </div>
