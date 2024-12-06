@@ -1,55 +1,17 @@
-.slick-prev:before,
-.slick-next:before {
-  font-family: 'Arial'; /* Prevent default slick font loading */
-  color: black; /* Optional: Adjust arrow color */
+.slide-1 {
+  background-image: url("/assets/images/slide-01.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
-.slide-1 {
-    background-image: url("/assets/images/slide-01.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-  .slide-2 {
-    background-image: url("/assets/images/slide-02.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .slide-3 {
-    background-image: url("/assets/images/slide-03.jpg");
-    background-size: cover;
-    background-position: center;
-  }
-  .wrap-slick1 {
-    overflow: hidden;
-    width: 100%; /* Ensure it doesn't overflow */
-  }
+.slide-2 {
+  background-image: url("/assets/images/slide-02.jpg");
+  background-size: cover;
+  background-position: center;
+}
 
-  /* ****************************************/
-  html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Disable horizontal scrolling */
-  }
-  
-  * {
-    box-sizing: border-box;
-  }
-  .container {
-    max-width: 100%; /* Prevent exceeding viewport width */
-    overflow: hidden; /* Hide content that overflows */
-  }
-  
-  .row {
-    display: flex; /* Flexbox prevents horizontal scroll */
-    flex-wrap: wrap; /* Ensure content wraps to the next line */
-    margin: 0 auto; /* Center content */
-  }
-  
-  @font-face {
-    font-family: "slick";
-    src: url("/assets/fonts/slick.woff") format("woff"),
-         url("/assets/fonts/slick.ttf") format("truetype");
-  }
-  
-    
+.slide-3 {
+  background-image: url("/assets/images/slide-03.jpg");
+  background-size: cover;
+  background-position: center;
+}
