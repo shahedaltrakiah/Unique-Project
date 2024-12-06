@@ -6,8 +6,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CategoryController;
+
 Route::post('orders', [OrderController::class, 'store']);
 
 
@@ -45,6 +46,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // update product
     Route::put('/products/{id}', [ProductController::class, 'update']);
 
+    // delete product
+    Route::delete('/products/{id}', [ProductController::class, 'delete']);
+
     // get all the orders for one user
     Route::get('orders', [OrderController::class, 'userOrders']);
 
@@ -52,6 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/order/{id}', [OrderController::class, 'getOrder']);
 
     // add new order
+    Route::post('orders', [OrderController::class, 'store']);
 
     // remove product from favorites
     Route::delete('favorites/{productId}', [FavoriteController::class, 'destroy']);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiService from "../../services/API";
 
 const Login = () => {
@@ -7,41 +7,35 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     try {
-      const response = await apiService.loginUser(formData); // Use the loginUser service
-      console.log(response.message); // You can log the success message or handle further
+      const response = await apiService.loginUser(formData);
+      // Save the token in local storage
+      localStorage.setItem("token", response.token);
 
-      // Handle successful login (e.g., store token, redirect user)
-      alert("Login successful!");
-      // For example, store the token:
-      // localStorage.setItem("token", response.token);
-      // Redirect the user (if needed):
-      // history.push("/dashboard");
-
+      window.location.href = "/";
+      
     } catch (error) {
       console.error(error);
-      alert("Login failed. Please check your credentials.");
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
   return (
-    <section className="bg0 p-t-104 p-b-116">
+    <section className="bg0 p-t-40 p-b-116">
       <div className="container">
         <div className="flex-w flex-tr">
           {/* Login Form */}
@@ -81,8 +75,8 @@ const Login = () => {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "flex-start", // Aligns the text to the left
-                  gap: "10px", // Adds spacing between the sections
+                  alignItems: "flex-start",
+                  gap: "10px",
                 }}
               >
                 <Link
@@ -95,7 +89,7 @@ const Login = () => {
                 <span
                   style={{
                     fontSize: "14px",
-                    color: "#6c757d", // Neutral text color
+                    color: "#6c757d",
                   }}
                 >
                   Don't have an account?{" "}
@@ -115,7 +109,7 @@ const Login = () => {
               <button
                 type="submit"
                 className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
-                disabled={isLoading} // Disable button while loading
+                disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Submit"}
               </button>
@@ -125,7 +119,7 @@ const Login = () => {
           {/* Image Section */}
           <div className="size-210 bor10 flex-w flex-col-m p-lr-1 w-full-md">
             <img
-              src="/assets/images/login.jpg"
+              src="public/assets/images/login.jpg"
               alt="Login Illustration"
               style={{ width: "580px", height: "100%", objectFit: "fill" }}
             />

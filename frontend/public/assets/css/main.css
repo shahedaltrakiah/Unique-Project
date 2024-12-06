@@ -3344,7 +3344,69 @@ textarea.stext-111 {
     resize: vertical; /* Allow resizing */
 }
 
-.error-message {
-  color: red;
-  margin-bottom: 10px;
+.button-group a {
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  text-align: center;
+  height: 50px; 
+  padding: 0 20px; 
+  text-decoration: none; 
+  border: none; 
+  cursor: pointer;
 }
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.wrap-icon-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+}
+
+.icon-header-item {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  text-decoration: none; 
+}
+
+.icon-header-item img {
+  display: inline-block; 
+  vertical-align: middle; 
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  right: 0; 
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  text-decoration: none;
+  display: block;
+  padding: 8px 16px;
+}
+
+.dropdown-content a:hover {
+  background-color: #717fe0;
+}
+

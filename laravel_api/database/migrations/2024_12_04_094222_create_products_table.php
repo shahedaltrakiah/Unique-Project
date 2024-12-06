@@ -20,8 +20,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('description');
             $table->string('image');
-            $table->string('string_size')->nullable();
-            $table->float('number_size')->nullable();
+            $table->string('size')->nullable();
             $table->float('price');
             $table->enum('status', ['available', 'sold'])->default('available');
             $table->timestamps();

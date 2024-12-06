@@ -4,6 +4,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import Hero from "../pages/home/Hero";
 import Breadcrumb from "./Breadcrumb";
+import CartSidebar from "./CartSidebar";
 
 const Layout = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const Layout = () => {
   return (
     <>
       <NavBar />
+      <CartSidebar />
       {/* Show Hero only on the Home page */}
       {location.pathname === "/" && <Hero />}
 
@@ -50,4 +52,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
