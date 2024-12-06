@@ -9,7 +9,7 @@ function MyProducts() {
 
   useEffect(() => {
     apiService
-      .getProducts()
+      .getUserProducts()
       .then(setProducts)
       .catch((err) => {
         console.error("Error fetching products:", err);
