@@ -4,12 +4,8 @@ import Checkout from "../components/pages/Checkout";
 import Contact from "../components/pages/Contact";
 import Home from "../components/pages/home/Home";
 import Login from "../components/auth/Login";
-import ProductDetails from "../components/pages/ProductDetails";
 import Profile from "../components/profile/Profile";
-import ProfileInfo from "../components/profile/ProfileInfo";
-import ProfileManage from "../components/profile/ProfileManage";
 import ProfileOrder from "../components/profile/ProfileOrder";
-import ProfileUpdate from "../components/profile/ProfileUpdate";
 import Register from "../components/auth/Register";
 import Sell from "../components/pages/Sell";
 import Shop from "../components/pages/Shop";
@@ -32,12 +28,8 @@ const routes = [
         { path: "/register", element: <Register /> },
         { path: "/wishlist", element: <Wishlist /> },
         { path: "/profile", element: <Profile /> },
-        { path: "/profileinfo", element: <ProfileInfo /> },
-        { path: "/profilemanage", element: <ProfileManage /> },
-        { path: "/profileorder", element: <ProfileOrder /> },
+        { path: "/profileOrder", element: <ProfileOrder /> },
         { path: "/orderDetails", element: <OrderDetails /> },
-        { path: "/profileupdate", element: <ProfileUpdate /> },
-        { path: "/productdetails", element: <ProductDetails /> },
         { path: "/sell", element: <Sell /> },
       ],
     },

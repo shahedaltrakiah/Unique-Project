@@ -1,47 +1,44 @@
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
+function ProfileSidebar() {
+  const navigate = useNavigate();
 
-function ProfileSidebar(){
-    return(
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
-   
-<>
-  <link href="/public/css/user_profile_style.css" rel="stylesheet" />
-  <div className="main-container mt-5">
-    <div className="sidebar">
-      <div className="profile-infoo">
-        <img
-          src="#"
-          alt="Profile Image"
-        />
-      </div>
+  return (
+    <div className="sidebarr">
       <ul>
         <li>
-          <button className="view-details-btn" id="personalInfoBtn">
+          <button
+            className="view-details-btn"
+            onClick={() => handleNavigation("/Profile")}
+          >
             Personal Info
           </button>
         </li>
         <li>
-          
-          <button className="view-details-btn" id="orderHistoryBtn">
+          <button
+            className="view-details-btn"
+            onClick={() => handleNavigation("/profileOrder")}
+          >
             Order History
           </button>
         </li>
         <li>
-          
-          <button className="view-details-btn" id="wishlistBtn">
-            Wishlist
+          <button
+            className="view-details-btn"
+            onClick={() => handleNavigation("/my-products")}
+          >
+            My Products
           </button>
         </li>
       </ul>
     </div>
-  </div>
-</>
-
-
-);
+  );
 }
 
 export default ProfileSidebar;
