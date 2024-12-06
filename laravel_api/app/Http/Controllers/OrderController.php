@@ -81,14 +81,11 @@ class OrderController extends Controller
         }
     }
     
-
-
-
     public function userOrders()
     {
         try {
             // Fetch orders for the authenticated user with related products
-            $orders = Order::where('user_id', Auth::id())
+            $orders = Order::where('user_id', 31)
                 ->with('products')
                 ->get();
 
