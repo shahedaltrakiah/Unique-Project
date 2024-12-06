@@ -8,6 +8,7 @@ const apiClient = axios.create({
 });
 
 const apiService = {
+  
   // Register User
   registerUser: async (data) => {
     try {
@@ -149,6 +150,16 @@ const apiService = {
     } catch (error) {
       console.error('Error updating user profile:', error.response?.data || error.message);
       throw error; // Propagate the error if needed
+    }
+  },
+
+  addToFavorite: async (id) => {
+    try {
+      const response = await apiClient.post(`/favorites/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching this product ', error);
+      throw error;
     }
   },
   
