@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 
 function NavBar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Tracks login status
-  const [token, setToken] = useState(localStorage.getItem("token")); // Tracks token
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   useEffect(() => {
-    // Update login status whenever the token changes
     setIsLoggedIn(!!token);
   }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token
-    setToken(null); // Clear token in state
-    navigate("/login"); // Redirect to login page
+    localStorage.removeItem("token");
+    setToken(null);
+    navigate("/login");
   };
 
   return (
@@ -34,20 +36,32 @@ function NavBar() {
             {/* Menu desktop */}
             <div className="menu-desktop">
               <ul className="main-menu">
-                <li className="active-menu">
-                  <a href="/">Home</a>
+                <li className={location.pathname === "/" ? "active-menu" : ""}>
+                  <Link to="/">Home</Link>
                 </li>
-                <li>
-                  <a href="/shop">Shop</a>
+                <li
+                  className={location.pathname === "/shop" ? "active-menu" : ""}
+                >
+                  <Link to="/shop">Shop</Link>
                 </li>
-                <li>
-                  <a href="/sell">Sell</a>
+                <li
+                  className={location.pathname === "/sell" ? "active-menu" : ""}
+                >
+                  <Link to="/sell">Sell</Link>
                 </li>
-                <li>
-                  <a href="/about">About</a>
+                <li
+                  className={
+                    location.pathname === "/about" ? "active-menu" : ""
+                  }
+                >
+                  <Link to="/about">About</Link>
                 </li>
-                <li>
-                  <a href="/contact">Contact</a>
+                <li
+                  className={
+                    location.pathname === "/contact" ? "active-menu" : ""
+                  }
+                >
+                  <Link to="/contact">Contact</Link>
                 </li>
               </ul>
             </div>
@@ -176,7 +190,6 @@ function NavBar() {
         </div>
       </div>
     </header>
-    
   );
 }
 
