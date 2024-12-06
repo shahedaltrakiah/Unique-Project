@@ -11,7 +11,9 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'total_amount'
+        'total_amount',
+        'address',
+        'phone',
     ];
 
     // Order belongs to a user

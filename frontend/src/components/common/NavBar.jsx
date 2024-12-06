@@ -6,26 +6,29 @@ function NavBar() {
         <div className="wrap-menu-desktop">
           <nav className="limiter-menu-desktop container">
             {/* Logo desktop */}
-            <a href="#" className="logo">
-              <img src="../public/assets/images/icons/logo-01.png" alt="IMG-LOGO" />
+            <a href="/" className="logo">
+              <img
+                src="../public/assets/images/logo.png"
+                alt="IMG-LOGO" style={{maxWidth:'180px'}}
+              />
             </a>
             {/* Menu desktop */}
             <div className="menu-desktop">
               <ul className="main-menu">
                 <li className="active-menu">
-                  <a href="index.html">Home</a>
+                  <a href="/">Home</a>
                 </li>
                 <li>
-                  <a href="product.html">Shop</a>
+                  <a href="/shop">Shop</a>
                 </li>
                 <li>
-                  <a href="shoping-cart.html">Sell</a>
+                  <a href="/sell">Sell</a>
                 </li>
                 <li>
-                  <a href="about.html">About</a>
+                  <a href="/about">About</a>
                 </li>
                 <li>
-                  <a href="contact.html">Contact</a>
+                  <a href="/contact">Contact</a>
                 </li>
               </ul>
             </div>
@@ -41,14 +44,14 @@ function NavBar() {
                 <i className="zmdi zmdi-shopping-cart" />
               </div>
               <a
-                href="#"
+                href="/wishlist"
                 className="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
                 data-notify={0}
               >
                 <i className="zmdi zmdi-favorite-outline" />
               </a>
               <a
-                href="#"
+                href="/login"
                 className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 "
                 data-notify={0}
               >
@@ -58,12 +61,16 @@ function NavBar() {
           </nav>
         </div>
       </div>
+
       {/* Header Mobile */}
       <div className="wrap-header-mobile">
         {/* Logo moblie */}
         <div className="logo-mobile">
-          <a href="index.html">
-            <img src="../public/assets/images/icons/logo-01.png" alt="IMG-LOGO" />
+          <a href="/">
+            <img
+              src="../public/assets/images/icons/logo-01.png"
+              alt="IMG-LOGO"
+            />
           </a>
         </div>
         {/* Icon header */}
@@ -78,11 +85,19 @@ function NavBar() {
             <i className="zmdi zmdi-shopping-cart" />
           </div>
           <a
-            href="#"
+            href="/wishlist"
             className="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti"
             data-notify={0}
           >
             <i className="zmdi zmdi-favorite-outline" />
+          </a>
+
+          <a
+            href="/login"
+            className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 "
+            data-notify={0}
+          >
+            <i class="zmdi zmdi-square-right"></i>{" "}
           </a>
         </div>
         {/* Button show menu */}
@@ -96,42 +111,19 @@ function NavBar() {
       <div className="menu-mobile">
         <ul className="main-menu-m">
           <li>
-            <a href="index.html">Home</a>
-            <ul className="sub-menu-m">
-              <li>
-                <a href="index.html">Homepage 1</a>
-              </li>
-              <li>
-                <a href="home-02.html">Homepage 2</a>
-              </li>
-              <li>
-                <a href="home-03.html">Homepage 3</a>
-              </li>
-            </ul>
-            <span className="arrow-main-menu-m">
-              <i className="fa fa-angle-right" aria-hidden="true" />
-            </span>
+            <a href="/">Home</a>
           </li>
           <li>
-            <a href="product.html">Shop</a>
+            <a href="/shop">Shop</a>
           </li>
           <li>
-            <a
-              href="shoping-cart.html"
-              className="label1 rs1"
-              data-label1="hot"
-            >
-              Features
-            </a>
+            <a href="/sell">Sell</a>
           </li>
           <li>
-            <a href="blog.html">Blog</a>
+            <a href="/about">About</a>
           </li>
           <li>
-            <a href="about.html">About</a>
-          </li>
-          <li>
-            <a href="contact.html">Contact</a>
+            <a href="/contact">Contact</a>
           </li>
         </ul>
       </div>
@@ -139,7 +131,10 @@ function NavBar() {
       <div className="modal-search-header flex-c-m trans-04 js-hide-modal-search">
         <div className="container-search-header">
           <button className="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-            <img src="../public/assets/images/icons/icon-close2.png" alt="CLOSE" />
+            <img
+              src="../public/assets/images/icons/icon-close2.png"
+              alt="CLOSE"
+            />
           </button>
           <form className="wrap-search-header flex-w p-l-15">
             <button className="flex-c-m trans-04">
