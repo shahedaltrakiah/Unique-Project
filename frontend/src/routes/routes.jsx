@@ -19,6 +19,7 @@ import Sell from "../components/pages/Sell";
 import Shop from "../components/pages/Shop";
 import Wishlist from "../components/pages/Wishlist";
 import Layout from "../components/common/Layout";
+import OrderDetails from "../components/profile/OrderDetails";
 
 const routes = [
     {
@@ -38,6 +39,7 @@ const routes = [
         { path: "/profileinfo", element: <ProfileInfo /> },
         { path: "/profilemanage", element: <ProfileManage /> },
         { path: "/profileorder", element: <ProfileOrder /> },
+        { path: "/orderDetails", element: <OrderDetails /> },
         { path: "/profileupdate", element: <ProfileUpdate /> },
         { path: "/productdetails", element: <ProductDetails /> },
         { path: "/sell", element: <Sell /> },

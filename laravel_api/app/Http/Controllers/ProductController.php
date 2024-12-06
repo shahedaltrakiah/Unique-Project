@@ -28,7 +28,7 @@ class ProductController extends Controller
     {
         try {
             // Retrieve products added by the currently authenticated user
-            $products = Product::where('user_id', Auth::id())->get();
+            $products = Product::where('user_id', 1)->get();
 
             // Return success response
             return response()->json($products, 200);

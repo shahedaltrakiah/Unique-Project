@@ -15,18 +15,59 @@ const apiService = {
       return response.data;
     } catch (error) {
       handleApiError(error);
-      throw error; 
+      throw error;
     }
   },
 
   // Login User
   loginUser: async (data) => {
     try {
-      const response = await apiClient.post("/login", data); 
-      return response.data; 
+      const response = await apiClient.post("/login", data);
+      return response.data;
     } catch (error) {
       handleApiError(error);
-      throw error; 
+      throw error;
+    }
+  },
+  // get user orders
+  getUserOrders: async () => {
+    try {
+      const response = await apiClient.get("/orders", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include auth token if needed
+        },
+      });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  },
+
+  // get one order for the user
+
+  getOrder: async (id) => {
+    try {
+      const response = await apiClient.get(`/order/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include auth token if needed
+        },
+      });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  },
+
+  // get all products added by one user
+  getUserProducts: async () => {
+    try {
+      const response = await apiClient.get("/user/products");
+      return response.data; // Return the products
+    } catch (error) {
+      console.error("Error fetching user products:", error.response || error);
+      throw error; // Rethrow to handle in components
     }
   },
 };
@@ -58,5 +99,7 @@ const handleApiError = (error) => {
     });
   }
 };
+
+
 
 export default apiService;
