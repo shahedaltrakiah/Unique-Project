@@ -63,11 +63,22 @@ const apiService = {
   // get all products added by one user
   getUserProducts: async () => {
     try {
-      const response = await apiClient.get("/user/products");
+      const response = await apiClient.get("/products/user");
       return response.data; // Return the products
     } catch (error) {
       console.error("Error fetching user products:", error.response || error);
       throw error; // Rethrow to handle in components
+    }
+  },
+
+  // get one product
+  getProductById: async (id) => {
+    try {
+      const response = await apiClient.get(`/product/${id}`);
+      return response.data; // Returns product data from the API
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      throw error; // Propagate the error to handle it where this function is called
     }
   },
 };
