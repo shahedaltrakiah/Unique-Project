@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Storage;
 
 class ProductController extends Controller
 {
@@ -29,7 +29,8 @@ class ProductController extends Controller
     {
         try {
             // Retrieve products added by the currently authenticated user
-            $products = Product::where('user_id', Auth::id())->get();
+            $products = Product::where('user_id', 12)->with('category')->
+            get();
 
             // Return success response
             return response()->json($products, 200);

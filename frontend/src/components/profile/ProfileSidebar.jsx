@@ -31,7 +31,7 @@ function ProfileSidebar() {
         <li>
           <button
             className="view-details-btn"
-            onClick={() => handleNavigation("/my-products")}
+            onClick={() => handleNavigation("/MyProducts")}
           >
             My Products
           </button>
