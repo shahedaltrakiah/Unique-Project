@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Order_product;
 use App\Models\Product;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -82,21 +82,24 @@ class OrderController extends Controller
     }
     
     public function userOrders()
-    {
-        try {
-            // Fetch orders for the authenticated user with related products
-            $orders = Order::where('user_id', 31)
-                ->with('products')
-                ->get();
+{
+    try {
+        // Fetch orders for the authenticated user with related products
+        $orders = Order::where('user_id', Auth::id()) // Use Auth::id() for getting the authenticated user ID
+            ->with('products') // Assuming 'products' is the relationship method defined on the Order model
+            ->get();
 
-            // Return the user's orders
-            return response()->json($orders, 200);
-
-        } catch (\Exception $e) {
-            // Handle unexpected exceptions
-            return response()->json(['error' => 'Failed to retrieve orders', 'message' => $e->getMessage()], 500);
-        }
+        // Return the user's orders
+        return response()->json($orders, 200);
+    } catch (\Exception $e) {
+        // Handle unexpected exceptions and provide a detailed error message
+        return response()->json([
+            'error' => 'Failed to retrieve orders',
+            'message' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
 
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,19 +28,24 @@ class ProductController extends Controller
     public function userProducts()
     {
         try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+    
             // Retrieve products added by the currently authenticated user
-            $products = Product::where('user_id', 12)->with('category')->
-            get();
-
+            $products = Product::where('user_id', $user->id)
+                                ->with('category')
+                                ->get();
+    
             // Return success response
             return response()->json($products, 200);
-
         } catch (\Exception $e) {
             // Handle any unexpected exceptions
             return response()->json(['error' => 'An error occurred while fetching user products.', 'message' => $e->getMessage()], 500);
         }
     }
-
+    
     public function store(Request $request)
     {
         try {
