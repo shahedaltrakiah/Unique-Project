@@ -8,7 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CategoryController;
 
-Route::get('/product/{id}', [ProductController::class, 'getProduct']);
+
 
 
 // register user
@@ -39,9 +39,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('products', [ProductController::class, 'store']);
 
     // get product
+    Route::get('/product/{id}', [ProductController::class, 'getProduct']);
 
     // update product
     Route::put('/products/{id}', [ProductController::class, 'update']);
+
+    // delete product
+    Route::delete('/products/{id}', [ProductController::class, 'delete']);
 
     // get all the orders for one user
     Route::get('orders', [OrderController::class, 'userOrders']);

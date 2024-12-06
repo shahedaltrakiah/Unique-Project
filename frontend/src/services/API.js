@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/api", 
+  baseURL: "http://localhost:8000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -24,7 +24,7 @@ const apiService = {
     try {
       const response = await apiClient.post("/login", data);
       // Store token (In localStorage)
-      localStorage.setItem("auth_token", response.data.token); 
+      localStorage.setItem("auth_token", response.data.token);
       return response.data;
     } catch (error) {
       handleApiError(error);
@@ -37,7 +37,7 @@ const apiService = {
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) throw new Error("User is not logged in");
-  
+
       const formData = new FormData();
       formData.append('name', data.name);
       formData.append('description', data.description);
@@ -45,29 +45,29 @@ const apiService = {
       formData.append('category_id', data.category_id);
       formData.append('status', data.status);
       formData.append('image', data.image);
-  
+
       if (data.sub_images) {
         data.sub_images.forEach((image, index) => {
           formData.append(`sub_images[${index}]`, image);
         });
       }
-  
+
       const response = await apiClient.post("/products", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       return response.data;
     } catch (error) {
       handleApiError(error);
       throw error;
     }
-  },  
+  },
 
-   // get user orders
-   getUserOrders: async () => {
+  // get user orders
+  getUserOrders: async () => {
     try {
       const response = await apiClient.get("/orders", {
         headers: {
@@ -117,6 +117,41 @@ const apiService = {
       throw error; // Propagate the error to handle it where this function is called
     }
   },
+
+  deleteProduct: async (id) => {
+    try {
+      const response = await apiClient.delete(`/products/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting product:", error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  getUserData: async (id) => {
+    try {
+      const response = await apiClient.get(`/user/${id}`);
+      return response.data; // Return the user data on success
+    } catch (error) {
+      console.error('Error fetching user data:', error.response?.data || error.message);
+      throw error; // Propagate the error if needed
+    }
+  },
+
+  updateUserProfile: async (userData) => {
+    try {
+      const response = await axios.patch('/api/user/update', userData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // If you're uploading files
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating user profile:', error.response?.data || error.message);
+      throw error; // Propagate the error if needed
+    }
+  },
+  
 };
 
 // Error Handler

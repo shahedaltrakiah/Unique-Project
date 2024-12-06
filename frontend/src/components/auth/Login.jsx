@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 import apiService from "../../services/API";
 
 const Login = () => {
@@ -8,7 +8,7 @@ const Login = () => {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,25 +17,23 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    setIsLoading(true); 
-  
+
+    setIsLoading(true);
+
     try {
-      const response = await apiService.loginUser(formData);   
+      const response = await apiService.loginUser(formData);
       // Save the token in local storage
       localStorage.setItem("token", response.token);
 
-      // Redirect to the home page
-      navigate("/"); 
-  
+      window.location.href = "/";
+      
     } catch (error) {
       console.error(error);
-      // You can optionally display an error message here (e.g., toast or message)
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
-  
+
   return (
     <section className="bg0 p-t-40 p-b-116">
       <div className="container">
@@ -77,8 +75,8 @@ const Login = () => {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "flex-start", 
-                  gap: "10px", 
+                  alignItems: "flex-start",
+                  gap: "10px",
                 }}
               >
                 <Link
@@ -111,7 +109,7 @@ const Login = () => {
               <button
                 type="submit"
                 className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
-                disabled={isLoading} 
+                disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Submit"}
               </button>

@@ -30,7 +30,6 @@ const Register = () => {
     }
 
     try {
-      // Register user
       await apiService.registerUser(formData);
 
       Swal.fire({
@@ -39,7 +38,6 @@ const Register = () => {
         text: "You have been registered successfully.",
       });
 
-      // Clear form
       setFormData({
         name: "",
         email: "",
