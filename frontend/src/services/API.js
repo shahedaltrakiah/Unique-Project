@@ -29,6 +29,28 @@ const apiService = {
       throw error; 
     }
   },
+
+  // Fetch all products
+  getProducts: async () => {
+    try {
+      const response = await apiClient.get("/products");
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  },
+
+  // Fetch a single product by ID
+  getProductById: async (id) => {
+    try {
+      const response = await apiClient.get(`/product/${id}`);
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  },
 };
 
 // Error Handler

@@ -1,51 +1,81 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import apiService from "../../../services/API"; // Adjust path as needed
 
-const Products = () => {
-  const navigate = useNavigate();
+function Products() {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
-  const products = [
-    { id: 1, name: "Product 1", image: "/assets/images/product-01.jpg", price: "$16.64" },
-    { id: 2, name: "Product 2", image: "/assets/images/product-02.jpg", price: "$35.31" },
-    { id: 3, name: "Product 3", image: "/assets/images/product-03.jpg", price: "$25.50" },
-    { id: 4, name: "Product 4", image: "/assets/images/product-04.jpg", price: "$50.50" },
-  ];
-
-  const handleQuickView = (id) => {
-    navigate(`/productdetails?id=${id}`);
-  };
+  useEffect(() => {
+    apiService
+      .getProducts()
+      .then(setProducts)
+      .catch((err) => {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products.");
+      });
+  }, []);
 
   return (
-    <div className="row isotope-grid">
-      {products.map((product) => (
-        <div key={product.id} className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
-          <div className="block2">
-            <div className="block2-pic hov-img0">
-              <img src={product.image} alt={product.name} />
-              <a
-                href="#"
-                className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleQuickView(product.id);
-                }}
-              >
-                Quick View
-              </a>
-            </div>
-            <div className="block2-txt flex-w flex-t p-t-14">
-              <div className="block2-txt-child1 flex-col-l">
-                <a href="#" className="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-                  {product.name}
-                </a>
-                <span className="stext-105 cl3">{product.price}</span>
+    <section className="bg0 p-t-23 p-b-140">
+      <div className="container">
+        <div className="p-b-10">
+          <h3 className="ltext-103 cl5">Product Overview</h3>
+        </div>
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <div className="row isotope-grid">
+          {products.map((product) => (
+            <div
+              className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women"
+              key={product.id}
+            >
+              {/* Block2 */}
+              <div className="block2">
+                <div className="block2-pic hov-img0">
+                  <img src={product.image} alt={product.name} />
+                  <a
+                    href="#"
+                    className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
+                  >
+                    Quick View
+                  </a>
+                </div>
+                <div className="block2-txt flex-w flex-t p-t-14">
+                  <div className="block2-txt-child1 flex-col-l">
+                    <a
+                      href="#"
+                      className="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                    >
+                      {product.name}
+                    </a>
+                    <span className="stext-105 cl3">{product.price}</span>
+                  </div>
+                  <div className="block2-txt-child2 flex-r p-t-3">
+                    <a
+                      href="#"
+                      className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+                    >
+                      <img
+                        className="icon-heart1 dis-block trans-04"
+                        src="/assets/images/icons/icon-heart-01.png"
+                        alt="ICON"
+                      />
+                      <img
+                        className="icon-heart2 dis-block trans-04 ab-t-l"
+                        src="/assets/images/icons/icon-heart-02.png"
+                        alt="ICON"
+                      />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
-};
+}
 
 export default Products;

@@ -1,4 +1,4 @@
-  .slick-prev:before,
+.slick-prev:before,
 .slick-next:before {
   font-family: 'Arial'; /* Prevent default slick font loading */
   color: black; /* Optional: Adjust arrow color */
@@ -24,3 +24,32 @@
     overflow: hidden;
     width: 100%; /* Ensure it doesn't overflow */
   }
+
+  /* ****************************************/
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Disable horizontal scrolling */
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  .container {
+    max-width: 100%; /* Prevent exceeding viewport width */
+    overflow: hidden; /* Hide content that overflows */
+  }
+  
+  .row {
+    display: flex; /* Flexbox prevents horizontal scroll */
+    flex-wrap: wrap; /* Ensure content wraps to the next line */
+    margin: 0 auto; /* Center content */
+  }
+  
+  @font-face {
+    font-family: "slick";
+    src: url("/assets/fonts/slick.woff") format("woff"),
+         url("/assets/fonts/slick.ttf") format("truetype");
+  }
+  
+    

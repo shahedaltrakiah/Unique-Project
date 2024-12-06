@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FavoriteController;
 Route::post('orders', [OrderController::class, 'store']);
 
 
@@ -30,16 +31,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('user', [UserController::class, 'update']);
 
     // get all products
-    Route::get('products', [ProductController::class, 'index']);
+    //Route::get('products', [ProductController::class, 'index']);
+
+    // get product
+    //Route::get('/product/{id}', [ProductController::class, 'getProduct']);
 
     // get all products for one user
     Route::get('products/user', [ProductController::class, 'userProducts']);
 
     // add new product
     Route::post('products', [ProductController::class, 'store']);
-
-    // get product
-    Route::get('/product/{id}', [ProductController::class, 'getProduct']);
 
     // update product
     Route::put('/products/{id}', [ProductController::class, 'update']);
@@ -63,3 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 });
+
+ // get all products
+ Route::get('products', [ProductController::class, 'index']);
+
+ // get product
+ Route::get('/product/{id}', [ProductController::class, 'getProduct']);
