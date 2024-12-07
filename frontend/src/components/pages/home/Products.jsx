@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; // To get query parameters
+import { useLocation, Link } from "react-router-dom"; // To get query parameters
 import apiService from "../../../services/API"; // Adjust path as needed
-import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2"; // Ensure this is installed
 
 function Products() {
   const [products, setProducts] = useState([]); // List of products
@@ -17,7 +17,7 @@ function Products() {
   const categoryId = params.get("category"); // Get category ID from query params
 
   // Fetch products by page
-  const fetchProducts = async (page) => {
+  const fetchProducts = async (page, reset = false) => {
     setLoading(true);
     setError(null);
 
@@ -32,7 +32,8 @@ function Products() {
       }
 
       if (response.data) {
-        setProducts((prevProducts) => [...prevProducts, ...response.data]);
+        const newProducts = reset ? response.data : [...products, ...response.data];
+        setProducts(newProducts);
         setHasMore(response.current_page < response.last_page);
       }
     } catch (err) {
@@ -44,14 +45,12 @@ function Products() {
   };
 
   // Get cart items from cookies
-  const getCartItems = () => {
-    return JSON.parse(Cookies.get("cart") || "[]");
-  };
+  const getCartItems = () => JSON.parse(Cookies.get("cart") || "[]");
 
   // Add product to cart
   const handleAddToCart = (product) => {
     try {
-      let cart = JSON.parse(Cookies.get("cart") || "[]");
+      let cart = getCartItems();
       const existingProduct = cart.find((item) => item.id === product.id);
 
       if (!existingProduct) {
@@ -68,27 +67,7 @@ function Products() {
     }
   };
 
-  useEffect(() => {
-    fetchProducts(currentPage);
-    const cartData = getCartItems();
-    setCartItems(cartData);
-  }, [currentPage]);
-    setProducts([]); // Reset products when the category changes
-    setCurrentPage(1); // Reset to the first page
-    fetchProducts(1); // Fetch first page of products
-    const cartData = getCartItems(); // Fetch cart data
-    setCartItems(cartData); // Set cart items state
-  }, [categoryId]);
-
-  const handleLoadMore = () => {
-    if (hasMore) {
-      const nextPage = currentPage + 1;
-      setCurrentPage(nextPage); // Increment page number
-      fetchProducts(nextPage);
-    }
-  };
-
-
+  // Add to favorites
   const handleAddToFavorite = async (productId) => {
     const token = localStorage.getItem("auth_token");
     if (!token) {
@@ -105,7 +84,7 @@ function Products() {
       });
       return;
     }
-  
+
     try {
       const response = await apiService.addToFavorites(productId, token);
       if (response.data) {
@@ -125,7 +104,23 @@ function Products() {
       });
     }
   };
-  
+
+  // Load more products
+  const handleLoadMore = () => {
+    if (hasMore) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage); // Increment page number
+      fetchProducts(nextPage);
+    }
+  };
+
+  // Fetch products on component mount and when categoryId changes
+  useEffect(() => {
+    setProducts([]); // Reset products when the category changes
+    setCurrentPage(1); // Reset to the first page
+    fetchProducts(1, true); // Fetch first page of products
+    setCartItems(getCartItems()); // Set cart items state
+  }, [categoryId]);
 
   return (
     <section className="bg0 p-t-23 p-b-140">
@@ -142,7 +137,6 @@ function Products() {
               className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women"
               key={product.id}
             >
-              {/* Block2 */}
               <div className="block2">
                 <div className="block2-pic hov-img0">
                   <img
@@ -189,7 +183,6 @@ function Products() {
           ))}
         </div>
 
-        {/* Load More Button */}
         {hasMore && (
           <div className="flex-c-m flex-w w-full p-t-45">
             <button
