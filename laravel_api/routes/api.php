@@ -37,7 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('products', [ProductController::class, 'store']);
 
     // update product
-    Route::put('/products/{id}', [ProductController::class, 'update']);
 
     // delete product
     Route::delete('/products/{id}', [ProductController::class, 'delete']);
@@ -63,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
+Route::put('/products/{id}', [ProductController::class, 'update']);
 
 
  // get all products

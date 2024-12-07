@@ -30,23 +30,28 @@ class ProductController extends Controller
     public function userProducts()
     {
         try {
+            // Get the currently authenticated user
             $user = Auth::user();
+    
+            // Check if the user is authenticated
             if (!$user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
-
-            // Retrieve products added by the currently authenticated user
+    
+            // Retrieve products added by the currently authenticated user,
+            // along with their category and product images
             $products = Product::where('user_id', $user->id)
-                ->with('category')
+                ->with(['category', 'productImages']) // Eager load both category and productImages
                 ->get();
-
-            // Return success response
+    
+            // Return success response with the products
             return response()->json($products, 200);
         } catch (\Exception $e) {
             // Handle any unexpected exceptions
             return response()->json(['error' => 'An error occurred while fetching user products.', 'message' => $e->getMessage()], 500);
         }
     }
+    
 
     public function store(Request $request)
     {
@@ -114,7 +119,7 @@ class ProductController extends Controller
     {
         try {
             // Find the product by ID
-            $product = Product::find($id);
+            $product = Product::find($id)->with('productImages')->get();
 
             // If the product is not found, return a 404 error
             if (!$product) {
@@ -145,7 +150,7 @@ class ProductController extends Controller
                 'status' => 'nullable|in:available,sold',
                 'size' => 'nullable|string|max:50',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                // 'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
             // Find the product
@@ -168,21 +173,21 @@ class ProductController extends Controller
             ));
 
             // Handle sub-image updates if provided
-            if ($request->has('sub_images')) {
-                // Delete existing sub-images
-                foreach ($product->productImages as $subImage) {
-                    Storage::disk('public')->delete($subImage->path);
-                    $subImage->delete();
-                }
+            // if ($request->has('sub_images')) {
+            //     // Delete existing sub-images
+            //     foreach ($product->productImages as $subImage) {
+            //         Storage::disk('public')->delete($subImage->path);
+            //         $subImage->delete();
+            //     }
 
-                // Add new sub-images
-                foreach ($request->file('sub_images') as $subImage) {
-                    $subImagePath = $subImage->store('product_sub_images', 'public');
-                    $product->productImages()->create([
-                        'path' => $subImagePath,
-                    ]);
-                }
-            }
+            //     // Add new sub-images
+            //     foreach ($request->file('sub_images') as $subImage) {
+            //         $subImagePath = $subImage->store('product_sub_images', 'public');
+            //         $product->productImages()->create([
+            //             'path' => $subImagePath,
+            //         ]);
+            //     }
+            // }
 
             return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
 
