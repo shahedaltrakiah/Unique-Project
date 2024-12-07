@@ -126,7 +126,7 @@ const apiService = {
   addToFavorites: async (productId, token) => {
     try {
       const response = await apiClient.post(
-        "/favorites", 
+        "/favorites",
         { product_id: productId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -135,7 +135,7 @@ const apiService = {
       throw error;
     }
   },
-  
+
   // Fetch user's favorite products
   getWishlist: async () => {
     try {
@@ -171,7 +171,7 @@ const apiService = {
 
   getUserData: async (token) => {
     try {
-      const response = await apiClient.get(`/user` ,{  // change this line
+      const response = await apiClient.get(`/user`, {  // change this line
         headers: { Authorization: `Bearer ${token}` }
       });
       return response.data; // Return the user data on success
@@ -181,30 +181,35 @@ const apiService = {
     }
   },
 
-  updateProduct: async (id, formData) => {
+  updateProduct: async (id, data) => {
     try {
-      const response = await apiClient.put(`/products/${id}`, formData, {
+
+      // console.log(id);
+      console.log(data);
+      const token = localStorage.getItem("auth_token"); // Ensure the token name matches
+      const response = await apiClient.put(`/products/${id}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",  // This is critical for file uploads
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
-      return response; // Ensure response.data contains the updated product
+      return response.data; // Ensure response.data contains the updated product
     } catch (error) {
       console.error("Error updating product:", error);
       throw error;
     }
   },
-  
+
 
   updateUserProfile: async (userData) => {
     try {
       // Retrieve the token from localStorage
       const token = localStorage.getItem("auth_token");
-  
+
       if (!token) {
         throw new Error("Authentication token is missing.");
       }
-  
+
       // Perform the API request to update user profile
       const response = await apiClient.put("/user", userData, {
         headers: {
@@ -212,7 +217,7 @@ const apiService = {
           Authorization: `Bearer ${token}`, // Include the token for authorization
         },
       });
-  
+
       return response.data;
     } catch (error) {
       console.error("Error updating user profile:", error.response?.data || error.message);
@@ -230,42 +235,42 @@ const apiService = {
       throw error;
     }
   },
-  
 
-// send Message contact Us
 
-sendMessage: async (data) => {
-  try {
-    const response = await apiClient.post("/messages", data);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-},
+  // send Message contact Us
+
+  sendMessage: async (data) => {
+    try {
+      const response = await apiClient.post("/messages", data);
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  },
 
 
   // Fetch all categories
-getCategories: async () => {
-  try {
-    const response = await apiClient.get("/categories");
-    return response.data; // Returns categories data from the API
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    throw error; // Propagate the error to handle it where this function is called
-  }
-},
+  getCategories: async () => {
+    try {
+      const response = await apiClient.get("/categories");
+      return response.data; // Returns categories data from the API
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error; // Propagate the error to handle it where this function is called
+    }
+  },
 
-// Fetch all products by category
-getProductsByCategory: async (categoryId, page = 1) => {
-  try {
-    const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
-    return response.data; // Returns products filtered by category
-  } catch (error) {
-    console.error("Error fetching products by category:", error);
-    throw error; // Propagate the error
-  }
-},
+  // Fetch all products by category
+  getProductsByCategory: async (categoryId, page = 1) => {
+    try {
+      const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
+      return response.data; // Returns products filtered by category
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      throw error; // Propagate the error
+    }
+  },
 
 
 

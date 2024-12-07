@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";  
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
+    const navigate = useNavigate();
 
     const getCartItems = () => {
-        return JSON.parse(Cookies.get('cart') || '[]'); // استرجاع البيانات من الكوكيز أو إرجاع مصفوفة فارغة
+        return JSON.parse(Cookies.get('cart') || '[]');
     };
 
     const handleRemoveItem = (productId) => {
-        const updatedCart = getCartItems().filter(item => item.id !== productId); // إزالة المنتج
-        Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 }); // تحديث الكوكيز
-        setCartItems(updatedCart); // تحديث الحالة
+        const updatedCart = getCartItems().filter(item => item.id !== productId);  
+        Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 }); 
+        setCartItems(updatedCart);  
     };
 
     useEffect(() => {
-        const cartData = getCartItems(); // جلب بيانات السلة من الكوكيز
+        const cartData = getCartItems(); 
         if (cartData && cartData.length > 0) {
-            setCartItems(cartData); // تحديث الحالة إذا كان هناك منتجات في السلة
+            setCartItems(cartData);  
         } else {
-            setCartItems([]); // إذا كانت السلة فارغة، تأكد من أن الحالة محدثة
+            setCartItems([]);  
         }
     }, []);
 
@@ -175,7 +177,10 @@ function Cart() {
                                 </div>
 
                                 <div className="size-209">
-                                    <button className="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04">
+                                    <button
+                                        className="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04"
+                                        onClick={() => navigate('/checkout')} 
+                                    >
                                         Proceed to Checkout
                                     </button>
                                 </div>
