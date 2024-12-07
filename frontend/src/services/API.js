@@ -46,6 +46,7 @@ const apiService = {
     }
   },
 
+  // Create Product
   createProduct: async (data) => {
     try {
       const token = localStorage.getItem("auth_token");
