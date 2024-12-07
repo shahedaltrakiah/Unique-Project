@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom"; // To get query parameters
-import apiService from "../../../services/API"; // Adjust path as needed
+import { useLocation, Link } from "react-router-dom"; 
+import apiService from "../../../services/API"; 
 import Cookies from "js-cookie";
-import Swal from "sweetalert2"; // Ensure this is installed
 
 function Products() {
   const [products, setProducts] = useState([]); // List of products
@@ -52,20 +51,39 @@ function Products() {
     try {
       let cart = getCartItems();
       const existingProduct = cart.find((item) => item.id === product.id);
-
+  
       if (!existingProduct) {
         cart.push(product); // Add the full product to the cart
         Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
         setCartItems(cart); // Update cart items state
-        alert("تم إضافة المنتج إلى السلة!");
+  
+        Swal.fire({
+          title: "Product Added!",
+          text: "The product has been added to your cart successfully.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
       } else {
-        alert("المنتج موجود بالفعل في السلة!");
+        Swal.fire({
+          title: "Product Already in Cart",
+          text: "This product is already in your cart.",
+          icon: "info",
+          timer: 1500,
+          showConfirmButton: false,
+        });
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("حدث خطأ أثناء الإضافة إلى السلة.");
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while adding the product to your cart. Please try again.",
+        icon: "error",
+        showConfirmButton: true,
+      });
     }
   };
+  
 
   // Add to favorites
   const handleAddToFavorite = async (productId) => {
@@ -140,7 +158,7 @@ function Products() {
               <div className="block2">
                 <div className="block2-pic hov-img0">
                   <img
-                    src={`/assets/images/${product.image}`}
+                    src={`${product.image}`}
                     alt={product.name}
                   />
                   <button

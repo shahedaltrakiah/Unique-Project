@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import apiService from "../../services/API"; // Adjust path if needed
+import apiService from "../../services/API";
 import ProfileSidebar from "./ProfileSidebar";
 
 function MyProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null); // For Edit Modal
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     apiService
@@ -18,15 +18,15 @@ function MyProducts() {
   }, []);
 
   const handleEditClick = (product) => {
-    setSelectedProduct(product); // Open modal with selected product
+    setSelectedProduct({ ...product }); // Open modal with selected product
   };
 
   const handleDeleteClick = (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       apiService
-        .deleteProduct(productId) // Replace with your API call for deletion
+        .deleteProduct(productId)
         .then(() => {
-          setProducts(products.filter((product) => product.id !== productId)); // Remove from UI
+          setProducts(products.filter((product) => product.id !== productId));
         })
         .catch((err) => {
           console.error("Error deleting product:", err);
@@ -35,44 +35,63 @@ function MyProducts() {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value, type, files } = e.target;
+    if (type === "file") {
+      // Handle file input (for images)
+      setSelectedProduct({
+        ...selectedProduct,
+        [name]: files[0], // Save the file object in the state
+      });
+    } else {
+      // Handle text inputs
+      setSelectedProduct({
+        ...selectedProduct,
+        [name]: value,
+      });
+    }
+  };
+
   const handleSaveChanges = async () => {
     if (!selectedProduct) return;
-
+  
     const formData = new FormData();
     formData.append("name", selectedProduct.name);
     formData.append("description", selectedProduct.description);
     formData.append("price", selectedProduct.price);
     formData.append("status", selectedProduct.status);
     formData.append("size", selectedProduct.size);
-    const mainImageInput = document.querySelector("#mainImageInput");
-    if (mainImageInput?.files?.[0]) {
-      formData.append("image", mainImageInput.files[0]);
+  
+    // Add image if it exists
+    if (selectedProduct.image && selectedProduct.image instanceof File) {
+      formData.append("image", selectedProduct.image);
     }
-
+  
     try {
-      const updatedProduct = await apiService.updateProduct(
-        selectedProduct.id,
-        formData
-      );
-      console.log("Product updated successfully:", updatedProduct);
-
-      alert("Product updated successfully!");
-      // Optionally, close the modal or refresh the product list
+      console.log("Sending data to API", formData);  // Log FormData before sending
+      const response = await apiService.updateProduct(selectedProduct.id, formData);
+      
+      console.log("Response from API:", response);
+      
+      if (response.data?.product) {
+        alert("Product updated successfully!");
+      } else {
+        alert("Failed to update product.");
+      }
     } catch (error) {
-      console.error("Failed to update product:", error);
+      console.error("Error updating product:", error);
       alert("Failed to update product. Please check your input and try again.");
     }
   };
-
+  
+  
   return (
     <div className="container mt-5">
       <div className="row">
-        {/* Sidebar */}
         <div className="col-md-3">
           <ProfileSidebar />
         </div>
 
-        {/* Main content area */}
         <div className="col-md-9">
           <h4>Products List</h4>
           {error && <p style={{ color: "red" }}>{error}</p>}
@@ -116,7 +135,7 @@ function MyProducts() {
                       Edit
                     </button>
                     <button
-                      className=" btn-danger btn"
+                      className="btn btn-danger"
                       onClick={() => handleDeleteClick(product.id)}
                     >
                       Delete
@@ -127,8 +146,6 @@ function MyProducts() {
             </tbody>
           </table>
 
-          {/* Edit Modal */}
-          {/* Edit Modal */}
           <div
             className="modal fade"
             id="editProductModal"
@@ -152,35 +169,37 @@ function MyProducts() {
                 <div className="modal-body">
                   {selectedProduct ? (
                     <>
-                      {/* Name */}
                       <div className="mb-3">
                         <label className="form-label">Name</label>
                         <input
                           type="text"
                           className="form-control"
-                          defaultValue={selectedProduct.name}
+                          name="name"
+                          value={selectedProduct.name}
+                          onChange={handleInputChange}
                         />
                       </div>
 
-                      {/* Description */}
                       <div className="mb-3">
                         <label className="form-label">Description</label>
                         <textarea
                           className="form-control"
                           rows="4"
-                          defaultValue={selectedProduct.description}
+                          name="description"
+                          value={selectedProduct.description}
+                          onChange={handleInputChange}
                         />
                       </div>
 
-                      {/* Main Image */}
                       <div className="mb-3">
                         <label className="form-label">Main Image</label>
                         <input
                           type="file"
                           className="form-control"
-                          accept="image/*"
+                          name="image"
+                          onChange={handleInputChange}
                         />
-                        {selectedProduct.image && (
+                        {selectedProduct.image && !(selectedProduct.image instanceof File) && (
                           <div className="mt-2">
                             <img
                               src={selectedProduct.image}
@@ -192,96 +211,44 @@ function MyProducts() {
                         )}
                       </div>
 
-                      {/* Size Dropdown */}
                       <div className="mb-3">
                         <label className="form-label">Size</label>
-                        {selectedProduct.category.name === "bottoms" ||
-                        selectedProduct.category.name === "shoes" ? (
-                          <select
-                            className="form-select"
-                            defaultValue={selectedProduct.size}
-                          >
-                            {[...Array(16).keys()].map((i) => (
-                              <option key={i + 30} value={i + 30}>
-                                {i + 30}
-                              </option>
-                            ))}
-                          </select>
-                        ) : selectedProduct.category.name === "tops" ? (
-                          <select
-                            className="form-select"
-                            defaultValue={selectedProduct.size}
-                          >
-                            {["S", "M", "L", "XL", "XXL", "XXXL"].map(
-                              (size) => (
-                                <option key={size} value={size}>
-                                  {size}
-                                </option>
-                              )
-                            )}
-                          </select>
-                        ) : (
-                          <input
-                            type="text"
-                            className="form-control"
-                            defaultValue={selectedProduct.size}
-                            readOnly
-                          />
-                        )}
+                        <select
+                          className="form-select"
+                          name="size"
+                          value={selectedProduct.size}
+                          onChange={handleInputChange}
+                        >
+                          {/* Example options, change as needed */}
+                          <option value="S">S</option>
+                          <option value="M">M</option>
+                          <option value="L">L</option>
+                        </select>
                       </div>
 
-                      {/* Price */}
                       <div className="mb-3">
                         <label className="form-label">Price (JD)</label>
                         <input
                           type="number"
                           className="form-control"
-                          defaultValue={selectedProduct.price}
+                          name="price"
+                          value={selectedProduct.price}
+                          onChange={handleInputChange}
                         />
                       </div>
 
-                      {/* Status */}
                       <div className="mb-3">
                         <label className="form-label">Status</label>
                         <select
                           className="form-select"
-                          defaultValue={selectedProduct.status}
+                          name="status"
+                          value={selectedProduct.status}
+                          onChange={handleInputChange}
                         >
                           <option value="available">Available</option>
                           <option value="sold">Sold</option>
                         </select>
                       </div>
-                      {/* Sub Images */}
-                      {/* <div className="mb-3">
-                        <label className="form-label">Sub Images</label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          accept="image/*"
-                          multiple
-                          // You can handle the upload of sub-images here
-                        />
-                        {selectedProduct.productImages &&
-                          selectedProduct.productImages.length > 0 && (
-                            <div className="mt-2">
-                              {selectedProduct.productImages.map(
-                                (image, index) => (
-                                  <div
-                                    key={index}
-                                    className="d-inline-block me-2"
-                                  >
-                                    <img
-                                      src={image.image_path}
-                                      alt={`Sub Image ${index + 1}`}
-                                      className="img-thumbnail"
-                                      style={{ width: "100px" }}
-                                    />
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          )}
-                      </div> */}
                     </>
                   ) : (
                     <p>Loading product details...</p>

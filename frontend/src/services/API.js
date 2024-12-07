@@ -111,21 +111,6 @@ const apiService = {
     }
   },
 
-  // get all products added by one user
-  getUserData: async (token) => {
-    try {
-      const response = await apiClient.get(`/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data; // Return the user data on success
-    } catch (error) {
-      console.error('Error fetching user data:', error.response?.data || error.message);
-      throw error; // Propagate the error if needed
-    }
-  },
-
   // get one product
   getProductById: async (id) => {
     try {
@@ -151,7 +136,6 @@ const apiService = {
     }
   },
   
-
   // Fetch user's favorite products
   getWishlist: async () => {
     try {
@@ -185,9 +169,11 @@ const apiService = {
     }
   },
 
-  getUserData: async (id) => {
+  getUserData: async (token) => {
     try {
-      const response = await apiClient.get(`/user/${id}`);
+      const response = await apiClient.get(`/user` ,{  // change this line
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data; // Return the user data on success
     } catch (error) {
       console.error('Error fetching user data:', error.response?.data || error.message);
@@ -195,19 +181,20 @@ const apiService = {
     }
   },
 
-  updateProduct: async (id, updatedData) => {
+  updateProduct: async (id, formData) => {
     try {
-      const response = await apiClient.put(`/products/${id}`, updatedData, {
+      const response = await apiClient.put(`/products/${id}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Necessary for handling file uploads
+          "Content-Type": "multipart/form-data",  // This is critical for file uploads
         },
       });
-      return response.data; // Return the response from the server
+      return response; // Ensure response.data contains the updated product
     } catch (error) {
       console.error("Error updating product:", error);
-      throw error; // Propagate the error for proper handling
+      throw error;
     }
   },
+  
 
   updateUserProfile: async (userData) => {
     try {

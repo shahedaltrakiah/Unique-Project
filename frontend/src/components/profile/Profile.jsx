@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import ProfileSidebar from "./ProfileSidebar";
 import apiService from "../../services/API"; // Assuming you have an apiService for API calls
-import Swal from "sweetalert2"; // Import SweetAlert2
 
 function Profile() {
   const [userData, setUserData] = useState({
@@ -53,19 +52,14 @@ function Profile() {
   };
 
   const handleSaveChanges = () => {
+    console.log("Save Changes Button Clicked");
+
+    // Simulate an API call or use your actual API service
     apiService
       .updateUserProfile(userData, token)
       .then((response) => {
-        console.log("Profile updated successfully:", response);
-        // Update the state with the new user data
-        setUserData((prevData) => ({
-          ...prevData,
-          name: data.data.name,
-          email: data.data.email,
-          phone: data.data.phone,
-          address: data.data.address,
-        }));
-        // Show success message with SweetAlert2
+        console.log("Profile updated response:", response); // Log the response
+        // Add SweetAlert2 here
         Swal.fire({
           title: "Success!",
           text: "Your profile has been updated.",
@@ -74,15 +68,13 @@ function Profile() {
         });
       })
       .catch((err) => {
-        console.error("Error updating profile:", err);
-        // Show error message with SweetAlert2
+        console.error("Error updating profile:", err); // Log the error
         Swal.fire({
           title: "Error!",
           text: "Failed to update your profile. Please try again.",
           icon: "error",
           confirmButtonText: "OK",
         });
-        setError("Failed to update profile.");
       });
   };
 
@@ -98,10 +90,11 @@ function Profile() {
         <div className="profile-card card active" id="personalInfo">
           <button
             className="profile-edit-btn"
-            onClick={handleSaveChanges} // Trigger save changes
+            onClick={handleSaveChanges} // Make sure this function is correctly bound
           >
             Save Changes
           </button>
+
           <div className="profile-info">
             <div>
               <h3 className="title mt-4">Personal Info</h3>

@@ -8,11 +8,15 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function getUserData($id)
+    public function getUserData(Request $request)
     {
         try {
-            // Fetch the user by their ID
-            $user = User::findOrFail($id);
+            // Retrieve the authenticated user
+            $user = auth()->user();
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
 
             // Return the user data as a response
             return response()->json([
@@ -20,12 +24,11 @@ class UserController extends Controller
                 'data' => $user
             ], 200);
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['error' => 'User not found'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve user data', 'message' => $e->getMessage()], 500);
         }
     }
+
     public function update(Request $request)
     {
         try {
