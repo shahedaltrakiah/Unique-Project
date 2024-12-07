@@ -148,6 +148,15 @@ const apiService = {
       throw error; // Propagate the error to handle it where this function is called
     }
   },
+  addToFavorite: async (data) => {
+    try {
+      const response = await apiClient.post(`/favorites`, data); // إرسال البيانات ككائن
+      return response.data;
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+      throw error; // إعادة رمي الخطأ للتعامل معه في الدالة المستدعية
+    }
+  },
 
   deleteProduct: async (id) => {
     try {
