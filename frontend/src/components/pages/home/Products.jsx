@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import apiService from "../../../services/API";
+import { useLocation } from "react-router-dom"; // To get query parameters
+import apiService from "../../../services/API"; // Adjust path as needed
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -11,12 +12,25 @@ function Products() {
   const [error, setError] = useState(null); // Error state
   const [cartItems, setCartItems] = useState([]); // Cart items state
 
+  const location = useLocation(); // To extract the current URL
+  const params = new URLSearchParams(location.search); // Parse query params
+  const categoryId = params.get("category"); // Get category ID from query params
+
   // Fetch products by page
   const fetchProducts = async (page) => {
     setLoading(true);
     setError(null);
+
     try {
-      const response = await apiService.getProducts(page);
+      let response;
+      if (categoryId) {
+        console.log("Fetching products for category:", categoryId); // Debugging log
+        response = await apiService.getProductsByCategory(categoryId, page); // Fetch by category
+      } else {
+        console.log("Fetching all products for page:", page); // Debugging log
+        response = await apiService.getProducts(page); // General fetch
+      }
+
       if (response.data) {
         setProducts((prevProducts) => [...prevProducts, ...response.data]);
         setHasMore(response.current_page < response.last_page);
@@ -59,12 +73,21 @@ function Products() {
     const cartData = getCartItems();
     setCartItems(cartData);
   }, [currentPage]);
+    setProducts([]); // Reset products when the category changes
+    setCurrentPage(1); // Reset to the first page
+    fetchProducts(1); // Fetch first page of products
+    const cartData = getCartItems(); // Fetch cart data
+    setCartItems(cartData); // Set cart items state
+  }, [categoryId]);
 
   const handleLoadMore = () => {
     if (hasMore) {
-      setCurrentPage((prevPage) => prevPage + 1);
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage); // Increment page number
+      fetchProducts(nextPage);
     }
   };
+
 
   const handleAddToFavorite = async (productId) => {
     const token = localStorage.getItem("auth_token");

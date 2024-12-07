@@ -37,7 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('products', [ProductController::class, 'store']);
 
     // update product
-    Route::put('/products/{id}', [ProductController::class, 'update']);
 
     // delete product
     Route::delete('/products/{id}', [ProductController::class, 'delete']);
@@ -60,12 +59,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Get list of favorites
     Route::get('favorites/user', [FavoriteController::class, 'index']);
 
-    // get all categories
-    Route::get('categories', [CategoryController::class, 'index']);
+    // Get list of favorites
+    Route::get('favorites/user', [FavoriteController::class, 'index']);
+
+    
 
 
 });
 
+Route::put('/products/{id}', [ProductController::class, 'update']);
 
 
  // get all products
@@ -73,3 +75,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
  // get product
  Route::get('/product/{id}', [ProductController::class, 'getProduct']);
+
+ // get all categories
+ Route::get('categories', [CategoryController::class, 'index']);
+
+ // get products by category
+ Route::get('products/category/{id}', [ProductController::class, 'getProductsByCategory']);

@@ -81,6 +81,21 @@ const apiService = {
     }
   },
 
+  getUserProducts: async () => {
+    try {
+      const token = localStorage.getItem("auth_token"); // Ensure the token name matches
+      const response = await apiClient.get("/products/user", { // Adjust the endpoint if needed
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the correct auth token
+        },
+      });
+      return response.data;
+    } catch (error) {
+      handleApiError(error);
+      throw error;
+    }
+  },
+
   // get one order for the user
   getOrder: async (id) => {
     try {
@@ -97,13 +112,17 @@ const apiService = {
   },
 
   // get all products added by one user
-  getUserProducts: async () => {
+  getUserData: async (token) => {
     try {
-      const response = await apiClient.get("/products/user");
-      return response.data; // Return the products
+      const response = await apiClient.get(`/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data; // Return the user data on success
     } catch (error) {
-      handleApiError(error);
-      throw error; // Rethrow to handle in components
+      console.error('Error fetching user data:', error.response?.data || error.message);
+      throw error; // Propagate the error if needed
     }
   },
 
@@ -176,19 +195,44 @@ const apiService = {
     }
   },
 
-  updateUserProfile: async (userData) => {
+  updateProduct: async (id, updatedData) => {
     try {
-      const response = await axios.patch('/api/user/update', userData, {
+      const response = await apiClient.put(`/products/${id}`, updatedData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // If you're uploading files
+          "Content-Type": "multipart/form-data", // Necessary for handling file uploads
         },
       });
+      return response.data; // Return the response from the server
+    } catch (error) {
+      console.error("Error updating product:", error);
+      throw error; // Propagate the error for proper handling
+    }
+  },
+
+  updateUserProfile: async (userData) => {
+    try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("auth_token");
+  
+      if (!token) {
+        throw new Error("Authentication token is missing.");
+      }
+  
+      // Perform the API request to update user profile
+      const response = await apiClient.put("/user", userData, {
+        headers: {
+          "Content-Type": "application/json", // Assuming you're sending JSON data
+          Authorization: `Bearer ${token}`, // Include the token for authorization
+        },
+      });
+  
       return response.data;
     } catch (error) {
-      console.error('Error updating user profile:', error.response?.data || error.message);
+      console.error("Error updating user profile:", error.response?.data || error.message);
       throw error; // Propagate the error if needed
     }
   },
+
   // Fetch all products
   getProducts: async (page = 1) => {
     try {
@@ -199,8 +243,48 @@ const apiService = {
       throw error;
     }
   },
+  
+
+// send Message contact Us
+
+sendMessage: async (data) => {
+  try {
+    const response = await apiClient.post("/messages", data);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+},
+
+
+  // Fetch all categories
+getCategories: async () => {
+  try {
+    const response = await apiClient.get("/categories");
+    return response.data; // Returns categories data from the API
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error; // Propagate the error to handle it where this function is called
+  }
+},
+
+// Fetch all products by category
+getProductsByCategory: async (categoryId, page = 1) => {
+  try {
+    const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
+    return response.data; // Returns products filtered by category
+  } catch (error) {
+    console.error("Error fetching products by category:", error);
+    throw error; // Propagate the error
+  }
+},
+
+
 
 };
+
+
 
 // Error Handler
 const handleApiError = (error) => {
