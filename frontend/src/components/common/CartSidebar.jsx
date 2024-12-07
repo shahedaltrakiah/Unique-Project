@@ -31,13 +31,13 @@ function CartSidebar() {
               cartItems.map((item) => (
                 <li className="header-cart-item flex-w flex-t m-b-12" key={item.id}>
                   <div className="header-cart-item-img">
-                    <img src={item.image} alt={item.name} />
+                    <img src={`assets/images/${item.image}`} alt={item.name} />
                   </div>
                   <div className="header-cart-item-txt p-t-8">
                     <a href="#" className="header-cart-item-name m-b-18 hov-cl1 trans-04">
                       {item.name}
                     </a>
-                    <span className="header-cart-item-info">1 x {item.price}</span>
+                    <span className="header-cart-item-info">{item.price}JD</span>
                   </div>
                 </li>
               ))
@@ -51,7 +51,7 @@ function CartSidebar() {
               Total:{" "}
               {cartItems
                 .reduce((total, item) => total + parseFloat(item.price), 0)
-                .toFixed(2)}
+                .toFixed(2)}JD
             </div>
 
             <div className="header-cart-buttons flex-w w-full">

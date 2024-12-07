@@ -152,13 +152,13 @@ function Products() {
         <div className="row isotope-grid">
           {products.map((product) => (
             <div
-              className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women"
+              className="col-sm-6 col-md-4 col-lg-3 p-b-20 isotope-item women"
               key={product.id}
             >
               <div className="block2">
                 <div className="block2-pic hov-img0">
                   <img
-                    src={`${product.image}`}
+                    src={`assets/images/${product.image}`}
                     alt={product.name}
                   />
                   <button
@@ -176,7 +176,7 @@ function Products() {
                     >
                       {product.name}
                     </Link>
-                    <span className="stext-105 cl3">{product.price}</span>
+                    <span className="stext-105 cl3">{product.price}JD</span>
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
                     <button

@@ -272,10 +272,24 @@ const apiService = {
     }
   },
 
+  placeOrder: async (orderData) => {
+    try {
+        const token = localStorage.getItem("auth_token");
+        if (!token) throw new Error("User is not logged in");
 
+        const response = await apiClient.post("/orders", orderData, {
+            headers: {
+                Authorization: `Bearer ${token}`, // إضافة التوكن
+            },
+        });
+        return response.data;
+    } catch (error) {
+        handleApiError(error);
+        throw error;
+    }
+  },
 
 };
-
 
 
 // Error Handler
