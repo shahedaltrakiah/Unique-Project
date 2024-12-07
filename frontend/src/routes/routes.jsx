@@ -13,6 +13,8 @@ import Shop from "../components/pages/Shop";
 import Wishlist from "../components/pages/Wishlist";
 import Layout from "../components/common/Layout";
 import OrderDetails from "../components/profile/OrderDetails";
+import ProductDetails from "../components/pages/ProductDetails";
+
 
 const routes = [
     {
@@ -33,6 +35,7 @@ const routes = [
         { path: "/orderDetails", element: <OrderDetails /> },
         { path: "/MyProducts", element: <MyProducts /> },
         { path: "/sell", element: <Sell /> },
+        { path: "/product/:id", element: <ProductDetails /> },
       ],
     },
   ];

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../../../services/API"; // Adjust path as needed
+import { Link } from "react-router-dom";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -33,7 +34,10 @@ function Products() {
               {/* Block2 */}
               <div className="block2">
                 <div className="block2-pic hov-img0">
-                  <img src={product.image} alt={product.name} />
+                  <img
+                    src={`/assets/images/${product.image}`}
+                    alt={product.name}
+                  />
                   <a
                     href="#"
                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
@@ -43,12 +47,12 @@ function Products() {
                 </div>
                 <div className="block2-txt flex-w flex-t p-t-14">
                   <div className="block2-txt-child1 flex-col-l">
-                    <a
-                      href="#"
+                    <Link
+                      to={`/product/${product.id}`}
                       className="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
                     >
                       {product.name}
-                    </a>
+                    </Link>
                     <span className="stext-105 cl3">{product.price}</span>
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
