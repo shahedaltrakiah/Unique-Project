@@ -176,7 +176,22 @@ const apiService = {
     }
   },
 
+// send Message contact Us
+
+sendMessage: async (data) => {
+  try {
+    const response = await apiClient.post("/messages", data);
+    return response.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
+  }
+},
+
+
 };
+
+
 
 // Error Handler
 const handleApiError = (error) => {
