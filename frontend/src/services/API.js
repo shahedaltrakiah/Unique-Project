@@ -194,6 +194,7 @@ const apiService = {
   },
 
   // Fetch a single product by ID
+  //who added this??
   // getProductById: async (id) => {
   //   try {
   //     const response = await apiClient.get("/product",id);
