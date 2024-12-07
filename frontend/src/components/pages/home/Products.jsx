@@ -111,13 +111,10 @@ function Products() {
     }
   };
 
-  // Fetch products on component mount and when categoryId changes
   useEffect(() => {
-    setProducts([]); // Reset products when the category changes
-    setCurrentPage(1); // Reset to the first page
-    fetchProducts(1, true); // Fetch first page of products
-    setCartItems(getCartItems()); // Set cart items state
-  }, [categoryId]);
+    fetchProducts(currentPage); // Fetch initial products
+    setCartItems(getCartItems());
+  }, [currentPage]);
 
   return (
     <section className="bg0 p-t-23 p-b-140">
