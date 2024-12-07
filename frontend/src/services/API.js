@@ -225,17 +225,17 @@ const apiService = {
     }
   },
 
-  // Fetch all products
-  getProducts: async (page = 1) => {
-    try {
-      const response = await apiClient.get(`/products?page=${page}`);
-      return response.data; // Return paginated data
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      throw error;
-    }
-  },
-
+  // Fetch products with optional query parameters
+  // getProducts: async (params = {}) => {
+  //   try {
+  //     const response = await apiClient.get("/products", { params }); // Pass query params dynamically
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error fetching products:", error);
+  //     throw error;
+  //   }
+  // },
+  
 
   // send Message contact Us
 
@@ -261,16 +261,38 @@ const apiService = {
     }
   },
 
-  // Fetch all products by category
-  getProductsByCategory: async (categoryId, page = 1) => {
-    try {
-      const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
-      return response.data; // Returns products filtered by category
-    } catch (error) {
-      console.error("Error fetching products by category:", error);
-      throw error; // Propagate the error
-    }
-  },
+// Fetch all products by category
+// getProductsByCategory: async (categoryId, page = 1) => {
+//   try {
+//     const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
+//     return response.data; // Returns products filtered by category
+//   } catch (error) {
+//     console.error("Error fetching products by category:", error);
+//     throw error; // Propagate the error
+//   }
+// },
+
+// Fetch products for the home page (limited with pagination)
+getHomeProducts: async (page = 1) => {
+  try {
+    const response = await apiClient.get(`/home-products?page=${page}`);
+    return response.data; // Return paginated data
+  } catch (error) {
+    console.error("Error fetching home products:", error);
+    throw error;
+  }
+},
+
+// Fetch products for the shop page (all products or filtered by category)
+getShopProducts: async (params = {}) => {
+  try {
+    const response = await apiClient.get(`/shop-products`, { params }); // Pass query params dynamically
+    return response.data; // Return all or filtered data
+  } catch (error) {
+    console.error("Error fetching shop products:", error);
+    throw error;
+  }
+},
 
   placeOrder: async (orderData) => {
     try {

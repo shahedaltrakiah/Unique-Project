@@ -1,43 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom"; 
-import apiService from "../../../services/API"; 
+import apiService from "../../../services/API";
+import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-
 function Products() {
-  const [products, setProducts] = useState([]); // List of products
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [hasMore, setHasMore] = useState(true); // If more products are available
+  const [products, setProducts] = useState([]); // Products state
+  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+  const [hasMore, setHasMore] = useState(true); // If there are more products to load
   const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState(null);
   const [cartItems, setCartItems] = useState([]); // Cart items state
 
-  const location = useLocation(); // To extract the current URL
-  const params = new URLSearchParams(location.search); // Parse query params
-  const categoryId = params.get("category"); // Get category ID from query params
-
-  // Fetch products by page
-  const fetchProducts = async (page, reset = false) => {
+  // Fetch products for the home page
+  const fetchProducts = async (page) => {
     setLoading(true);
-    setError(null);
-
     try {
-      let response;
-      if (categoryId) {
-        console.log("Fetching products for category:", categoryId); // Debugging log
-        response = await apiService.getProductsByCategory(categoryId, page); // Fetch by category
-      } else {
-        console.log("Fetching all products for page:", page); // Debugging log
-        response = await apiService.getProducts(page); // General fetch
-      }
-
-      if (response.data) {
-        const newProducts = reset ? response.data : [...products, ...response.data];
-        setProducts(newProducts);
-        setHasMore(response.current_page < response.last_page);
-      }
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to load products.");
+      const response = await apiService.getHomeProducts(page); // Fetch paginated products
+      setProducts((prev) => [...prev, ...response.data]); // Append new products
+      setHasMore(response.current_page < response.last_page); // Check if more pages exist
+    } catch (error) {
+      console.error("Error fetching home products:", error);
     } finally {
       setLoading(false);
     }
@@ -126,19 +107,14 @@ function Products() {
   // Load more products
   const handleLoadMore = () => {
     if (hasMore) {
-      const nextPage = currentPage + 1;
-      setCurrentPage(nextPage); // Increment page number
-      fetchProducts(nextPage);
+      setCurrentPage((prev) => prev + 1); // Increment the current page
     }
   };
 
-  // Fetch products on component mount and when categoryId changes
   useEffect(() => {
-    setProducts([]); // Reset products when the category changes
-    setCurrentPage(1); // Reset to the first page
-    fetchProducts(1, true); // Fetch first page of products
-    setCartItems(getCartItems()); // Set cart items state
-  }, [categoryId]);
+    fetchProducts(currentPage); // Fetch initial products
+    setCartItems(getCartItems());
+  }, [currentPage]);
 
   return (
     <section className="bg0 p-t-23 p-b-50">
@@ -162,9 +138,8 @@ function Products() {
                     alt={product.name}
                   />
                   <button
-                    onClick={() => handleAddToCart(product)}
-                    className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
-                  >
+                     onClick={() => handleAddToCart(product)}
+                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"                   >
                     Add To Cart
                   </button>
                 </div>
@@ -191,10 +166,10 @@ function Products() {
                       <img
                         className="icon-heart2 dis-block trans-04 ab-t-l"
                         src="/assets/images/icons/icon-heart-02.png"
-                        alt="ICON"
-                      />
-                    </button>
-                  </div>
+                         alt="ICON"
+                       />
+                     </button>
+                   </div>
                 </div>
               </div>
             </div>
