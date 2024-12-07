@@ -18,7 +18,7 @@ class FavoriteController extends Controller
 
             // Add the product to favorites
             Favorite::create([
-                'user_id' => 1,
+                'user_id' => Auth::id(),
                 'product_id' => $validated['product_id'],
             ]);
 

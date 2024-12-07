@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../../../services/API"; // Adjust path as needed
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Products() {
   const [products, setProducts] = useState([]); // List of products
@@ -8,6 +9,7 @@ function Products() {
   const [hasMore, setHasMore] = useState(true); // If more products are available
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(null); // Error state
+  const [cartItems, setCartItems] = useState([]); // Cart items state
 
   // Fetch products by page
   const fetchProducts = async (page) => {
@@ -27,9 +29,36 @@ function Products() {
     }
   };
 
-  // Initial fetch
+  // Get cart items from cookies
+  const getCartItems = () => {
+    return JSON.parse(Cookies.get("cart") || "[]"); // Retrieve cart data or return an empty array
+  };
+
+  // Add product to cart
+  const handleAddToCart = (product) => {
+    try {
+      let cart = JSON.parse(Cookies.get("cart") || "[]");
+      const existingProduct = cart.find((item) => item.id === product.id); // Check if the product already exists using its ID
+
+      if (!existingProduct) {
+        cart.push(product); // Add the full product to the cart
+        Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
+        setCartItems(cart); // Update cart items state
+        alert("تم إضافة المنتج إلى السلة!");
+      } else {
+        alert("المنتج موجود بالفعل في السلة!");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("حدث خطأ أثناء الإضافة إلى السلة.");
+    }
+  };
+
+  // Initialize products and cart data on mount
   useEffect(() => {
     fetchProducts(currentPage);
+    const cartData = getCartItems(); // Fetch cart data
+    setCartItems(cartData); // Set cart items state
   }, [currentPage]);
 
   // Handle Load More
@@ -37,6 +66,19 @@ function Products() {
     if (hasMore) {
       setCurrentPage((prevPage) => prevPage + 1); // Increment page number
     }
+  };
+
+  const handleAddToFavorite = (productId) => {
+    apiService
+      .addToFavorite({ productId }) // Replace `productId` dynamically
+      .then((response) => {
+        console.log("Added to favorites successfully:", response);
+        // Optionally update the UI to reflect the addition
+      })
+      .catch((error) => {
+        console.error("Error adding to favorites:", error);
+        alert("Failed to add to favorites. Please try again.");
+      });
   };
 
   return (
@@ -62,7 +104,7 @@ function Products() {
                     alt={product.name}
                   />
                   <button
-                    href="#"
+                    onClick={() => handleAddToCart(product)}
                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
                   >
                     Add To Cart
@@ -79,9 +121,9 @@ function Products() {
                     <span className="stext-105 cl3">{product.price}</span>
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
-                    <a
-                      href="#"
+                    <button
                       className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+                      onClick={() => handleAddToFavorite(product.id)} // Replace `productId` with actual product ID
                     >
                       <img
                         className="icon-heart1 dis-block trans-04"
@@ -93,7 +135,7 @@ function Products() {
                         src="/assets/images/icons/icon-heart-02.png"
                         alt="ICON"
                       />
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
