@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Favorite;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
@@ -11,6 +11,13 @@ class FavoriteController extends Controller
     public function store(Request $request)
     {
         try {
+
+            // Validate the token (ensure the user is authenticated)
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json(['error' => 'User is not logged in'], 401);
+            }
+
             // Validate the input
             $validated = $request->validate([
                 'product_id' => 'required|exists:products,id',
@@ -18,7 +25,7 @@ class FavoriteController extends Controller
 
             // Add the product to favorites
             Favorite::create([
-                'user_id' => 1,
+                'user_id' => Auth::id(),
                 'product_id' => $validated['product_id'],
             ]);
 

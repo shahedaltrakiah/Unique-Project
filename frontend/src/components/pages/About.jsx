@@ -8,34 +8,24 @@ function About() {
               <div className="p-t-7 p-r-85 p-r-15-lg p-r-0-md">
                 <h3 className="mtext-111 cl2 p-b-16">Our Story</h3>
                 <p className="stext-113 cl6 p-b-26">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Mauris consequat consequat enim, non auctor massa ultrices
-                  non. Morbi sed odio massa. Quisque at vehicula tellus, sed
-                  tincidunt augue. Orci varius natoque penatibus et magnis dis
-                  parturient montes, nascetur ridiculus mus. Maecenas varius
-                  egestas diam, eu sodales metus scelerisque congue.
-                  Pellentesque habitant morbi tristique senectus et netus et
-                  malesuada fames ac turpis egestas. Maecenas gravida justo eu
-                  arcu egestas convallis. Nullam eu erat bibendum, tempus ipsum
-                  eget, dictum enim. Donec non neque ut enim dapibus tincidunt
-                  vitae nec augue. Suspendisse potenti. Proin ut est diam. Donec
-                  condimentum euismod tortor, eget facilisis diam faucibus et.
-                  Morbi a tempor elit.
+                <b>
+                At UNIQUE STORE,
+                we believe in a sustainable fashion future.
+                </b>
+                <br/>
+                Thrifting is about more than just finding amazing deals on your favorite brands.
+                It’s about shopping with intention, rejecting throwaway fashion culture, and standing for sustainability. 
+                The clothes we wear have the power to create change.
                 </p>
                 <p className="stext-113 cl6 p-b-26">
-                  Donec gravida lorem elit, quis condimentum ex semper sit amet.
-                  Fusce eget ligula magna. Aliquam aliquam imperdiet sodales. Ut
-                  fringilla turpis in vehicula vehicula. Pellentesque congue ac
-                  orci ut gravida. Aliquam erat volutpat. Donec iaculis lectus a
-                  arcu facilisis, eu sodales lectus sagittis. Etiam
-                  pellentesque, magna vel dictum rutrum, neque justo eleifend
-                  elit, vel tincidunt erat arcu ut sem. Sed rutrum, turpis ut
-                  commodo efficitur, quam velit convallis ipsum, et maximus enim
-                  ligula ac ligula.
+                 <b>Thrifting Can Help Solve the Fashion Waste Crisis</b><br/> 
+                 Our love for constant newness has come at too high a price for our planet. 
+                Shopping secondhand reduces the cost of fashion by giving new life to used clothes.
+                Resale moves us one step closer to a circular fashion future.
                 </p>
                 <p className="stext-113 cl6 p-b-26">
-                  Any questions? Let us know in store at 8th floor, 379 Hudson
-                  St, New York, NY 10018 or call us on (+1) 96 716 6879
+                <b>New clothing production is hurting the planet</b><br/>
+                Over 100B garments are produced each year, which is 2X more than 15 years ago.
                 </p>
               </div>
             </div>
@@ -52,28 +42,27 @@ function About() {
               <div className="p-t-7 p-l-85 p-l-15-lg p-l-0-md">
                 <h3 className="mtext-111 cl2 p-b-16">Our Mission</h3>
                 <p className="stext-113 cl6 p-b-26">
-                  Mauris non lacinia magna. Sed nec lobortis dolor. Vestibulum
-                  rhoncus dignissim risus, sed consectetur erat. Pellentesque
-                  habitant morbi tristique senectus et netus et malesuada fames
-                  ac turpis egestas. Nullam maximus mauris sit amet odio
-                  convallis, in pharetra magna gravida. Praesent sed nunc
-                  fermentum mi molestie tempor. Morbi vitae viverra odio.
-                  Pellentesque ac velit egestas, luctus arcu non, laoreet
-                  mauris. Sed in ipsum tempor, consequat odio in, porttitor
-                  ante. Ut mauris ligula, volutpat in sodales in, porta non
-                  odio. Pellentesque tempor urna vitae mi vestibulum, nec
-                  venenatis nulla lobortis. Proin at gravida ante. Mauris auctor
-                  purus at lacus maximus euismod. Pellentesque vulputate massa
-                  ut nisl hendrerit, eget elementum libero iaculis.
+                <b>
+                We’re an online consignment & thrift store, 
+                where you can constantly refresh your style while creating less waste.
+                </b>
                 </p>
                 <div className="bor16 p-l-29 p-b-9 m-t-22">
                   <p className="stext-114 cl6 p-r-40 p-b-11">
-                    Creativity is just connecting things. When you ask creative
-                    people how they did something, they feel a little guilty
-                    because they didnt really do it, they just saw something.
-                    It seemed obvious to them after a while.
+                  We created a smarter way to shop and sell.
+                  We deliver a modern resale experience on one of the largest online platforms for women’s and kids’ secondhand apparel, 
+                  providing a fun and convenient place to shop and clean out your closet.
                   </p>
-                  <span className="stext-111 cl8">- Steve Job’s</span>
+                  <span className="stext-111 cl8">Our Marketplace</span>
+                </div>
+                <div className="bor16 p-l-29 p-b-9 m-t-22">
+                  <p className="stext-114 cl6 p-r-40 p-b-11">
+                  <b>UNIQUE STORE</b> serves as a dynamic resale platform, acting as an intermediary that enables
+                   individuals to seamlessly buy and sell clothing. It facilitates peer-to-peer transactions 
+                   by connecting sellers with potential buyers,
+                   simplifying the process of reselling clothing.
+                  </p>
+                  <span className="stext-111 cl8">Our Marketplace</span>
                 </div>
               </div>
             </div>

@@ -1,4 +1,28 @@
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+
 function Cart() {
+    const [cartItems, setCartItems] = useState([]);
+
+    const getCartItems = () => {
+        return JSON.parse(Cookies.get('cart') || '[]'); // استرجاع البيانات من الكوكيز أو إرجاع مصفوفة فارغة
+    };
+
+    const handleRemoveItem = (productId) => {
+        const updatedCart = getCartItems().filter(item => item.id !== productId); // إزالة المنتج
+        Cookies.set('cart', JSON.stringify(updatedCart), { expires: 7 }); // تحديث الكوكيز
+        setCartItems(updatedCart); // تحديث الحالة
+    };
+
+    useEffect(() => {
+        const cartData = getCartItems(); // جلب بيانات السلة من الكوكيز
+        if (cartData && cartData.length > 0) {
+            setCartItems(cartData); // تحديث الحالة إذا كان هناك منتجات في السلة
+        } else {
+            setCartItems([]); // إذا كانت السلة فارغة، تأكد من أن الحالة محدثة
+        }
+    }, []);
+
     return (
         <div>
             <div className="wrap-header-cart js-panel-cart">
@@ -6,10 +30,7 @@ function Cart() {
 
                 <div className="header-cart flex-col-l p-l-65 p-r-25">
                     <div className="header-cart-title flex-w flex-sb-m p-b-8">
-                        <span className="mtext-103 cl2">
-                            Your Cart
-                        </span>
-
+                        <span className="mtext-103 cl2">Your Cart</span>
                         <div className="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
                             <i className="zmdi zmdi-close"></i>
                         </div>
@@ -17,58 +38,39 @@ function Cart() {
 
                     <div className="header-cart-content flex-w js-pscroll">
                         <ul className="header-cart-wrapitem w-full">
-                            <li className="header-cart-item flex-w flex-t m-b-12">
-                                <div className="header-cart-item-img">
-                                    <img src="images/item-cart-01.jpg" alt="IMG" />
-                                </div>
+                            {cartItems.length > 0 ? (
+                                cartItems.map((item) => (
+                                    <li className="header-cart-item flex-w flex-t m-b-12" key={item.id}>
+                                        <div className="header-cart-item-img">
+                                            <img src={item.image} alt={item.name} />
+                                        </div>
 
-                                <div className="header-cart-item-txt p-t-8">
-                                    <a href="#" className="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                                        White Shirt Pleat
-                                    </a>
+                                        <div className="header-cart-item-txt p-t-8">
+                                            <a href="#" className="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                                                {item.name}
+                                            </a>
 
-                                    <span className="header-cart-item-info">
-                                        1 x $19.00
-                                    </span>
-                                </div>
-                            </li>
+                                            <span className="header-cart-item-info">
+                                                1 x {item.price}
+                                            </span>
+                                        </div>
 
-                            <li className="header-cart-item flex-w flex-t m-b-12">
-                                <div className="header-cart-item-img">
-                                    <img src="images/item-cart-02.jpg" alt="IMG" />
-                                </div>
-
-                                <div className="header-cart-item-txt p-t-8">
-                                    <a href="#" className="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                                        Converse All Star
-                                    </a>
-
-                                    <span className="header-cart-item-info">
-                                        1 x $39.00
-                                    </span>
-                                </div>
-                            </li>
-
-                            <li className="header-cart-item flex-w flex-t m-b-12">
-                                <div className="header-cart-item-img">
-                                    <img src="images/item-cart-03.jpg" alt="IMG" />
-                                </div>
-
-                                <div className="header-cart-item-txt p-t-8">
-                                    <a href="#" className="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                                        Nixon Porter Leather
-                                    </a>
-
-                                    <span className="header-cart-item-info">
-                                        1 x $17.00
-                                    </span>
-                                </div>
-                            </li>
+                                        <div className="header-cart-item-remove">
+                                            <button onClick={() => handleRemoveItem(item.id)} className="btn-remove">
+                                                <i className="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </li>
+                                ))
+                            ) : (
+                                <p>سلة التسوق فارغة!</p>
+                            )}
                         </ul>
 
                         <div className="w-full">
                             <div className="header-cart-total w-full p-tb-40">
-                                Total: $75.00
+                                Total:
+                                {cartItems.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2)}
                             </div>
 
                             <div className="header-cart-buttons flex-w w-full">
@@ -85,8 +87,6 @@ function Cart() {
                 </div>
             </div>
 
-
-            {/*breadcrumb */}
             <div className="container">
                 <div className="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
                     <a href="index.html" className="stext-109 cl8 hov-cl1 trans-04">
@@ -94,14 +94,10 @@ function Cart() {
                         <i className="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
                     </a>
 
-                    <span className="stext-109 cl4">
-                        Shoping Cart
-                    </span>
+                    <span className="stext-109 cl4">Shopping Cart</span>
                 </div>
             </div>
 
-
-            {/*Shoping Cart */}
             <form className="bg0 p-t-75 p-b-85">
                 <div className="container">
                     <div className="row">
@@ -117,99 +113,72 @@ function Cart() {
                                             <th className="column-5">Remove</th>
                                         </tr>
 
-                                        <tr className="table_row">
-                                            <td className="column-1">
-                                                <div className="how-itemcart1">
-                                                    <img src="images/item-cart-04.jpg" alt="IMG" />
-                                                </div>
-                                            </td>
-                                            <td className="column-2">Fresh Strawberries</td>
-                                            <td className="column-3">$ 36.00</td>
-                                            <td className="column-4">$ 36.00</td>
-
-                                            <td className="column-5">
-                                                <button className="btn-remove">
-                                                    <i className="fa fa-times"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                        <tr className="table_row">
-                                            <td className="column-1">
-                                                <div className="how-itemcart1">
-                                                    <img src="images/item-cart-05.jpg" alt="IMG" />
-                                                </div>
-                                            </td>
-                                            <td className="column-2">Lightweight Jacket</td>
-                                            <td className="column-3">$ 16.00</td>
-                                            <td className="column-4">$ 16.00</td>
-                                            <td className="column-5">
-
-                                                <button className="btn-remove">
-                                                    <i className="fa fa-times"></i>
-                                                </button>
-
-                                            </td>
-                                        </tr>
+                                        {cartItems.map((item) => (
+                                            <tr className="table_row" key={item.id}>
+                                                <td className="column-1">
+                                                    <div className="how-itemcart1">
+                                                        <img src={item.image} alt={item.name} />
+                                                    </div>
+                                                </td>
+                                                <td className="column-2">{item.name}</td>
+                                                <td className="column-3">{item.price}</td>
+                                                <td className="column-4">{item.price}</td>
+                                                <td className="column-5">
+                                                    <button onClick={() => handleRemoveItem(item.id)} className="btn-remove">
+                                                        <i className="fa fa-times"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </table>
                                 </div>
-
-                               
                             </div>
                         </div>
 
                         <div className="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
-                            <div className="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                                <h4 className="mtext-109 cl2 p-b-30">
-                                    Cart Totals
-                                </h4>
+                            <div className="bor10 p-lr-40 p-t30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+                                <h4 className="mtext-109 cl2 p-b-30">Cart Totals</h4>
 
                                 <div className="flex-w flex-t bor12 p-b-13">
                                     <div className="size-208">
-                                        <span className="stext-110 cl2">
-                                            Subtotal:
-                                        </span>
+                                        <span className="stext-110 cl2">Subtotal:</span>
                                     </div>
-
                                     <div className="size-209">
                                         <span className="mtext-110 cl2">
-                                            JOD 79.65
+                                            JOD {cartItems.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2)}
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className="flex-w flex-t bor12 p-t-15 p-b-30">
                                     <div className="size-208 w-full-ssm">
-                                        <span className="stext-110 cl2">
-                                            Shipping:
-                                        </span>
+                                        <span className="stext-110 cl2">Shipping:</span>
+                                    </div>
+
+                                    <div className="size-209">
+                                        <span className="mtext-110 cl2">JOD 2.0</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex-w flex-t bor12 p-t-15 p-b-30">
+                                    <div className="size-208 w-full-ssm">
+                                        <span className="stext-110 cl2">Total:</span>
                                     </div>
 
                                     <div className="size-209">
                                         <span className="mtext-110 cl2">
-                                        JOD 2.0
-                                        </span>
-                                    </div>
-
-                                </div>
-
-                                <div className="flex-w flex-t p-t-27 p-b-33">
-                                    <div className="size-208">
-                                        <span className="mtext-101 cl2">
-                                            Total:
-                                        </span>
-                                    </div>
-
-                                    <div className="size-209 p-t-1">
-                                        <span className="mtext-110 cl2">
-                                            JOD 79.65
+                                            JOD {(
+                                                cartItems.reduce((total, item) => total + parseFloat(item.price), 0) + 2
+                                            ).toFixed(2)}
                                         </span>
                                     </div>
                                 </div>
 
-                                <button className="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-                                    Proceed to Checkout
-                                </button>
+                                <div className="size-209">
+                                    <button className="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04">
+                                        Proceed to Checkout
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,4 +187,5 @@ function Cart() {
         </div>
     );
 }
-export default Cart
+
+export default Cart;

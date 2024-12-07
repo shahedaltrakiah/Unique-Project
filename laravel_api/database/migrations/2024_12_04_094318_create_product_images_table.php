@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->string('image');
+            $table->string('image')->nullable();  // Make image field nullable
             $table->timestamps();
         });
     }
