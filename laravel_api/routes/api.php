@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // get user data
     Route::get('/user/{id}', [UserController::class, 'getUserData']);
 
-    // update user 
+    // update user
     Route::put('user', [UserController::class, 'update']);
 
     // get all products for one user
@@ -56,6 +56,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // add product to favorites
     Route::post('favorites', [FavoriteController::class, 'store']);
+
+    // Get list of favorites
+    Route::get('favorites/user', [FavoriteController::class, 'index']);
 
     // get all categories
     Route::get('categories', [CategoryController::class, 'index']);

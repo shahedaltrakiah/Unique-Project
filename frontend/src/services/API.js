@@ -56,14 +56,14 @@ const apiService = {
       const response = await apiClient.post("/products", data, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       return response.data;
     } catch (error) {
-      throw error; 
+      throw error;
     }
-  },  
+  },
 
   // get user orders
   getUserOrders: async () => {
@@ -117,17 +117,41 @@ const apiService = {
       throw error; // Propagate the error to handle it where this function is called
     }
   },
-  addToFavorite: async (data) => {
+
+  // Function to add product to favorites
+  addToFavorites: async (productId, token) => {
     try {
-      const token = localStorage.getItem("auth_token");
-      const response = await apiClient.post("/favorites", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
+      const response = await apiClient.post(
+        "/favorites", 
+        { product_id: productId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response;
     } catch (error) {
-      console.error("Error adding to favorites:", error);
+      throw error;
+    }
+  },
+  
+
+  // Fetch user's favorite products
+  getWishlist: async () => {
+    try {
+      const response = await apiClient.get('/favorites/user');
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Remove product from wishlist
+  removeFromWishlist: async (productId) => {
+    const token = localStorage.getItem('auth_token');
+    try {
+      const response = await apiClient.delete(`/favorites/${productId}`, {  // change this line
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response;
+    } catch (error) {
       throw error;
     }
   },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import apiService from "../../../services/API"; // Adjust path as needed
+import apiService from "../../../services/API";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -16,10 +16,10 @@ function Products() {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiService.getProducts(page); // Pass the page number to the API
+      const response = await apiService.getProducts(page);
       if (response.data) {
-        setProducts((prevProducts) => [...prevProducts, ...response.data]); // Append new products
-        setHasMore(response.current_page < response.last_page); // Check if there are more pages
+        setProducts((prevProducts) => [...prevProducts, ...response.data]);
+        setHasMore(response.current_page < response.last_page);
       }
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -31,14 +31,14 @@ function Products() {
 
   // Get cart items from cookies
   const getCartItems = () => {
-    return JSON.parse(Cookies.get("cart") || "[]"); // Retrieve cart data or return an empty array
+    return JSON.parse(Cookies.get("cart") || "[]");
   };
 
   // Add product to cart
   const handleAddToCart = (product) => {
     try {
       let cart = JSON.parse(Cookies.get("cart") || "[]");
-      const existingProduct = cart.find((item) => item.id === product.id); // Check if the product already exists using its ID
+      const existingProduct = cart.find((item) => item.id === product.id);
 
       if (!existingProduct) {
         cart.push(product); // Add the full product to the cart
@@ -54,32 +54,55 @@ function Products() {
     }
   };
 
-  // Initialize products and cart data on mount
   useEffect(() => {
     fetchProducts(currentPage);
-    const cartData = getCartItems(); // Fetch cart data
-    setCartItems(cartData); // Set cart items state
+    const cartData = getCartItems();
+    setCartItems(cartData);
   }, [currentPage]);
 
-  // Handle Load More
   const handleLoadMore = () => {
     if (hasMore) {
-      setCurrentPage((prevPage) => prevPage + 1); // Increment page number
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
-  const handleAddToFavorite = (productId) => {
-    apiService
-      .addToFavorite({ productId }) // Replace `productId` dynamically
-      .then((response) => {
-        console.log("Added to favorites successfully:", response);
-        // Optionally update the UI to reflect the addition
-      })
-      .catch((error) => {
-        console.error("Error adding to favorites:", error);
-        alert("Failed to add to favorites. Please try again.");
+  const handleAddToFavorite = async (productId) => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      Swal.fire({
+        title: "Please log in to add to favorites!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Log In",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/login";
+        }
       });
+      return;
+    }
+  
+    try {
+      const response = await apiService.addToFavorites(productId, token);
+      if (response.data) {
+        Swal.fire({
+          title: "Product added to favorites!",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    } catch (err) {
+      console.error("Error adding to favorites:", err);
+      Swal.fire({
+        title: "Failed to add product to favorites.",
+        icon: "error",
+        showConfirmButton: true,
+      });
+    }
   };
+  
 
   return (
     <section className="bg0 p-t-23 p-b-140">
@@ -123,7 +146,7 @@ function Products() {
                   <div className="block2-txt-child2 flex-r p-t-3">
                     <button
                       className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
-                      onClick={() => handleAddToFavorite(product.id)} // Replace `productId` with actual product ID
+                      onClick={() => handleAddToFavorite(product.id)}
                     >
                       <img
                         className="icon-heart1 dis-block trans-04"
