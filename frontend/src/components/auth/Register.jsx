@@ -33,7 +33,7 @@ const Register = () => {
       await apiService.registerUser(formData);
 
       // Save token in localStorage
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("auth_token", response.token);
 
       Swal.fire({
         icon: "success",

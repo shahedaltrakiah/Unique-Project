@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 
 function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("auth_token"));
   const navigate = useNavigate();
   const location = useLocation(); 
 
@@ -14,7 +14,7 @@ function NavBar() {
   }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("auth_token");
     setToken(null);
     navigate("/login");
   };

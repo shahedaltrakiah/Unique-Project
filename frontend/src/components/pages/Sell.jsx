@@ -14,8 +14,8 @@ const Sell = () => {
 
   const [sizeOptions, setSizeOptions] = useState([]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
     setFormData((prevData) => ({
       ...prevData,
@@ -27,7 +27,7 @@ const Sell = () => {
         setSizeOptions(["37", "38", "39", "40", "41", "42", "43"]);
       } else if (value === "Tops") {
         setSizeOptions(["S", "M", "L", "XL", "XXL"]);
-      } else if (value === "Pants") {
+      } else if (value === "Bottoms") {
         setSizeOptions(["32", "34", "36", "38", "40", "42", "44", "46"]);
       } else {
         setSizeOptions([]);
@@ -35,72 +35,70 @@ const Sell = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setFormData((prevData) => ({
-      ...prevData,
-      image: file,
-    }));
+  const handleImageChange = (event) => {
+    const { name, files } = event.target;
+
+    if (name === "image") {
+      setFormData((prevData) => ({
+        ...prevData,
+        image: files[0],
+      }));
+    } else if (name === "sub_images") {
+      setFormData((prevData) => ({
+        ...prevData,
+        sub_images: Array.from(files),
+      }));
+    }
   };
+
+  const categoryMapping = { Tops: 1, Bottoms: 2, Bags: 4, Shoes: 3 };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create FormData
-    const formDataToSend = new FormData();
+    const formDataToSubmit = new FormData();
+    formDataToSubmit.append("name", formData.name);
+    formDataToSubmit.append("description", formData.description);
+    formDataToSubmit.append("price", formData.price);
+    formDataToSubmit.append("category_id", categoryMapping[formData.category]);
+    formDataToSubmit.append("size", formData.size);
+    formDataToSubmit.append("image", formData.image);
+    formDataToSubmit.append("status", "available");
 
-    // Loop through formData and append the fields
-    Object.keys(formData).forEach((key) => {
-      if (key === "sub_images" && Array.isArray(formData[key])) {
-        // Append multiple images for sub_images
-        formData[key].forEach((image, index) => {
-          formDataToSend.append(`sub_images[${index}]`, image);
-        });
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
-    });
-
-    formDataToSend.append("category", formData.category);
-
-    // Check the image and file fields (ensure they are valid)
-    if (!formDataToSend.get("image")) {
-      Swal.fire({
-        icon: "error",
-        title: "Missing Image",
-        text: "Please upload a product image.",
+    if (formData.sub_images) {
+      Array.from(formData.sub_images).forEach((file) => {
+        formDataToSubmit.append("sub_images[]", file);
       });
-      return;
     }
 
     try {
-      const response = await apiService.createProduct(formDataToSend);
-
-      if (response.status === 201) {
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: "Product listed successfully!",
-        });
-      }
+      const response = await apiService.createProduct(formDataToSubmit);
+      Swal.fire({
+        title: "Success!",
+        text: "Product added successfully",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+      console.log(response);
     } catch (error) {
-      if (error.response) {
-        console.log("Error Response:", error.response.data); // Log the error data
+      console.error(error);
+    
+      if (error.message === "User is not logged in") {
         Swal.fire({
+          title: "Error!",
+          text: "You need to log in first to add a product.",
           icon: "error",
-          title: "Validation Error",
-          text:
-            error.response.data.message ||
-            "Validation failed. Check input fields.",
+          confirmButtonText: "OK",
         });
       } else {
         Swal.fire({
+          title: "Error!",
+          text: "Failed to add the product. Please try again.",
           icon: "error",
-          title: "Error",
-          text: error.message || "Unknown error occurred",
+          confirmButtonText: "OK",
         });
       }
-    }
+    }    
   };
 
   return (
@@ -135,7 +133,7 @@ const Sell = () => {
                 <i className="fa fa-list how-pos4"></i>
                 <select
                   className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
-                  name="category" // Change this to "category" instead of "category_id"
+                  name="category"
                   value={formData.category}
                   onChange={handleChange}
                   required
@@ -144,7 +142,7 @@ const Sell = () => {
                     Select Category
                   </option>
                   <option value="Tops">Tops</option>
-                  <option value="Pants">Pants</option>
+                  <option value="Bottoms">Bottoms </option>
                   <option value="Bags">Bags</option>
                   <option value="Shoes">Shoes</option>
                 </select>
@@ -226,7 +224,7 @@ const Sell = () => {
               <div
                 style={{
                   fontWeight: "bold",
-                  marginBottom: "5px", // Space between the text and input
+                  marginBottom: "5px",
                   color: "#333",
                   fontSize: "14px",
                 }}
@@ -241,7 +239,7 @@ const Sell = () => {
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  flexDirection: "column", // Stack elements vertically
+                  flexDirection: "column",
                   gap: "10px",
                 }}
               >
@@ -254,7 +252,7 @@ const Sell = () => {
                 >
                   <i
                     className="fa fa-image how-pos4"
-                    style={{ marginBottom: "10px" }} // Space between icon and input
+                    style={{ marginBottom: "10px" }}
                   ></i>
                   <input
                     id="main-image"
@@ -264,7 +262,7 @@ const Sell = () => {
                     placeholder="Main image"
                     onChange={handleImageChange}
                     required
-                    style={{ padding: "10px 60px", width: "100%" }} // Ensure input takes full width
+                    style={{ padding: "10px 60px", width: "100%" }}
                   />
                 </div>
               </div>
@@ -273,7 +271,7 @@ const Sell = () => {
               <div
                 style={{
                   fontWeight: "bold",
-                  marginBottom: "5px", // Space between the text and input
+                  marginBottom: "5px",
                   color: "#333",
                   fontSize: "14px",
                 }}
@@ -288,13 +286,13 @@ const Sell = () => {
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  flexDirection: "column", // Stack elements vertically
+                  flexDirection: "column",
                   gap: "10px",
                 }}
               >
                 <i
                   className="fa fa-image how-pos4"
-                  style={{ marginBottom: "10px" }} // Space between icon and input
+                  style={{ marginBottom: "10px" }}
                 ></i>
 
                 <div
@@ -306,7 +304,7 @@ const Sell = () => {
                 >
                   <i
                     className="fa fa-images how-pos4"
-                    style={{ marginBottom: "10px" }} // Space between icon and input
+                    style={{ marginBottom: "10px" }}
                   ></i>
                   <input
                     id="sub-images"
@@ -321,11 +319,10 @@ const Sell = () => {
                         sub_images: [...e.target.files],
                       }));
                     }}
-                    style={{ padding: "10px 60px", width: "100%" }} // Ensure input takes full width
+                    style={{ padding: "10px 60px", width: "100%" }}
                   />
                 </div>
               </div>
-
               <button
                 type="submit"
                 className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"

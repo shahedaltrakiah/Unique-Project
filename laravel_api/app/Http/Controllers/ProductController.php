@@ -49,6 +49,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+
+            // Validate the token (ensure the user is authenticated)
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json(['error' => 'User is not logged in'], 401);
+            }
+
             // Validate incoming request data
             $validated = $request->validate([
                 'name' => 'required|string|max:255',

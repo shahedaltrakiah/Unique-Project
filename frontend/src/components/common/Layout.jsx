@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Breadcrumb from "./Breadcrumb";
 import CartSidebar from "./CartSidebar";
 import Hero from "../pages/home/Hero";
+import Model from "./Model";
 
 const Layout = () => {
   const location = useLocation();
@@ -22,7 +23,7 @@ const Layout = () => {
     "/Profile": " My Profile",
     "/profileOrder": "My Order",
     "/orderDetails": "",
-    "/MyProducts": "My Products" ,
+    "/MyProducts": "My Products",
     "/sell": "Sell Your Product",
   };
 
@@ -30,22 +31,19 @@ const Layout = () => {
     <>
       <NavBar />
       <CartSidebar />
-
+      <Model />
       {/* Render Hero only on the Home Page */}
       {location.pathname === "/" && <Hero />}{" "}
-
       {/* Breadcrumb for all other pages */}
       {location.pathname !== "/" && (
         <div className="breadcrumb-container">
           <Breadcrumb text={breadcrumbs[location.pathname] || "Page"} />
         </div>
       )}
-
       <main>
         {/* Render the content for the current route */}
         <Outlet />
       </main>
-      
       <Footer />
     </>
   );
