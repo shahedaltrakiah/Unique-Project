@@ -208,7 +208,7 @@ const apiService = {
       throw error; // Propagate the error if needed
     }
   },
-  
+
   // Fetch all products
   getProducts: async (page = 1) => {
     try {
@@ -219,6 +219,7 @@ const apiService = {
       throw error;
     }
   },
+  
 
 // send Message contact Us
 
@@ -231,6 +232,30 @@ sendMessage: async (data) => {
     throw error;
   }
 },
+
+
+  // Fetch all categories
+getCategories: async () => {
+  try {
+    const response = await apiClient.get("/categories");
+    return response.data; // Returns categories data from the API
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error; // Propagate the error to handle it where this function is called
+  }
+},
+
+// Fetch all products by category
+getProductsByCategory: async (categoryId, page = 1) => {
+  try {
+    const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
+    return response.data; // Returns products filtered by category
+  } catch (error) {
+    console.error("Error fetching products by category:", error);
+    throw error; // Propagate the error
+  }
+},
+
 
 
 };
