@@ -1,43 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; // To get query parameters
-import apiService from "../../../services/API"; // Adjust path as needed
+import apiService from "../../../services/API";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-
 function Products() {
-  const [products, setProducts] = useState([]); // List of products
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [hasMore, setHasMore] = useState(true); // If more products are available
+  const [products, setProducts] = useState([]); // Products state
+  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+  const [hasMore, setHasMore] = useState(true); // If there are more products to load
   const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState(null);
   const [cartItems, setCartItems] = useState([]); // Cart items state
 
-  const location = useLocation(); // To extract the current URL
-  const params = new URLSearchParams(location.search); // Parse query params
-  const categoryId = params.get("category"); // Get category ID from query params
-
-  // Fetch products by page
+  // Fetch products for the home page
   const fetchProducts = async (page) => {
     setLoading(true);
-    setError(null);
-
     try {
-      let response;
-      if (categoryId) {
-        console.log("Fetching products for category:", categoryId); // Debugging log
-        response = await apiService.getProductsByCategory(categoryId, page); // Fetch by category
-      } else {
-        console.log("Fetching all products for page:", page); // Debugging log
-        response = await apiService.getProducts(page); // General fetch
-      }
-
-      if (response.data) {
-        setProducts((prevProducts) => [...prevProducts, ...response.data]); // Append new products
-        setHasMore(response.current_page < response.last_page); // Check if there are more pages
-      }
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to load products.");
+      const response = await apiService.getHomeProducts(page); // Fetch paginated products
+      setProducts((prev) => [...prev, ...response.data]); // Append new products
+      setHasMore(response.current_page < response.last_page); // Check if more pages exist
+    } catch (error) {
+      console.error("Error fetching home products:", error);
     } finally {
       setLoading(false);
     }
@@ -68,37 +49,31 @@ function Products() {
     }
   };
 
-  // Initialize products and cart data on mount
   useEffect(() => {
-    setProducts([]); // Reset products when the category changes
-    setCurrentPage(1); // Reset to the first page
-    fetchProducts(1); // Fetch first page of products
+    fetchProducts(currentPage); // Fetch initial products
     const cartData = getCartItems(); // Fetch cart data
     setCartItems(cartData); // Set cart items state
-  }, [categoryId]);
+  }, [currentPage]);
 
-  // Handle Load More
+  // Handle "Load More" button click
   const handleLoadMore = () => {
     if (hasMore) {
-      const nextPage = currentPage + 1;
-      setCurrentPage(nextPage); // Increment page number
-      fetchProducts(nextPage);
+      setCurrentPage((prev) => prev + 1); // Increment the current page
     }
   };
 
-
   const handleAddToFavorite = (productId) => {
-    apiService
-      .addToFavorite({ productId }) // Replace `productId` dynamically
-      .then((response) => {
-        console.log("Added to favorites successfully:", response);
-        // Optionally update the UI to reflect the addition
-      })
-      .catch((error) => {
-        console.error("Error adding to favorites:", error);
-        alert("Failed to add to favorites. Please try again.");
-      });
-  };
+        apiService
+          .addToFavorite({ productId }) // Replace `productId` dynamically
+          .then((response) => {
+            console.log("Added to favorites successfully:", response);
+            // Optionally update the UI to reflect the addition
+          })
+          .catch((error) => {
+            console.error("Error adding to favorites:", error);
+            alert("Failed to add to favorites. Please try again.");
+          });
+      };
 
   return (
     <section className="bg0 p-t-23 p-b-140">
@@ -112,10 +87,9 @@ function Products() {
         <div className="row isotope-grid">
           {products.map((product) => (
             <div
-              className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women"
+              className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item"
               key={product.id}
             >
-              {/* Block2 */}
               <div className="block2">
                 <div className="block2-pic hov-img0">
                   <img
@@ -123,9 +97,8 @@ function Products() {
                     alt={product.name}
                   />
                   <button
-                    onClick={() => handleAddToCart(product)}
-                    className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
-                  >
+                     onClick={() => handleAddToCart(product)}
+                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"                   >
                     Add To Cart
                   </button>
                 </div>
@@ -141,21 +114,21 @@ function Products() {
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
                     <button
-                      className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
-                      onClick={() => handleAddToFavorite(product.id)} // Replace `productId` with actual product ID
-                    >
-                      <img
-                        className="icon-heart1 dis-block trans-04"
-                        src="/assets/images/icons/icon-heart-01.png"
-                        alt="ICON"
-                      />
-                      <img
-                        className="icon-heart2 dis-block trans-04 ab-t-l"
+                       className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+                       onClick={() => handleAddToFavorite(product.id)} // Replace `productId` with actual product ID
+                     >
+                       <img
+                         className="icon-heart1 dis-block trans-04"
+                         src="/assets/images/icons/icon-heart-01.png"
+                         alt="ICON"
+                       />
+                       <img
+                         className="icon-heart2 dis-block trans-04 ab-t-l"
                         src="/assets/images/icons/icon-heart-02.png"
-                        alt="ICON"
-                      />
-                    </button>
-                  </div>
+                         alt="ICON"
+                       />
+                     </button>
+                   </div>
                 </div>
               </div>
             </div>

@@ -64,8 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
- // get all products
- Route::get('products', [ProductController::class, 'index']);
+ // get all products for home
+//  Route::get('products', [ProductController::class, 'index']);
 
  // get product
  Route::get('/product/{id}', [ProductController::class, 'getProduct']);
@@ -74,4 +74,13 @@ Route::middleware('auth:sanctum')->group(function () {
  Route::get('categories', [CategoryController::class, 'index']);
 
  // get products by category
- Route::get('products/category/{id}', [ProductController::class, 'getProductsByCategory']);
+ //Route::get('products/category/{id}', [ProductController::class, 'getProductsByCategory']);
+
+// Get all products without pagination for shop
+//Route::get('products-all', [ProductController::class, 'getAllProducts']);
+
+// Get products for the home page
+Route::get('home-products', [ProductController::class, 'getHomeProducts']);
+
+// Get all products for the shop page
+Route::get('shop-products', [ProductController::class, 'getShopProducts']);
