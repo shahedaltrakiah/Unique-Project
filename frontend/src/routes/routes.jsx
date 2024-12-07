@@ -12,7 +12,6 @@ import Sell from "../components/pages/Sell";
 import Shop from "../components/pages/Shop";
 import Wishlist from "../components/pages/Wishlist";
 import Layout from "../components/common/Layout";
-import OrderDetails from "../components/profile/OrderDetails";
 import ProductDetails from "../components/pages/ProductDetails";
 import Thankyou from "../components/pages/Thankyou";
 import Filter from "../components/pages/Filter";
@@ -34,7 +33,6 @@ const routes = [
         { path: "/wishlist", element: <Wishlist /> },
         { path: "/profile", element: <Profile /> },
         { path: "/profileOrder", element: <ProfileOrder /> },
-        { path: "/orderDetails", element: <OrderDetails /> },
         { path: "/MyProducts", element: <MyProducts /> },
         { path: "/sell", element: <Sell /> },
         { path: "/product/:id", element: <ProductDetails /> },

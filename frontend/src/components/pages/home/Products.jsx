@@ -25,55 +25,99 @@ function Products() {
   };
 
   // Get cart items from cookies
-  const getCartItems = () => {
-    return JSON.parse(Cookies.get("cart") || "[]"); // Retrieve cart data or return an empty array
-  };
+  const getCartItems = () => JSON.parse(Cookies.get("cart") || "[]");
 
   // Add product to cart
   const handleAddToCart = (product) => {
     try {
-      let cart = JSON.parse(Cookies.get("cart") || "[]");
-      const existingProduct = cart.find((item) => item.id === product.id); // Check if the product already exists using its ID
-
+      let cart = getCartItems();
+      const existingProduct = cart.find((item) => item.id === product.id);
+  
       if (!existingProduct) {
         cart.push(product); // Add the full product to the cart
         Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
         setCartItems(cart); // Update cart items state
-        alert("تم إضافة المنتج إلى السلة!");
+  
+        Swal.fire({
+          title: "Product Added!",
+          text: "The product has been added to your cart successfully.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
       } else {
-        alert("المنتج موجود بالفعل في السلة!");
+        Swal.fire({
+          title: "Product Already in Cart",
+          text: "This product is already in your cart.",
+          icon: "info",
+          timer: 1500,
+          showConfirmButton: false,
+        });
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-      alert("حدث خطأ أثناء الإضافة إلى السلة.");
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while adding the product to your cart. Please try again.",
+        icon: "error",
+        showConfirmButton: true,
+      });
+    }
+  };
+  
+
+  // Add to favorites
+  const handleAddToFavorite = async (productId) => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      Swal.fire({
+        title: "Please log in to add to favorites!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Log In",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/login";
+        }
+      });
+      return;
+    }
+
+    try {
+      const response = await apiService.addToFavorites(productId, token);
+      if (response.data) {
+        Swal.fire({
+          title: "Product added to favorites!",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    } catch (err) {
+      console.error("Error adding to favorites:", err);
+      Swal.fire({
+        title: "Failed to add product to favorites.",
+        icon: "error",
+        showConfirmButton: true,
+      });
     }
   };
 
-  useEffect(() => {
-    fetchProducts(currentPage); // Fetch initial products
-    const cartData = getCartItems(); // Fetch cart data
-    setCartItems(cartData); // Set cart items state
-  }, [currentPage]);
-
-  // Handle "Load More" button click
+  // Load more products
   const handleLoadMore = () => {
     if (hasMore) {
       setCurrentPage((prev) => prev + 1); // Increment the current page
     }
   };
 
-  const handleAddToFavorite = (productId) => {
-        apiService
-          .addToFavorite({ productId }) // Replace `productId` dynamically
-          .then((response) => {
-            console.log("Added to favorites successfully:", response);
-            // Optionally update the UI to reflect the addition
-          })
-          .catch((error) => {
-            console.error("Error adding to favorites:", error);
-            alert("Failed to add to favorites. Please try again.");
-          });
-      };
+  // Fetch products on component mount and when categoryId changes
+  useEffect(() => {
+    setProducts([]); // Reset products when the category changes
+    setCurrentPage(1); // Reset to the first page
+    fetchProducts(1, true); // Fetch first page of products
+    setCartItems(getCartItems()); // Set cart items state
+  }, [categoryId]);
 
   return (
     <section className="bg0 p-t-23 p-b-140">
@@ -87,13 +131,13 @@ function Products() {
         <div className="row isotope-grid">
           {products.map((product) => (
             <div
-              className="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item"
+              className="col-sm-6 col-md-4 col-lg-3 p-b-20 isotope-item women"
               key={product.id}
             >
               <div className="block2">
                 <div className="block2-pic hov-img0">
                   <img
-                    src={`/assets/images/${product.image}`}
+                    src={`assets/images/${product.image}`}
                     alt={product.name}
                   />
                   <button
@@ -110,20 +154,20 @@ function Products() {
                     >
                       {product.name}
                     </Link>
-                    <span className="stext-105 cl3">{product.price}</span>
+                    <span className="stext-105 cl3">{product.price}JD</span>
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
                     <button
-                       className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
-                       onClick={() => handleAddToFavorite(product.id)} // Replace `productId` with actual product ID
-                     >
-                       <img
-                         className="icon-heart1 dis-block trans-04"
-                         src="/assets/images/icons/icon-heart-01.png"
-                         alt="ICON"
-                       />
-                       <img
-                         className="icon-heart2 dis-block trans-04 ab-t-l"
+                      className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+                      onClick={() => handleAddToFavorite(product.id)}
+                    >
+                      <img
+                        className="icon-heart1 dis-block trans-04"
+                        src="/assets/images/icons/icon-heart-01.png"
+                        alt="ICON"
+                      />
+                      <img
+                        className="icon-heart2 dis-block trans-04 ab-t-l"
                         src="/assets/images/icons/icon-heart-02.png"
                          alt="ICON"
                        />
@@ -135,7 +179,6 @@ function Products() {
           ))}
         </div>
 
-        {/* Load More Button */}
         {hasMore && (
           <div className="flex-c-m flex-w w-full p-t-45">
             <button

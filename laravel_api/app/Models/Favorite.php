@@ -23,6 +23,7 @@ class Favorite extends Model
     // Favorite belongs to a product
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class); // Adjust the relationship as needed
     }
+
 }

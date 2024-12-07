@@ -44,7 +44,7 @@ h3 {
     position: absolute;
     top: 20px;
     right: 20px;
-    background-color: #3B5D50;
+    background-color: #717fe0;
     color: white;
     border: none;
     border-radius: 8px;
@@ -53,7 +53,7 @@ h3 {
 }
 
 .profile-edit-btn:hover {
-    background-color: #2a403a;
+    background-color: #5c6ace;
 }
 
 .profile-details {
@@ -74,53 +74,44 @@ h3 {
 }
 
 /* Order History Section */
-.order-card {
-    background-color: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
-}
-
-.order-card h4 {
-    font-weight: bold;
-    color: #3B5D50;
-}
-
-.order-table th,
-.order-table td {
-    vertical-align: middle;
-    text-align: center;
-
-}
-
-.order-table th {
-    background-color: #3B5D50;
+/* Table header */
+.order-table thead th {
+    background-color: #717fe0;
     color: white;
+    text-align: center;
     font-weight: bold;
-}
-
-.order-table td {
-    background-color: #f9f9f9;
-}
-
-.order-table td span {
-    font-size: 14px;
-}
-
-
-.view-details-btn {
-    background-color: #3B5D50;
+  }
+  
+  /* Table rows */
+  .order-table tbody tr {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .order-table tbody tr:hover {
+    background-color: #f2f4ff; /* Light shade for hover effect */
+  }
+  
+  /* Table text */
+  .order-table td {
+    color: #000;
+    text-align: center;
+  }
+  
+  /* View Details button */
+  .view-details-btn {
+    background-color: #717fe0;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    transition: background-color 0.3s;
-}
-
-.view-details-btn:hover {
-    background-color: #2a403a;
-}
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-details-btn:hover {
+    background-color: #5c6ace;
+  }
+  
 
 .modal-content {
     border-radius: 10px;
@@ -166,6 +157,16 @@ h3 {
     color: white;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+}
+
+.btn-primary{
+    width: 60px;
+    margin-right: 5px;
+}
+
+.btn-danger{
+    width: 80px;
+    height: 37px;
 }
 
 .btn-close-white {
@@ -332,7 +333,7 @@ h3 {
 .sidebarr li button {
     width: 100%;  /* Full width buttons for better usability */
     padding: 12px 0;  /* More padding for a larger click area */
-    background-color: #3B5D50;  /* Primary color for buttons */
+    background-color: #717fe0;  /* Primary color for buttons */
     color: white;  /* Text color for buttons */
     border: none;  /* Remove default border */
     border-radius: 8px;  /* Rounded corners */
@@ -341,8 +342,9 @@ h3 {
     transition: background-color 0.3s ease;  /* Smooth transition for hover effect */
 }
 
+
 .sidebarr li button:hover {
-    background-color: #1b2c25;  /* Darker shade for hover effect */
+    background-color: #000;  /* Darker shade for hover effect */
 }
 
 .sidebarr li button:focus {
@@ -380,6 +382,7 @@ h3 {
 .profile-infoo {
     text-align: center;
     margin-bottom: 20px;
+
 }
 
 .profile-infoo img {
@@ -391,4 +394,75 @@ h3 {
     margin: 0 auto;
 }
 
+.title{
+    color: #717fe0;
+}
+
+/* Modal custom styles */
+.modal-content {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .modal-header {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 20px;
+  }
+  
+  .modal-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .btn-close {
+    background-color: transparent;
+    border: none;
+  }
+  
+  .modal-body {
+    padding: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .order-details p {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .order-items .list-group-item {
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+  
+  .order-items .list-group-item:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .img-thumbnail {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  .modal-footer {
+    background-color: #f7f7f7;
+    border-top: 1px solid #ddd;
+    padding: 10px 20px;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+  
 

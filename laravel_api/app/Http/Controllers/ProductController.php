@@ -38,23 +38,28 @@ class ProductController extends Controller
     public function userProducts()
     {
         try {
+            // Get the currently authenticated user
             $user = Auth::user();
+
+            // Check if the user is authenticated
             if (!$user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            // Retrieve products added by the currently authenticated user
+            // Retrieve products added by the currently authenticated user,
+            // along with their category and product images
             $products = Product::where('user_id', $user->id)
-                ->with('category')
+                ->with(['category', 'productImages']) // Eager load both category and productImages
                 ->get();
 
-            // Return success response
+            // Return success response with the products
             return response()->json($products, 200);
         } catch (\Exception $e) {
             // Handle any unexpected exceptions
             return response()->json(['error' => 'An error occurred while fetching user products.', 'message' => $e->getMessage()], 500);
         }
     }
+
 
     public function store(Request $request)
     {
@@ -122,7 +127,7 @@ class ProductController extends Controller
     {
         try {
             // Find the product by ID
-            $product = Product::find($id);
+            $product = Product::find($id)->with('productImages')->get();
 
             // If the product is not found, return a 404 error
             if (!$product) {
@@ -144,6 +149,12 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            // Validate the token (ensure the user is authenticated)
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'User is not logged in'], 401);
+            }
+
             // Validate incoming request data
             $validated = $request->validate([
                 'name' => 'nullable|string|max:255',
@@ -153,39 +164,43 @@ class ProductController extends Controller
                 'status' => 'nullable|in:available,sold',
                 'size' => 'nullable|string|max:50',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'sub_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
             // Find the product
             $product = Product::findOrFail($id);
 
-            // Handle the main image update
+            // Ensure the product belongs to the authenticated user
+            if ($product->user_id !== $user->id) {
+                return response()->json(['error' => 'You are not authorized to update this product'], 403);
+            }
+
+            // Handle the main image update if a new one is provided
             if ($request->hasFile('image')) {
                 // Delete the old main image if it exists
                 if ($product->image) {
                     Storage::disk('public')->delete($product->image);
                 }
                 // Store the new main image
-                $validated['image'] = $request->file('image')->store('products', 'public');
+                $product->image = $request->file('image')->store('products', 'public');
             }
 
-            // Update the product attributes
-            $product->update(array_merge(
-                $product->toArray(),
-                array_filter($validated, fn($value) => $value !== null)
-            ));
+            // Update product attributes (mass assignment)
+            $product->name = $validated['name'] ?? $product->name;
+            $product->description = $validated['description'] ?? $product->description;
+            $product->price = $validated['price'] ?? $product->price;
+            $product->size = $validated['size'] ?? $product->size;
+            $product->category_id = $validated['category_id'] ?? $product->category_id;
+            $product->status = $validated['status'] ?? $product->status;
 
-            // Handle sub-image updates if provided
+            // Save the product with updated attributes
+            $product->save();
+
+            // Handle sub-images if provided
             if ($request->has('sub_images')) {
-                // Delete existing sub-images
-                foreach ($product->productImages as $subImage) {
-                    Storage::disk('public')->delete($subImage->path);
-                    $subImage->delete();
-                }
-
-                // Add new sub-images
                 foreach ($request->file('sub_images') as $subImage) {
                     $subImagePath = $subImage->store('product_sub_images', 'public');
+                    // Store each sub-image associated with the product
                     $product->productImages()->create([
                         'path' => $subImagePath,
                     ]);
@@ -194,12 +209,16 @@ class ProductController extends Controller
 
             return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['error' => 'Product not found'], 404);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 422);
+            return response()->json([
+                'error' => 'Validation failed',
+                'details' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to update product', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'An error occurred',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 

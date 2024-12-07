@@ -32,7 +32,7 @@ function About() {
             <div className="col-11 col-md-5 col-lg-4 m-lr-auto">
               <div className="how-bor1 ">
                 <div className="hov-img0">
-                  <img src="public/assets/images/about-01.jpg" alt="IMG" />
+                  <img src="public/assets/images/ourlogo.png" alt="IMG" />
                 </div>
               </div>
             </div>
@@ -69,7 +69,7 @@ function About() {
             <div className="order-md-1 col-11 col-md-5 col-lg-4 m-lr-auto p-b-30">
               <div className="how-bor2">
                 <div className="hov-img0">
-                  <img src="public/assets/images/about-02.jpg" alt="IMG" />
+                  <img src="public/assets/images/about-01.jpg" alt="IMG" />
                 </div>
               </div>
             </div>
