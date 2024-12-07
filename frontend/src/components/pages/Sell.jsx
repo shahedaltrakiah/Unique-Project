@@ -3,13 +3,13 @@ import apiService from "../../services/API";
 
 const Sell = () => {
   const [formData, setFormData] = useState({
-    category: "",
-    size: "",
     name: "",
-    image: null,
-    sub_images: [],
     description: "",
     price: "",
+    category: "",
+    size: "",
+    image: null,
+    sub_images: [],
   });
 
   const [sizeOptions, setSizeOptions] = useState([]);
@@ -45,11 +45,14 @@ const Sell = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted: ", formData);
 
+    // Create FormData
     const formDataToSend = new FormData();
+
+    // Loop through formData and append the fields
     Object.keys(formData).forEach((key) => {
       if (key === "sub_images" && Array.isArray(formData[key])) {
+        // Append multiple images for sub_images
         formData[key].forEach((image, index) => {
           formDataToSend.append(`sub_images[${index}]`, image);
         });
@@ -57,6 +60,18 @@ const Sell = () => {
         formDataToSend.append(key, formData[key]);
       }
     });
+
+    formDataToSend.append("category", formData.category);
+
+    // Check the image and file fields (ensure they are valid)
+    if (!formDataToSend.get("image")) {
+      Swal.fire({
+        icon: "error",
+        title: "Missing Image",
+        text: "Please upload a product image.",
+      });
+      return;
+    }
 
     try {
       const response = await apiService.createProduct(formDataToSend);
@@ -69,11 +84,22 @@ const Sell = () => {
         });
       }
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error,
-      });
+      if (error.response) {
+        console.log("Error Response:", error.response.data); // Log the error data
+        Swal.fire({
+          icon: "error",
+          title: "Validation Error",
+          text:
+            error.response.data.message ||
+            "Validation failed. Check input fields.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message || "Unknown error occurred",
+        });
+      }
     }
   };
 
@@ -109,7 +135,7 @@ const Sell = () => {
                 <i className="fa fa-list how-pos4"></i>
                 <select
                   className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
-                  name="category"
+                  name="category" // Change this to "category" instead of "category_id"
                   value={formData.category}
                   onChange={handleChange}
                   required
@@ -198,6 +224,19 @@ const Sell = () => {
 
               {/* Main Image Upload */}
               <div
+                style={{
+                  fontWeight: "bold",
+                  marginBottom: "5px", // Space between the text and input
+                  color: "#333",
+                  fontSize: "14px",
+                }}
+              >
+                Main Image{" "}
+                <span style={{ fontSize: "12px", color: "#888" }}>
+                  (required)
+                </span>
+              </div>
+              <div
                 className="bor8 m-b-50 how-pos4-parent"
                 style={{
                   display: "flex",
@@ -206,19 +245,6 @@ const Sell = () => {
                   gap: "10px",
                 }}
               >
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    marginBottom: "5px", // Space between the text and input
-                    color: "#333",
-                    fontSize: "14px",
-                  }}
-                >
-                  Main Image{" "}
-                  <span style={{ fontSize: "12px", color: "#888" }}>
-                    (required)
-                  </span>
-                </div>
                 <div
                   style={{
                     display: "flex",
@@ -245,6 +271,19 @@ const Sell = () => {
 
               {/* Sub-Images Upload */}
               <div
+                style={{
+                  fontWeight: "bold",
+                  marginBottom: "5px", // Space between the text and input
+                  color: "#333",
+                  fontSize: "14px",
+                }}
+              >
+                Additional Images{" "}
+                <span style={{ fontSize: "12px", color: "#888" }}>
+                  (optional)
+                </span>
+              </div>
+              <div
                 className="bor8 m-b-50 how-pos4-parent"
                 style={{
                   display: "flex",
@@ -253,19 +292,11 @@ const Sell = () => {
                   gap: "10px",
                 }}
               >
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    marginBottom: "5px", // Space between the text and input
-                    color: "#333",
-                    fontSize: "14px",
-                  }}
-                >
-                  Additional Images{" "}
-                  <span style={{ fontSize: "12px", color: "#888" }}>
-                    (optional)
-                  </span>
-                </div>
+                <i
+                  className="fa fa-image how-pos4"
+                  style={{ marginBottom: "10px" }} // Space between icon and input
+                ></i>
+
                 <div
                   style={{
                     display: "flex",

@@ -155,7 +155,7 @@ function NavBar() {
           {isLoggedIn ? (
             <div className="dropdown">
               <a
-                href="#"
+                href="/profile"
                 className="icon-header-item cl2 hov-cl1 trans-04"
                 style={{ display: "flex", alignItems: "center" }}
               >

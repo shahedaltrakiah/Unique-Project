@@ -19,7 +19,7 @@ apiClient.interceptors.request.use((config) => {
 
 
 const apiService = {
-  
+
   // Register User
   registerUser: async (data) => {
     try {
@@ -46,39 +46,55 @@ const apiService = {
     }
   },
 
-  // Create Product
   createProduct: async (data) => {
+    console.log("Data passed to the function:", data);  // Log the data passed
+  
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) throw new Error("User is not logged in");
-
+  
+      // Create a new FormData object
       const formData = new FormData();
+  
+      // Append form data fields from the passed data (this should come from formData state)
       formData.append('name', data.name);
       formData.append('description', data.description);
       formData.append('price', data.price);
       formData.append('category_id', data.category_id);
-      formData.append('status', data.status);
-      formData.append('image', data.image);
-
-      if (data.sub_images) {
-        data.sub_images.forEach((image, index) => {
-          formData.append(`sub_images[${index}]`, image);
+      formData.append('size', data.size);
+      formData.append('status', "active"); // Assuming 'active' status by default
+  
+      // Append the main image (from the form data state)
+      if (data.image) {
+        formData.append('image', data.image);
+      }
+  
+      // If there are sub-images, loop through and append them
+      if (data.sub_images && data.sub_images.length) {
+        data.sub_images.forEach(subImage => {
+          formData.append('sub_images[]', subImage);
         });
       }
-
+  
+      // Log form data for debugging
+      console.log("Form Data to Send:");
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+  
+      // Send the API request
       const response = await apiClient.post("/products", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       return response.data;
     } catch (error) {
       handleApiError(error);
       throw error;
     }
-  },
+  },  
 
   // get user orders
   getUserOrders: async () => {
@@ -180,7 +196,7 @@ const apiService = {
   // Fetch a single product by ID
   getProductById: async (id) => {
     try {
-      const response = await apiClient.get("/product",id);
+      const response = await apiClient.get("/product", id);
       return response.data;
     } catch (error) {
       handleApiError(error);
