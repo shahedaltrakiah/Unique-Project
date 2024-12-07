@@ -5,8 +5,17 @@ import ProfileSidebar from "./ProfileSidebar";
 function MyProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [formData, setFormData] = useState({
+    id: null, // Ensure formData also contains the product id for updating
+    name: "",
+    description: "",
+    price: "",
+    status: "available",
+    size: "S",
+    image: null,
+  });
 
+  // Fetch products on component mount
   useEffect(() => {
     apiService
       .getUserProducts()
@@ -16,11 +25,22 @@ function MyProducts() {
         setError("Failed to load products.");
       });
   }, []);
-
+  
+  // Handle the click to edit product
   const handleEditClick = (product) => {
-    setSelectedProduct({ ...product }); // Open modal with selected product
+    console.log(product);
+    setFormData({
+      id: product.id, // Set product id to formData
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      status: product.status,
+      size: product.size,
+      image: product.image,
+    });
   };
 
+  // Handle the delete product click
   const handleDeleteClick = (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       apiService
@@ -35,44 +55,43 @@ function MyProducts() {
     }
   };
 
+  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
-      // Handle file input (for images)
-      setSelectedProduct({
-        ...selectedProduct,
+      setFormData({
+        ...formData,
         [name]: files[0], // Save the file object in the state
       });
     } else {
-      // Handle text inputs
-      setSelectedProduct({
-        ...selectedProduct,
+      setFormData({
+        ...formData,
         [name]: value,
       });
     }
   };
 
+  // Handle saving the changes to the product
   const handleSaveChanges = async () => {
-    if (!selectedProduct) return;
-  
-    const formData = new FormData();
-    formData.append("name", selectedProduct.name);
-    formData.append("description", selectedProduct.description);
-    formData.append("price", selectedProduct.price);
-    formData.append("status", selectedProduct.status);
-    formData.append("size", selectedProduct.size);
-  
+    if (!formData.id) return; // Ensure product id is present
+
+    const updatedFormData = new FormData();
+    updatedFormData.append("name", formData.name);
+    updatedFormData.append("description", formData.description);
+    updatedFormData.append("price", formData.price);
+    updatedFormData.append("status", formData.status);
+    updatedFormData.append("size", formData.size);
+    console.log(formData);
+
     // Add image if it exists
-    if (selectedProduct.image && selectedProduct.image instanceof File) {
-      formData.append("image", selectedProduct.image);
+    if (formData.image && formData.image instanceof File) {
+      updatedFormData.append("image", formData.image);
     }
-  
+    console.log(updatedFormData);
+
     try {
-      console.log("Sending data to API", formData);  // Log FormData before sending
-      const response = await apiService.updateProduct(selectedProduct.id, formData);
-      
-      console.log("Response from API:", response);
-      
+      const response = await apiService.updateProduct(formData.id, formData);
+
       if (response.data?.product) {
         alert("Product updated successfully!");
       } else {
@@ -83,8 +102,7 @@ function MyProducts() {
       alert("Failed to update product. Please check your input and try again.");
     }
   };
-  
-  
+
   return (
     <div className="container mt-5">
       <div className="row">
@@ -146,6 +164,7 @@ function MyProducts() {
             </tbody>
           </table>
 
+          {/* Edit Product Modal */}
           <div
             className="modal fade"
             id="editProductModal"
@@ -167,7 +186,7 @@ function MyProducts() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  {selectedProduct ? (
+                  {formData ? (
                     <>
                       <div className="mb-3">
                         <label className="form-label">Name</label>
@@ -175,7 +194,7 @@ function MyProducts() {
                           type="text"
                           className="form-control"
                           name="name"
-                          value={selectedProduct.name}
+                          value={formData.name}
                           onChange={handleInputChange}
                         />
                       </div>
@@ -186,7 +205,7 @@ function MyProducts() {
                           className="form-control"
                           rows="4"
                           name="description"
-                          value={selectedProduct.description}
+                          value={formData.description}
                           onChange={handleInputChange}
                         />
                       </div>
@@ -199,10 +218,10 @@ function MyProducts() {
                           name="image"
                           onChange={handleInputChange}
                         />
-                        {selectedProduct.image && !(selectedProduct.image instanceof File) && (
+                        {formData.image && !(formData.image instanceof File) && (
                           <div className="mt-2">
                             <img
-                              src={selectedProduct.image}
+                              src={formData.image}
                               alt="Product"
                               className="img-thumbnail"
                               style={{ width: "100px" }}
@@ -216,10 +235,9 @@ function MyProducts() {
                         <select
                           className="form-select"
                           name="size"
-                          value={selectedProduct.size}
+                          value={formData.size}
                           onChange={handleInputChange}
                         >
-                          {/* Example options, change as needed */}
                           <option value="S">S</option>
                           <option value="M">M</option>
                           <option value="L">L</option>
@@ -232,7 +250,7 @@ function MyProducts() {
                           type="number"
                           className="form-control"
                           name="price"
-                          value={selectedProduct.price}
+                          value={formData.price}
                           onChange={handleInputChange}
                         />
                       </div>
@@ -242,7 +260,7 @@ function MyProducts() {
                         <select
                           className="form-select"
                           name="status"
-                          value={selectedProduct.status}
+                          value={formData.status}
                           onChange={handleInputChange}
                         >
                           <option value="available">Available</option>

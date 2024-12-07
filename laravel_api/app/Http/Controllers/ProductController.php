@@ -139,57 +139,83 @@ class ProductController extends Controller
 
 
     public function update(Request $request, $id)
-    {
-        try {
-            // Log incoming request data
-            Log::info("Request data: ", $request->all());
-
-            // Validate incoming request data
-            $validated = $request->validate([
-                'name' => 'nullable|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'nullable|numeric',
-                'category_id' => 'nullable|exists:categories,id',
-                'status' => 'nullable|in:available,sold',
-                'size' => 'nullable|string|max:50',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-
-            // Find the product by ID
-            $product = Product::findOrFail($id);
-
-            // Handle the image update if present
-            if ($request->hasFile('image')) {
-                // Log the incoming image
-                Log::info("Image file found: " . $request->file('image')->getClientOriginalName());
-
-                // Delete the old image if it exists
-                if ($product->image) {
-                    Storage::disk('public')->delete($product->image);
-                }
-
-                // Store the new image
-                $validated['image'] = $request->file('image')->store('products', 'public');
-            }
-
-            // Update product attributes
-            $product->update(array_filter($validated)); // Only update non-null values
-
-            // Log the updated product
-            Log::info("Updated product: ", $product->toArray());
-
-            return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error("Product not found: " . $e->getMessage());
-            return response()->json(['error' => 'Product not found'], 404);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error("Validation failed: " . json_encode($e->errors()));
-            return response()->json(['error' => $e->errors()], 422);
-        } catch (\Exception $e) {
-            Log::error("General error: " . $e->getMessage());
-            return response()->json(['error' => 'Failed to update product', 'message' => $e->getMessage()], 500);
+{
+    try {
+        // Validate the token (ensure the user is authenticated)
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'User is not logged in'], 401);
         }
+
+        // Validate incoming request data
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'nullable|numeric',
+            'category_id' => 'nullable|exists:categories,id',
+            'status' => 'nullable|in:available,sold',
+            'size' => 'nullable|string|max:50',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'sub_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Find the product
+        $product = Product::findOrFail($id);
+
+        // Ensure the product belongs to the authenticated user
+        if ($product->user_id !== $user->id) {
+            return response()->json(['error' => 'You are not authorized to update this product'], 403);
+        }
+
+        // Handle the main image update if a new one is provided
+        if ($request->hasFile('image')) {
+            // Delete the old main image if it exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            // Store the new main image
+            $product->image = $request->file('image')->store('products', 'public');
+        }
+
+        // Update product attributes (mass assignment)
+        $product->name = $validated['name'] ?? $product->name;
+        $product->description = $validated['description'] ?? $product->description;
+        $product->price = $validated['price'] ?? $product->price;
+        $product->size = $validated['size'] ?? $product->size;
+        $product->category_id = $validated['category_id'] ?? $product->category_id;
+        $product->status = $validated['status'] ?? $product->status;
+
+        // Save the product with updated attributes
+        $product->save();
+
+        // Handle sub-images if provided
+        if ($request->has('sub_images')) {
+            foreach ($request->file('sub_images') as $subImage) {
+                $subImagePath = $subImage->store('product_sub_images', 'public');
+                // Store each sub-image associated with the product
+                $product->productImages()->create([
+                    'path' => $subImagePath,
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'error' => 'Validation failed',
+            'details' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'An error occurred',
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
+
+
+    
 
 
     public function delete($id)
