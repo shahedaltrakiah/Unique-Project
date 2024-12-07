@@ -5,15 +5,15 @@ import ProfileSidebar from "./ProfileSidebar";
 function MyProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    id: null, // Ensure formData also contains the product id for updating
-    name: "",
-    description: "",
-    price: "",
-    status: "available",
-    size: "S",
-    image: null,
-  });
+//   const [formData, setFormData] = useState({
+//     id: null, // Ensure formData also contains the product id for updating
+//     name: "",
+//     description: "",
+//     price: "",
+//     status: "available",
+//     size: "S",
+//     image: null,
+//   });
 
   // Fetch products on component mount
   useEffect(() => {
@@ -27,18 +27,18 @@ function MyProducts() {
   }, []);
   
   // Handle the click to edit product
-  const handleEditClick = (product) => {
-    console.log(product);
-    setFormData({
-      id: product.id, // Set product id to formData
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      status: product.status,
-      size: product.size,
-      image: product.image,
-    });
-  };
+//   const handleEditClick = (product) => {
+//     console.log(product);
+//     setFormData({
+//       id: product.id, // Set product id to formData
+//       name: product.name,
+//       description: product.description,
+//       price: product.price,
+//       status: product.status,
+//       size: product.size,
+//       image: product.image,
+//     });
+//   };
 
   // Handle the delete product click
   const handleDeleteClick = (productId) => {
@@ -56,52 +56,52 @@ function MyProducts() {
   };
 
   // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === "file") {
-      setFormData({
-        ...formData,
-        [name]: files[0], // Save the file object in the state
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
+//   const handleInputChange = (e) => {
+//     const { name, value, type, files } = e.target;
+//     if (type === "file") {
+//       setFormData({
+//         ...formData,
+//         [name]: files[0], // Save the file object in the state
+//       });
+//     } else {
+//       setFormData({
+//         ...formData,
+//         [name]: value,
+//       });
+//     }
+//   };
 
   // Handle saving the changes to the product
-  const handleSaveChanges = async () => {
-    if (!formData.id) return; // Ensure product id is present
+//   const handleSaveChanges = async () => {
+//     if (!formData.id) return; // Ensure product id is present
 
-    const updatedFormData = new FormData();
-    updatedFormData.append("name", formData.name);
-    updatedFormData.append("description", formData.description);
-    updatedFormData.append("price", formData.price);
-    updatedFormData.append("status", formData.status);
-    updatedFormData.append("size", formData.size);
-    console.log(formData);
+//     const updatedFormData = new FormData();
+//     updatedFormData.append("name", formData.name);
+//     updatedFormData.append("description", formData.description);
+//     updatedFormData.append("price", formData.price);
+//     updatedFormData.append("status", formData.status);
+//     updatedFormData.append("size", formData.size);
+//     console.log(formData);
 
-    // Add image if it exists
-    if (formData.image && formData.image instanceof File) {
-      updatedFormData.append("image", formData.image);
-    }
-    console.log(updatedFormData);
+//     // Add image if it exists
+//     if (formData.image && formData.image instanceof File) {
+//       updatedFormData.append("image", formData.image);
+//     }
+//     console.log(updatedFormData);
 
-    try {
-      const response = await apiService.updateProduct(formData.id, formData);
+//     try {
+//       const response = await apiService.updateProduct(formData.id, formData);
 
-      if (response.data?.product) {
-        alert("Product updated successfully!");
-      } else {
-        alert("Failed to update product.");
-      }
-    } catch (error) {
-      console.error("Error updating product:", error);
-      alert("Failed to update product. Please check your input and try again.");
-    }
-  };
+//       if (response.data?.product) {
+//         alert("Product updated successfully!");
+//       } else {
+//         alert("Failed to update product.");
+//       }
+//     } catch (error) {
+//       console.error("Error updating product:", error);
+//       alert("Failed to update product. Please check your input and try again.");
+//     }
+//   };
 
   return (
     <div className="container mt-5">
@@ -144,14 +144,14 @@ function MyProducts() {
                   <td>{product.price.toFixed(2)}</td>
                   <td>{product.status}</td>
                   <td>
-                    <button
+                    {/* <button
                       className="btn btn-primary"
                       onClick={() => handleEditClick(product)}
                       data-bs-toggle="modal"
                       data-bs-target="#editProductModal"
                     >
                       Edit
-                    </button>
+                    </button> */}
                     <button
                       className="btn btn-danger"
                       onClick={() => handleDeleteClick(product.id)}
@@ -165,7 +165,7 @@ function MyProducts() {
           </table>
 
           {/* Edit Product Modal */}
-          <div
+          {/* <div
             className="modal fade"
             id="editProductModal"
             tabIndex="-1"
@@ -290,8 +290,8 @@ function MyProducts() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div>*/}
+        </div> 
       </div>
     </div>
   );
