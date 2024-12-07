@@ -32,12 +32,12 @@ class ProductController extends Controller
             if (!$user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
-    
+
             // Retrieve products added by the currently authenticated user
             $products = Product::where('user_id', $user->id)
-                                ->with('category')
-                                ->get();
-    
+                ->with('category')
+                ->get();
+
             // Return success response
             return response()->json($products, 200);
         } catch (\Exception $e) {
@@ -45,7 +45,7 @@ class ProductController extends Controller
             return response()->json(['error' => 'An error occurred while fetching user products.', 'message' => $e->getMessage()], 500);
         }
     }
-    
+
     public function store(Request $request)
     {
         try {
@@ -87,11 +87,16 @@ class ProductController extends Controller
             }
 
             return response()->json(['message' => 'Product added successfully', 'product' => $product], 201);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 422);
+            return response()->json([
+                'error' => 'Validation failed',
+                'details' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while adding the product.', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'An error occurred',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -182,35 +187,33 @@ class ProductController extends Controller
     }
 
     public function delete($id)
-{
-    try {
-        // Find the product by ID
-        $product = Product::findOrFail($id);
+    {
+        try {
+            // Find the product by ID
+            $product = Product::findOrFail($id);
 
-        // Delete associated product images
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image); // Delete main image
-        }
-
-        if ($product->productImages) {
-            foreach ($product->productImages as $subImage) {
-                Storage::disk('public')->delete($subImage->path); // Delete sub-images
-                $subImage->delete(); // Remove sub-image record from the database
+            // Delete associated product images
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image); // Delete main image
             }
+
+            if ($product->productImages) {
+                foreach ($product->productImages as $subImage) {
+                    Storage::disk('public')->delete($subImage->path); // Delete sub-images
+                    $subImage->delete(); // Remove sub-image record from the database
+                }
+            }
+
+            // Delete the product
+            $product->delete();
+
+            return response()->json(['message' => 'Product deleted successfully'], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['error' => 'Product not found'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete product', 'message' => $e->getMessage()], 500);
         }
-
-        // Delete the product
-        $product->delete();
-
-        return response()->json(['message' => 'Product deleted successfully'], 200);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json(['error' => 'Product not found'], 404);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Failed to delete product', 'message' => $e->getMessage()], 500);
     }
-}
-
-
 
 
 }
