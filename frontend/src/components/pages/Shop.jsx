@@ -1,6 +1,13 @@
+import React from "react";
+//import Products from "../pages/home/Banner"; 
+import Products from "../pages/home/Products"; 
+
 function Shop(){
 return(
-    <h1>shop</h1>
+    <>
+    {/* <Banner /> */}
+    <Products />
+  </>
 )
 }
 export default Shop
