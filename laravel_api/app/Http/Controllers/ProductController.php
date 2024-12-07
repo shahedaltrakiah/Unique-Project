@@ -224,5 +224,19 @@ class ProductController extends Controller
         }
     }
 
+    public function getProductsByCategory($id)
+    {
+    try {
+        // Retrieve products filtered by category ID
+        $products = Product::where('category_id', $id)->with('category')->paginate(8);;
+
+        // Return success response
+        return response()->json($products, 200);
+    } catch (\Exception $e) {
+        // Handle unexpected exceptions
+        return response()->json(['error' => 'An error occurred while fetching products by category.', 'message' => $e->getMessage()], 500);
+    }
+    }
+
 
 }
