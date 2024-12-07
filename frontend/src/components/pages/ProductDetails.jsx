@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiService from "../../services/API";
-//import "./ProductDetails.css"; 
 
 function ProductDetails() {
   const { id } = useParams(); // Extract product ID from the URL
   const [product, setProduct] = useState(null); // State to hold product details
   const [loading, setLoading] = useState(true);
+  console.log("Product ID from URL:", id);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -50,8 +50,8 @@ function ProductDetails() {
           <h2 className="product-name">{product.name}</h2>
           <p className="product-description">{product.description}</p>
           <span className="product-price">{product.price}</span>
-          <span className="product-price">{product.string_size}</span>
           <span className="product-price">{product.number_size}</span>
+          <span className="product-price">{product.string_size}</span>
 
           {/* Add to Cart and Wishlist */}
           <div className="product-actions">

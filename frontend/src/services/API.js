@@ -178,15 +178,15 @@ const apiService = {
   },
 
   // Fetch a single product by ID
-  getProductById: async (id) => {
-    try {
-      const response = await apiClient.get("/product",id);
-      return response.data;
-    } catch (error) {
-      handleApiError(error);
-      throw error;
-    }
-  },
+  // getProductById: async (id) => {
+  //   try {
+  //     const response = await apiClient.get("/product",id);
+  //     return response.data;
+  //   } catch (error) {
+  //     handleApiError(error);
+  //     throw error;
+  //   }
+  // },
 
 };
 
