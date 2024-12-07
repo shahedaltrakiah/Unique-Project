@@ -1,20 +1,61 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom"; // To get query parameters
 import apiService from "../../../services/API"; // Adjust path as needed
 import { Link } from "react-router-dom";
 
 function Products() {
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
+  const [products, setProducts] = useState([]); // List of products
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const [hasMore, setHasMore] = useState(true); // If more products are available
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(null); // Error state
 
+  const location = useLocation(); // To extract the current URL
+  const params = new URLSearchParams(location.search); // Parse query params
+  const categoryId = params.get("category"); // Get category ID from query params
+
+  // Fetch products based on category or general pagination
+  const fetchProducts = async (page) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      let response;
+      if (categoryId) {
+        console.log("Fetching products for category:", categoryId); // Debugging log
+        response = await apiService.getProductsByCategory(categoryId, page); // Fetch by category
+      } else {
+        console.log("Fetching all products for page:", page); // Debugging log
+        response = await apiService.getProducts(page); // General fetch
+      }
+
+      if (response.data) {
+        setProducts((prevProducts) => [...prevProducts, ...response.data]); // Append new products
+        setHasMore(response.current_page < response.last_page); // Check if there are more pages
+      }
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("Failed to load products.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial fetch or when category changes
   useEffect(() => {
-    apiService
-      .getProducts()
-      .then(setProducts)
-      .catch((err) => {
-        console.error("Error fetching products:", err);
-        setError("Failed to load products.");
-      });
-  }, []);
+    setProducts([]); // Reset products when the category changes
+    setCurrentPage(1); // Reset to the first page
+    fetchProducts(1); // Fetch first page of products
+  }, [categoryId]);
+
+  // Handle Load More
+  const handleLoadMore = () => {
+    if (hasMore) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage); // Increment page number
+      fetchProducts(nextPage);
+    }
+  };
 
   return (
     <section className="bg0 p-t-23 p-b-140">
@@ -77,6 +118,19 @@ function Products() {
             </div>
           ))}
         </div>
+
+        {/* Load More Button */}
+        {hasMore && (
+          <div className="flex-c-m flex-w w-full p-t-45">
+            <button
+              onClick={handleLoadMore}
+              className="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
