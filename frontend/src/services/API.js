@@ -192,27 +192,15 @@ const apiService = {
     }
   },
   // Fetch all products
-  getProducts: async () => {
+   getProducts: async (page = 1) => {
     try {
-      const response = await apiClient.get("/products");
-      return response.data;
+      const response = await apiClient.get(`/products?page=${page}`);
+      return response.data; // Return paginated data
     } catch (error) {
-      handleApiError(error);
+      console.error("Error fetching products:", error);
       throw error;
     }
   },
-
-  // Fetch a single product by ID
-  //who added this??
-  // getProductById: async (id) => {
-  //   try {
-  //     const response = await apiClient.get("/product",id);
-  //     return response.data;
-  //   } catch (error) {
-  //     handleApiError(error);
-  //     throw error;
-  //   }
-  // },
 
 };
 
