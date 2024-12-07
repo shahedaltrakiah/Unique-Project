@@ -13,7 +13,9 @@ class ProductController extends Controller
     {
         try {
             // Retrieve all products with their associated categories
-            $products = Product::with('category')->get();
+            // $products = Product::with(relations: 'category')->get();
+            $products = Product::with('category')->paginate(8);
+
 
             // Return success response
             return response()->json($products, 200);
