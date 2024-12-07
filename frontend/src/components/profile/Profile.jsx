@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import ProfileSidebar from "./ProfileSidebar";
-import apiService from "../../services/API"; // Assuming you have an apiService for API calls
+import apiService from "../../services/API"; 
 
 function Profile() {
   const [userData, setUserData] = useState({
@@ -83,7 +83,7 @@ function Profile() {
   }
 
   return (
-    <div className="main-container mt-5">
+    <div className="main-container">
       <ProfileSidebar />
       <div className="content" id="content">
         {/* Profile Section */}

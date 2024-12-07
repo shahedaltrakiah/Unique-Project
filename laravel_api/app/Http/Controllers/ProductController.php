@@ -141,9 +141,6 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            // Log incoming request data
-            Log::info("Request data: ", $request->all());
-
             // Validate incoming request data
             $validated = $request->validate([
                 'name' => 'nullable|string|max:255',
@@ -155,38 +152,24 @@ class ProductController extends Controller
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            // Find the product by ID
+            // Find the product
             $product = Product::findOrFail($id);
 
-            // Handle the image update if present
+            // Handle the main image update
             if ($request->hasFile('image')) {
-                // Log the incoming image
-                Log::info("Image file found: " . $request->file('image')->getClientOriginalName());
-
-                // Delete the old image if it exists
+                // Delete the old main image if it exists
                 if ($product->image) {
                     Storage::disk('public')->delete($product->image);
                 }
-
-                // Store the new image
+                // Store the new main image
                 $validated['image'] = $request->file('image')->store('products', 'public');
             }
 
-            // Update product attributes
+            // Update the product attributes
             $product->update(array_filter($validated)); // Only update non-null values
 
-            // Log the updated product
-            Log::info("Updated product: ", $product->toArray());
-
             return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error("Product not found: " . $e->getMessage());
-            return response()->json(['error' => 'Product not found'], 404);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error("Validation failed: " . json_encode($e->errors()));
-            return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
-            Log::error("General error: " . $e->getMessage());
             return response()->json(['error' => 'Failed to update product', 'message' => $e->getMessage()], 500);
         }
     }

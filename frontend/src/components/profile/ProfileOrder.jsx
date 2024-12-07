@@ -25,12 +25,12 @@ function ProfileOrder() {
   };
 
   return (
-    <div className="main-container mt-5">
-      <div className="d-flex"> {/* Flexbox container for sidebar and table */}
-        <ProfileSidebar /> {/* Sidebar stays fixed on the left */}
+    <div className="main-container">
+      <div className="d-flex"> 
+        <ProfileSidebar />
         
-        <div className="content-container ms-4"> {/* Space the table from sidebar */}
-          <h4>Order History</h4>
+        <div className="content-container ms-4">
+          <h3 className="title mt-4">Order History</h3>
 
           {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -140,6 +140,7 @@ function ProfileOrder() {
             </div>
           )}
         </div>
+        
       </div>
     </div>
   );
