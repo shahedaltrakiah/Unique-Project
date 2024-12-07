@@ -141,7 +141,7 @@ function Products() {
   }, [categoryId]);
 
   return (
-    <section className="bg0 p-t-23 p-b-140">
+    <section className="bg0 p-t-23 p-b-50">
       <div className="container">
         <div className="p-b-10">
           <h3 className="ltext-103 cl5">Product Overview</h3>
@@ -176,7 +176,7 @@ function Products() {
                     >
                       {product.name}
                     </Link>
-                    <span className="stext-105 cl3">{product.price}JD</span>
+                    <span className="stext-105 cl3 mytext">{product.price}JD</span>
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
                     <button

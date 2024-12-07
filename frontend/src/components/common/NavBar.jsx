@@ -70,19 +70,20 @@ function NavBar() {
               className="wrap-icon-header flex-w flex-r-m"
               style={{ gap: "15px" }}
             >
-              <div className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-                <i className="zmdi zmdi-search" />
-              </div>
-              <div
+              {/* <div
                 className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
                 data-notify={2}
+              >
+                <i className="zmdi zmdi-shopping-cart" />
+              </div> */}
+              <div
+                className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  js-show-cart"
               >
                 <i className="zmdi zmdi-shopping-cart" />
               </div>
               <a
                 href="/wishlist"
-                className="icon-header-item cl2 hov-cl1 trans-04 p-r-11 icon-header-noti icon-header-noti"
-                data-notify={0}
+                className="icon-header-item cl2 hov-cl1 trans-04 p-r-11"
               >
                 <i className="zmdi zmdi-favorite-outline" />
               </a>

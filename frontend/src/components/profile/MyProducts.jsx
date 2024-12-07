@@ -111,7 +111,7 @@ function MyProducts() {
         </div>
 
         <div className="col-md-9">
-          <h4>Products List</h4>
+          <h3 className="title mt-4 mb-4">Products List</h3>
           {error && <p style={{ color: "red" }}>{error}</p>}
 
           <table className="table order-table">
@@ -130,7 +130,7 @@ function MyProducts() {
                 <tr key={product.id}>
                   <td>
                     <img
-                      src={product.image}
+                      src={`assets/images/${product.image}`}
                       alt={product.name}
                       style={{
                         width: "50px",

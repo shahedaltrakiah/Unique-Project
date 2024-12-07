@@ -31,7 +31,6 @@ function Checkout() {
   };
 
   const handlePlaceOrder = async () => {
-    // استخراج معرّفات المنتجات فقط من العربة
     const productIds = cartItems.map(item => item.id);
   
     const orderData = {
@@ -180,18 +179,18 @@ function Checkout() {
             {/* Order Summary */}
             <div className="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
               <div className="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-                <h4 className="mtext-109 cl2 p-b-30">Your Order</h4>
+                <h4 className="mtext-109 cl2">Your Order</h4>
 
                 {/* Display the products in the cart */}
                 {cartItems.length > 0 ? (
                   cartItems.map((item, index) => (
-                    <div key={index} className="flex-w flex-t bor12 p-b-13">
+                    <div key={index} className="flex-w flex-t bor12 p-b-13 p-t-20">
                       <div className="size-208">
                         <span className="stext-110 cl2 p-b-20">{item.name}</span>
                       </div>
                       <div className="size-209">
                         <span className="mtext-110 cl2" style={{ marginLeft: "90px" }}>
-                          ${item.price.toFixed(2)}
+                          {item.price.toFixed(2)}JD
                         </span>
                       </div>
                     </div>
@@ -207,7 +206,7 @@ function Checkout() {
                   </div>
                   <div className="size-209 p-t-1">
                     <span className="mtext-110 cl2" style={{ marginLeft: "90px" }}>
-                      ${calculateSubtotal()}
+                      {calculateSubtotal()}JD
                     </span>
                   </div>
                 </div>

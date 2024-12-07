@@ -443,6 +443,11 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   color: #6c7ae0;
 }
 
+.mytext{
+  color: #6c7ae0;
+  font-weight: bold;
+}
+
 .main-menu > li:hover > .sub-menu {
   visibility: visible;
   opacity: 1;
@@ -3485,6 +3490,3 @@ li {
   font-weight: 300;
   margin: 0 0 20px;
 }
-
-
-

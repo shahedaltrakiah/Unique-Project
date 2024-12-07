@@ -1,7 +1,7 @@
 function Testimonials() {
   return (
     <>
-      <div className="sec-banner p-b-50 p-l-120">
+      <div className="sec-banner p-b-80 p-l-120">
         <div className="container">
           <figure className="snip1533">
             <figcaption>
