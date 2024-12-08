@@ -5,9 +5,7 @@ function CartSidebar() {
   const [cartItems, setCartItems] = useState([]);
 
   // Fetch cart items from cookies
-  const getCartItems = () => {
-    return JSON.parse(Cookies.get("cart") || "[]");
-  };
+  const getCartItems = () => JSON.parse(Cookies.get("cart") || "[]");
 
   // Update cookies after state changes
   const setCartItemsToCookies = (items) => {
@@ -33,6 +31,10 @@ function CartSidebar() {
     const cartData = getCartItems();
     setCartItems(cartData); // Set initial cart data in state
   }, []); // This runs only once on component mount
+
+  // Calculate the total price
+  const calculateTotal = () =>
+    cartItems.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);
 
   return (
     <div className="wrap-header-cart js-panel-cart">
