@@ -32,18 +32,20 @@ function Products() {
     try {
       let cart = getCartItems();
       const existingProduct = cart.find((item) => item.id === product.id);
-  
+
       if (!existingProduct) {
         cart.push(product); // Add the full product to the cart
         Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
         setCartItems(cart); // Update cart items state
-  
+
         Swal.fire({
           title: "Product Added!",
           text: "The product has been added to your cart successfully.",
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
+        }).then(() => {
+          window.location.href = "/";
         });
       } else {
         Swal.fire({
@@ -64,7 +66,6 @@ function Products() {
       });
     }
   };
-  
 
   // Add to favorites
   const handleAddToFavorite = async (productId) => {
@@ -92,6 +93,9 @@ function Products() {
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
+        }).then(() => {
+          // Reload the page after showing the success message
+          window.location.href = "/";
         });
       }
     } catch (err) {
@@ -138,8 +142,9 @@ function Products() {
                     alt={product.name}
                   />
                   <button
-                     onClick={() => handleAddToCart(product)}
-                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"                   >
+                    onClick={() => handleAddToCart(product)}
+                    className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
+                  >
                     Add To Cart
                   </button>
                 </div>
@@ -151,7 +156,9 @@ function Products() {
                     >
                       {product.name}
                     </Link>
-                    <span className="stext-105 cl3 mytext">{product.price}JD</span>
+                    <span className="stext-105 cl3 mytext">
+                      {product.price}JD
+                    </span>
                   </div>
                   <div className="block2-txt-child2 flex-r p-t-3">
                     <button
@@ -166,10 +173,10 @@ function Products() {
                       <img
                         className="icon-heart2 dis-block trans-04 ab-t-l"
                         src="/assets/images/icons/icon-heart-02.png"
-                         alt="ICON"
-                       />
-                     </button>
-                   </div>
+                        alt="ICON"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

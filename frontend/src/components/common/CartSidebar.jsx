@@ -9,34 +9,30 @@ function CartSidebar() {
     return JSON.parse(Cookies.get("cart") || "[]");
   };
 
-  // Function to update cart state dynamically
-  const updateCartItems = () => {
-    const cartData = getCartItems();
-    setCartItems(cartData);
+  // Update cookies after state changes
+  const setCartItemsToCookies = (items) => {
+    Cookies.set("cart", JSON.stringify(items)); // No expiration here
   };
 
-  // Update cart state on component mount and when cookies change
-  useEffect(() => {
-    updateCartItems();
-
-    // Set up an interval to monitor cookie changes (if not using a state management library)
-    const interval = setInterval(() => {
-      const currentCart = getCartItems();
-      if (JSON.stringify(currentCart) !== JSON.stringify(cartItems)) {
-        setCartItems(currentCart);
-      }
-    }, 500); // Check every 500ms
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, [cartItems]);
-
-  // Add a function to remove an item from the cart
-  const removeItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    Cookies.set("cart", JSON.stringify(updatedCart));
+  // Add item to the cart
+  const addItemToCart = (newItem) => {
+    const updatedCart = [...cartItems, newItem];
     setCartItems(updatedCart);
+    setCartItemsToCookies(updatedCart); // Update cookies immediately
   };
+
+  // Remove item from the cart
+  const removeItemFromCart = (itemId) => {
+    const updatedCart = cartItems.filter((item) => item.id !== itemId);
+    setCartItems(updatedCart);
+    setCartItemsToCookies(updatedCart); // Update cookies immediately
+  };
+
+  // Load cart from cookies on initial render
+  useEffect(() => {
+    const cartData = getCartItems();
+    setCartItems(cartData); // Set initial cart data in state
+  }, []); // This runs only once on component mount
 
   return (
     <div className="wrap-header-cart js-panel-cart">
@@ -44,7 +40,10 @@ function CartSidebar() {
       <div className="header-cart flex-col-l p-l-65 p-r-25">
         <div className="header-cart-title flex-w flex-sb-m p-b-8">
           <span className="mtext-103 cl2">Your Cart</span>
-          <div className="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+          <div
+            className="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart"
+            onClick={() => setCartItems([])} // Clear the cart when the close icon is clicked
+          >
             <i className="zmdi zmdi-close"></i>
           </div>
         </div>
@@ -56,12 +55,6 @@ function CartSidebar() {
                 <li className="header-cart-item flex-w flex-t m-b-12" key={item.id}>
                   <div className="header-cart-item-img">
                     <img src={`assets/images/${item.image}`} alt={item.name} />
-                    <button
-                      className="remove-item-btn"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      X
-                    </button>
                   </div>
                   <div className="header-cart-item-txt p-t-8">
                     <a
@@ -70,7 +63,13 @@ function CartSidebar() {
                     >
                       {item.name}
                     </a>
-                    <span className="header-cart-item-info">{item.price}JD</span>
+                    <span className="header-cart-item-info">{item.price} JD</span>
+                    <div
+                      className="remove-item"
+                      onClick={() => removeItemFromCart(item.id)} // Remove item on click
+                    >
+                      <i className="zmdi zmdi-delete"></i> Remove
+                    </div>
                   </div>
                 </li>
               ))
@@ -84,7 +83,8 @@ function CartSidebar() {
               Total:{" "}
               {cartItems
                 .reduce((total, item) => total + parseFloat(item.price), 0)
-                .toFixed(2)}JD
+                .toFixed(2)}{" "}
+              JD
             </div>
 
             <div className="header-cart-buttons flex-w w-full">
