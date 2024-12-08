@@ -127,7 +127,7 @@ class ProductController extends Controller
     {
         try {
             // Find the product by ID
-            $product = Product::find($id)->with('productImages')->get();
+            $product = Product::find($id);
 
             // If the product is not found, return a 404 error
             if (!$product) {
