@@ -2,7 +2,7 @@ function Footer() {
   return (
     <>
       {/* Footer */}
-      <footer className="bg3 p-t-75 p-b-32">
+      <footer className="bg3 p-t-75 p-b-32 p-l-40">
         <div className="container">
           <div className="row d-flex justify-content-center align-items-center text-left">
             {/* Unique Store Section */}
