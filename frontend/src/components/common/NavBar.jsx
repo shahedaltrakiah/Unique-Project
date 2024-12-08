@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
-
+import Cookies from "js-cookie";
+import apiService from "../../services/API"; // Your API service
 
 function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("auth_token"));
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
+
+  const cartItems = JSON.parse(Cookies.get("cart") || "[]");
+  const cartCount = cartItems.length;
 
   useEffect(() => {
     setIsLoggedIn(!!token);
@@ -18,6 +22,22 @@ function NavBar() {
     setToken(null);
     navigate("/login");
   };
+
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch wishlist data from backend
+    const fetchWishlistCount = async () => {
+      try {
+        const response = await apiService.getWishlist(); // Make sure `getWishlist` is the correct API method
+        setWishlistCount(response.data.wishlistCount);
+      } catch (error) {
+        console.error("Error fetching wishlist count", error);
+      }
+    };
+
+    fetchWishlistCount();
+  }, []); // Run on mount
 
   return (
     <header>
@@ -70,20 +90,16 @@ function NavBar() {
               className="wrap-icon-header flex-w flex-r-m"
               style={{ gap: "15px" }}
             >
-              {/* <div
-                className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
-                data-notify={2}
-              >
-                <i className="zmdi zmdi-shopping-cart" />
-              </div> */}
               <div
-                className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11  js-show-cart"
+                className="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart"
+                data-notify={cartCount}
               >
                 <i className="zmdi zmdi-shopping-cart" />
               </div>
               <a
                 href="/wishlist"
-                className="icon-header-item cl2 hov-cl1 trans-04 p-r-11"
+                className="icon-header-item cl2 hov-cl1 trans-04 p-r-11  icon-header-noti "
+                data-notify={wishlistCount}
               >
                 <i className="zmdi zmdi-favorite-outline" />
               </a>

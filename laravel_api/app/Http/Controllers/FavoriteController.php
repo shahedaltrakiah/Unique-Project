@@ -61,17 +61,23 @@ class FavoriteController extends Controller
     public function index()
     {
         try {
-            // Check if the user is authenticated
             $user = Auth::user(); // Get the currently logged-in user
 
-            // Fetch the user's favorites
             $favorites = Favorite::where('user_id', $user->id)
-                ->with('product') // Assuming there is a relationship with Product
+                ->with('product')
                 ->get();
 
-            return response()->json(['favorites' => $favorites], 200);
+            $wishlistCount = $favorites->count();
+
+            return response()->json([
+                'favorites' => $favorites,
+                'wishlistCount' => $wishlistCount
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch favorites', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Failed to fetch favorites',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 

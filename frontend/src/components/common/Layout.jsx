@@ -26,6 +26,7 @@ const Layout = () => {
     "/MyProducts": "My Products",
     "/sell": "Sell Your Product",
     "/thankyou" : "Thank You",
+    "/product/:id": "Product Details",
   };
 
   return (

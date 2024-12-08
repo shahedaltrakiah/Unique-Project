@@ -19,7 +19,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (formData.password !== formData.confirmPassword) {
       Swal.fire({
         icon: "error",
@@ -28,21 +28,20 @@ const Register = () => {
       });
       return;
     }
-
+  
     try {
-      await apiService.registerUser(formData);
-
-      // Save token in localStorage
+      const response = await apiService.registerUser(formData); 
+  
       localStorage.setItem("auth_token", response.token);
-
+  
       Swal.fire({
         icon: "success",
         title: "Registration Successful!",
         text: "You have been registered successfully.",
       }).then(() => {
         window.location.href = "/";
-    });
-
+      });
+  
       setFormData({
         name: "",
         email: "",
@@ -52,9 +51,9 @@ const Register = () => {
         phone: "",
       });
     } catch (error) {
-      // Error handling is centralized in `apiService`
     }
   };
+  
   
   return (
     <section className="bg0 p-t-104 p-b-116">

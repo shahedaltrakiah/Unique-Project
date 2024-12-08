@@ -38,6 +38,9 @@ class AuthController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
             return response()->json(['error' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle any other exceptions
+            return response()->json(['error' => 'An error occurred during registration.', 'message' => $e->getMessage()], 500);
         }
     }
 
