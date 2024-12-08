@@ -5,38 +5,44 @@ function CartSidebar() {
   const [cartItems, setCartItems] = useState([]);
 
   // Fetch cart items from cookies
-  const getCartItems = () => {
-    return JSON.parse(Cookies.get("cart") || "[]");
-  };
+  const getCartItems = () => JSON.parse(Cookies.get("cart") || "[]");
 
-  // Function to update cart state dynamically
+  // Function to update the cart state
   const updateCartItems = () => {
     const cartData = getCartItems();
     setCartItems(cartData);
   };
 
-  // Update cart state on component mount and when cookies change
+  // Listen for custom cart update events
   useEffect(() => {
+    // Update on mount
     updateCartItems();
 
-    // Set up an interval to monitor cookie changes (if not using a state management library)
-    const interval = setInterval(() => {
-      const currentCart = getCartItems();
-      if (JSON.stringify(currentCart) !== JSON.stringify(cartItems)) {
-        setCartItems(currentCart);
-      }
-    }, 500); // Check every 500ms
+    // Listen for the custom "cartUpdated" event
+    const handleCartUpdate = () => updateCartItems();
+    window.addEventListener("cartUpdated", handleCartUpdate);
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, [cartItems]);
+    // Cleanup listener on unmount
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+  }, []);
 
-  // Add a function to remove an item from the cart
+  // Emit a custom event when the cart is updated
+  const emitCartUpdate = () => {
+    const event = new Event("cartUpdated");
+    window.dispatchEvent(event);
+  };
+
+  // Function to remove an item from the cart
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     Cookies.set("cart", JSON.stringify(updatedCart));
-    setCartItems(updatedCart);
+    setCartItems(updatedCart); // Update local state
+    emitCartUpdate(); // Notify other components
   };
+
+  // Calculate the total price
+  const calculateTotal = () =>
+    cartItems.reduce((total, item) => total + parseFloat(item.price), 0).toFixed(2);
 
   return (
     <div className="wrap-header-cart js-panel-cart">
@@ -60,7 +66,7 @@ function CartSidebar() {
                       className="remove-item-btn"
                       onClick={() => removeItem(item.id)}
                     >
-                      X
+                      <i className="zmdi zmdi-close"></i>
                     </button>
                   </div>
                   <div className="header-cart-item-txt p-t-8">
@@ -70,7 +76,7 @@ function CartSidebar() {
                     >
                       {item.name}
                     </a>
-                    <span className="header-cart-item-info">{item.price}JD</span>
+                    <span className="header-cart-item-info">{item.price} JD</span>
                   </div>
                 </li>
               ))
@@ -81,10 +87,7 @@ function CartSidebar() {
 
           <div className="w-full">
             <div className="header-cart-total w-full p-tb-40">
-              Total:{" "}
-              {cartItems
-                .reduce((total, item) => total + parseFloat(item.price), 0)
-                .toFixed(2)}JD
+              Total: {calculateTotal()} JD
             </div>
 
             <div className="header-cart-buttons flex-w w-full">
