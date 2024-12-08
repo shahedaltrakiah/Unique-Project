@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import apiService from "../../services/API";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 function ProductDetails() {
   const { id } = useParams(); // Extract product ID from the URL
   const [product, setProduct] = useState(null); // State to hold product details
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]); // Cart items state
-
-  console.log("Product ID from URL:", id);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -114,37 +113,63 @@ function ProductDetails() {
   return (
     <div className="product-details-container">
       <div className="product-details-row">
+        <div className="wrap-slick3 flex-sb flex-w">
+          <div className="wrap-slick3-dots" />
+          <div className="wrap-slick3-arrows flex-sb-m flex-w" />
+          <div className="slick3 gallery-lb">
+            {product.product_images && product.product_images.length > 0 ? (
+              product.product_images.map((image) => (
+                <div key={image.id} className="item-slick3">
+                  <div className="wrap-pic-w pos-relative">
+                    <img
+                      src={`${image.image}`}
+                      alt={product.name}
+                    />
+                    <a
+                      className="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
+                      href={`/assets/images/${image.image}`}
+                    >
+                      <i className="fa fa-expand" />
+                    </a>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No additional images available.</p>
+            )}
+          </div>
+        </div>
+
         {/* Product Images */}
         <div className="product-images">
           <div className="main-image">
             <img
-              src={`/assets/images/${product.image}`}
+              src={`${product.image}`}
               alt={product.name}
               className="product-main-image"
             />
           </div>
         </div>
-
         {/* Product Info */}
         <div className="product-info">
           <h2 className="product-name">{product.name}</h2>
           <p className="product-description">{product.description}</p>
-          <span className="product-price">Price: {product.price} JD</span>
-          <span className="product-price">Size: {product.size}</span>
+          <span className="product-price">Price: {product.price}</span>
+          <span className="product-size">Size: {product.size}</span>
 
           {/* Add to Cart and Wishlist */}
           <div className="product-actions">
             <button
-              className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
+              className="btn-add-to-cart"
               onClick={() => handleAddToCart(product)}
             >
-              Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
+              Add to Cart
             </button>
             <button
-              className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
+              className="btn-add-to-wishlist"
               onClick={() => handleAddToFavorite(product.id)}
             >
-              Add to &nbsp; <i className="fa fa-heart"></i>
+              <i className="fa fa-heart"></i> Wishlist
             </button>
           </div>
         </div>
