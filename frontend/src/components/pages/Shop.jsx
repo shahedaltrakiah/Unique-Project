@@ -9,26 +9,14 @@ function Shop() {
   const [category, setCategory] = useState(null); // Selected category state
   const [error, setError] = useState(null); // Error state
   const [cartItems, setCartItems] = useState([]); // Cart items state
+  const [categories, setCategories] = useState([]); // Categories state
+
 
   const location = useLocation(); // To access query parameters
   const queryParams = new URLSearchParams(location.search); // Parse query parameters
   const categoryIdFromUrl = queryParams.get("category"); // Extract category ID from URL
 
   const navigate = useNavigate();
-
-  // Fetch products based on selected category
-  const fetchProducts = async (selectedCategory) => {
-    try {
-      const params = selectedCategory?.id
-        ? { category_id: selectedCategory.id }
-        : {}; // Only add category_id if it exists
-      const response = await apiService.getShopProducts(params); // Fetch products
-      setProducts(response);
-    } catch (err) {
-      console.error("Error fetching shop products:", err);
-      setError("Failed to load products.");
-    }
-  };
 
   // Get cart items from cookies
   const getCartItems = () => JSON.parse(Cookies.get("cart") || "[]");
@@ -109,31 +97,58 @@ function Shop() {
     }
   };
 
-  // Handle changes to the category (both URL changes and filter interaction)
+   // Fetch categories for mapping category IDs to names
+   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiService.getCategories(); // Fetch categories from API
+        setCategories(response); // Save categories
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Update the category state when navigating from the banner
   useEffect(() => {
-    if (
-      categoryIdFromUrl &&
-      (!category || category?.id !== categoryIdFromUrl)
-    ) {
-      // If category ID is in the URL, set it as the selected category
-      setCategory({ id: categoryIdFromUrl });
-    } else if (!categoryIdFromUrl && category) {
-      // If no category is in the URL, reset the category
-      setCategory(null);
+    if (categoryIdFromUrl) {
+      // Find the category name based on categoryIdFromUrl
+      const matchedCategory = categories.find(
+        (cat) => cat.id === parseInt(categoryIdFromUrl)
+      );
+      if (matchedCategory) {
+        setCategory(matchedCategory); // Update the category state
+      }
+    } else {
+      setCategory(null); // Clear the category if no categoryIdFromUrl
     }
-  }, [categoryIdFromUrl]);
+  }, [categoryIdFromUrl, categories]);
 
   // Fetch products whenever the category changes
   useEffect(() => {
-    fetchProducts(category);
-    setCartItems(getCartItems());
+    const fetchProducts = async () => {
+      try {
+        const params = category?.id
+          ? { category_id: category.id }
+          : {}; // Add category_id if category exists
+        const response = await apiService.getShopProducts(params); // Fetch products
+        setProducts(response); // Update products state
+      } catch (err) {
+        console.error("Error fetching shop products:", err);
+        setError("Failed to load products.");
+      }
+    };
+
+    fetchProducts();
   }, [category]);
 
   const handleFilterChange = (selectedCategory) => {
     if (selectedCategory?.id) {
-      navigate(`/shop?category=${selectedCategory.id}`); // Update the URL with category_id
+      navigate(`/shop?category=${selectedCategory.id}`); // Update the URL
     } else {
-      navigate("/shop"); // Clear the category filter in the URL
+      navigate("/shop"); // Clear the filter
     }
     setCategory(selectedCategory); // Update the category state
   };
@@ -141,7 +156,7 @@ function Shop() {
   return (
     <div>
       {/* Pass setCategory to Filter to handle filter interactions */}
-      <Filter setCategory={handleFilterChange} />
+      <Filter setCategory={handleFilterChange} selectedCategory={category} />
       {error && <p style={{ color: "red" }}>{error}</p>}
       <section className="bg0 p-t-23 p-b-140">
         <div className="container">

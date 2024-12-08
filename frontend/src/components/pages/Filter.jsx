@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../../services/API"; 
 
-function Filter({ setCategory }) {
+function Filter({ setCategory, selectedCategory }) {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -18,18 +17,16 @@ function Filter({ setCategory }) {
     fetchCategories();
   }, []);
 
-  const handleFilterClick = (category) => {
-    setSelectedCategory(category); // Highlight the active category
-    //setCategory(category ? { id: category.id } : { all: true }); // Notify parent about the selected category or request all products
-    setCategory(category?.id ? category : null);
-};
+const handleFilterClick = (category) => {
+    setCategory(category); // Notify parent about the selected category
+  };
 
 
   return (
     <>
       <div className="p-b-10 p-t-40 p-l-75">
         <h3 className="ltext-103 cl5 ">
-          {selectedCategory ? ` ${selectedCategory.name}` : "All Products"}
+          {selectedCategory ? selectedCategory.name : "All Products"}
         </h3>
       </div>
       <div className="flex-w flex-sb-m p-l-75">
