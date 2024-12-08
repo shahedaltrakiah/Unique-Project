@@ -24,10 +24,10 @@ function Hero() {
             <div className="container h-full">
               <div className="flex-col-l-m h-full p-t-100 p-b-30 respon5">
                 <span className="ltext-101 cl2 respon2">
-                  Women Collection 2024
+                Discover pre-loved treasures at unbeatable prices
                 </span>
                 <h2 className="ltext-201 cl2 p-t-19 p-b-43 respon1">
-                  NEW SEASON
+                Shop Unique Finds
                 </h2>
                 <div className="button-group">
                   <a
@@ -51,9 +51,9 @@ function Hero() {
           <div className="item-slick1 slide-2">
             <div className="container h-full">
               <div className="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-                <span className="ltext-101 cl2 respon2">Men New-Season</span>
+                <span className="ltext-101 cl2 respon2">List your items today and make space for something new</span>
                 <h2 className="ltext-201 cl2 p-t-19 p-b-43 respon1">
-                  Jackets & Coats
+                Turn Clutter into Cash!
                 </h2>
                 <div className="button-group">
                   <a
@@ -78,10 +78,10 @@ function Hero() {
             <div className="container h-full">
               <div className="flex-col-l-m h-full p-t-100 p-b-30 respon5">
                 <span className="ltext-101 cl2 respon2">
-                  Men Collection 2024
+                Shop sustainably and embrace secondhand fashion
                 </span>
                 <h2 className="ltext-201 cl2 p-t-19 p-b-43 respon1">
-                  New Arrivals
+                Sustain Your Style
                 </h2>
                 <div className="button-group">
                   <a

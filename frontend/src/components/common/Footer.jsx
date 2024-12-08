@@ -1,4 +1,21 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import apiService from "../../services/API";
 function Footer() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiService.getCategories(); // Fetch categories from API
+        setCategories(response);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
   return (
     <>
       {/* Footer */}
@@ -36,26 +53,17 @@ function Footer() {
             <div className="col-sm-6 col-lg-4 p-b-50">
               <h4 className="stext-301 cl0 p-b-10">Categories</h4>
               <ul className="list-unstyled">
-                <li className="p-b-10">
-                  <a href="#" className="stext-107 cl7 hov-cl1 trans-04">
-                    Tops
-                  </a>
-                </li>
-                <li className="p-b-10">
-                  <a href="#" className="stext-107 cl7 hov-cl1 trans-04">
-                    Bottoms
-                  </a>
-                </li>
-                <li className="p-b-10">
-                  <a href="#" className="stext-107 cl7 hov-cl1 trans-04">
-                    Shoes
-                  </a>
-                </li>
-                <li className="p-b-10">
-                  <a href="#" className="stext-107 cl7 hov-cl1 trans-04">
-                    Bags
-                  </a>
-                </li>
+                {categories.map((category) => (
+                  <li key={category.id} className="p-b-10">
+                    {/* Link to /shop with category query */}
+                    <Link
+                      to={`/shop?category=${category.id}`} // Pass category id as query param
+                      className="stext-107 cl7 hov-cl1 trans-04"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
