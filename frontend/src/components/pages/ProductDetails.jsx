@@ -129,7 +129,7 @@ function ProductDetails() {
         <div className="product-info">
           <h2 className="product-name">{product.name}</h2>
           <p className="product-description">{product.description}</p>
-          <span className="product-price">Price: {product.price}</span>
+          <span className="product-price">Price: {product.price} JD</span>
           <span className="product-price">Size: {product.size}</span>
 
           {/* Add to Cart and Wishlist */}
