@@ -216,9 +216,9 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   height: auto;
 }
 
-.header-v4 .container-menu-desktop {
+/* .header-v4 .container-menu-desktop {
   height: 124px;
-}
+} */
 
 
 /*==================================================================
@@ -275,7 +275,6 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   background-color: transparent;
   width: 100%;
   height: 84px;
-  top: 40px;
   left: 0px; 
 
   -webkit-transition: height 0.3s, background-color 0.3s;
@@ -1206,7 +1205,9 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 }
 
 
-
+.breadcrumb-text{
+  margin-top: 100px;
+}
 /*//////////////////////////////////////////////////////////////////
 [ Slick1 ]*/
 .wrap-slick1 {
@@ -2654,6 +2655,7 @@ input.num-product::-webkit-inner-spin-button {
 .bg7 {background-color: #333;}
 .bg8 {background-color: #f3f3f3;}
 .bg9 {background-color: rgba(255,255,255,0.9);}
+.bg10 {background-color: rgba(244, 41, 41, 0.71);}
 
 /*---------------------------------------------*/
 .bg-overlay1::before {

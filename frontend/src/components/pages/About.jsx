@@ -32,7 +32,7 @@ function About() {
             <div className="col-11 col-md-5 col-lg-4 m-lr-auto">
               <div className="how-bor1 ">
                 <div className="hov-img0">
-                  <img src="public/assets/images/ourlogo.png" alt="IMG" />
+                  <img src="public/assets/images/about-02.jpg" alt="IMG" />
                 </div>
               </div>
             </div>

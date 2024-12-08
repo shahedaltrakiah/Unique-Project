@@ -14,25 +14,25 @@ class ProductController extends Controller
     //     try {
     //         // Build the query
     //         $query = Product::with('category');
-    
+
     //         // Filter by category if category_id is provided
     //         if ($request->has('category_id')) {
     //             $query->where('category_id', $request->category_id);
     //         }
-    
+
     //         // Check if all products are requested (no pagination)
     //         if ($request->query('all')) {
     //             $products = $query->get(); // Fetch all products
     //         } else {
     //             $products = $query->paginate(8); // Paginated fetch
     //         }
-    
+
     //         return response()->json($products, 200);
     //     } catch (\Exception $e) {
     //         return response()->json(['error' => 'An error occurred while fetching products.', 'message' => $e->getMessage()], 500);
     //     }
     // }
-    
+
 
 
     public function userProducts()
@@ -122,7 +122,7 @@ class ProductController extends Controller
         }
     }
 
-
+//edit//
     public function getProduct($id)
     {
         try {
@@ -266,37 +266,37 @@ class ProductController extends Controller
     // }
 
     // Fetch limited products for the home page
-public function getHomeProducts()
-{
-    try {
-        // Fetch only the first 8 products with pagination
-        $products = Product::with('category')->paginate(8);
+    public function getHomeProducts()
+    {
+        try {
+            // Fetch only the first 8 products with pagination
+            $products = Product::with('category')->paginate(8);
 
-        return response()->json($products, 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'An error occurred while fetching home products.', 'message' => $e->getMessage()], 500);
-    }
-}
-
-// Fetch all products for the shop page
-public function getShopProducts(Request $request)
-{
-    try {
-        $query = Product::with('category');
-
-        // Filter by category if provided
-        if ($request->has('category_id')) {
-            $query->where('category_id', $request->category_id);
+            return response()->json($products, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching home products.', 'message' => $e->getMessage()], 500);
         }
-
-        // Fetch all products without pagination
-        $products = $query->get();
-
-        return response()->json($products, 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'An error occurred while fetching shop products.', 'message' => $e->getMessage()], 500);
     }
-}
+
+    // Fetch all products for the shop page
+    public function getShopProducts(Request $request)
+    {
+        try {
+            $query = Product::with('category');
+
+            // Filter by category if provided
+            if ($request->has('category_id')) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            // Fetch all products without pagination
+            $products = $query->get();
+
+            return response()->json($products, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching shop products.', 'message' => $e->getMessage()], 500);
+        }
+    }
 
 
 

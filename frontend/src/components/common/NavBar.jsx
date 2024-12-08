@@ -40,10 +40,10 @@ function NavBar() {
   }, []); // Run on mount
 
   return (
-    <header>
+    <header className="header-v4">
       {/* Header desktop */}
       <div className="container-menu-desktop">
-        <div className="wrap-menu-desktop">
+        <div className="wrap-menu-desktop ">
           <nav className="limiter-menu-desktop container">
             {/* Logo desktop */}
             <a href="/" className="logo">

@@ -4,7 +4,6 @@ import Filter from "./Filter";
 import apiService from "../../services/API";
 import Cookies from "js-cookie";
 
-
 function Shop() {
   const [products, setProducts] = useState([]); // Products state
   const [category, setCategory] = useState(null); // Selected category state
@@ -20,7 +19,9 @@ function Shop() {
   // Fetch products based on selected category
   const fetchProducts = async (selectedCategory) => {
     try {
-      const params = selectedCategory?.id ? { category_id: selectedCategory.id } : {}; // Only add category_id if it exists
+      const params = selectedCategory?.id
+        ? { category_id: selectedCategory.id }
+        : {}; // Only add category_id if it exists
       const response = await apiService.getShopProducts(params); // Fetch products
       setProducts(response);
     } catch (err) {
@@ -37,12 +38,12 @@ function Shop() {
     try {
       let cart = getCartItems();
       const existingProduct = cart.find((item) => item.id === product.id);
-  
+
       if (!existingProduct) {
         cart.push(product); // Add the full product to the cart
         Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
         setCartItems(cart); // Update cart items state
-  
+
         Swal.fire({
           title: "Product Added!",
           text: "The product has been added to your cart successfully.",
@@ -69,7 +70,6 @@ function Shop() {
       });
     }
   };
-  
 
   // Add to favorites
   const handleAddToFavorite = async (productId) => {
@@ -111,7 +111,10 @@ function Shop() {
 
   // Handle changes to the category (both URL changes and filter interaction)
   useEffect(() => {
-    if (categoryIdFromUrl && (!category || category?.id !== categoryIdFromUrl)) {
+    if (
+      categoryIdFromUrl &&
+      (!category || category?.id !== categoryIdFromUrl)
+    ) {
       // If category ID is in the URL, set it as the selected category
       setCategory({ id: categoryIdFromUrl });
     } else if (!categoryIdFromUrl && category) {
@@ -155,40 +158,45 @@ function Shop() {
                       alt={product.name}
                     />
                     <button
-                     onClick={() => handleAddToCart(product)}
-                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"                   >
-                    Add To Cart
-                  </button>
-                  </div>
-                  <div className="block2-txt flex-w flex-t p-t-14">
-                  <div className="block2-txt-child1 flex-col-l">
-                    <Link
-                      to={`/product/${product.id}`}
-                      className="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                      onClick={() => handleAddToCart(product)}
+                      className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
                     >
-                      {product.name}
-                    </Link>
-                    <span className="stext-105 cl3 mytext">{product.price}JD</span>
+                      Add To Cart
+                    </button>
                   </div>
-                  <div className="block2-txt-child2 flex-r p-t-3">
-                    <button
-                      className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
-                      onClick={() => handleAddToFavorite(product.id)}
-                    >
-                      <img
-                        className="icon-heart1 dis-block trans-04"
-                        src="/assets/images/icons/icon-heart-01.png"
-                        alt="ICON"
-                      />
-                      <img
-                        className="icon-heart2 dis-block trans-04 ab-t-l"
-                        src="/assets/images/icons/icon-heart-02.png"
-                         alt="ICON"
-                       />
-                     </button>
-                   </div>
-                </div>
-                  
+                  <div
+                    className="block2-txt flex-w flex-t p-t-14"
+                    style={{ width: "190px", marginLeft: "30px" }}
+                  >
+                    <div className="block2-txt-child1 flex-col-l">
+                      <Link
+                        to={`/product/${product.id}`}
+                        className="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                      >
+                        {product.name}
+                      </Link>
+                      <span className="stext-105 cl3 mytext">
+                        {product.price}JD
+                      </span>
+                    </div>
+                    <div className="block2-txt-child2 flex-r p-t-3">
+                      <button
+                        className="btn-addwish-b2 dis-block pos-relative js-addwish-b2"
+                        onClick={() => handleAddToFavorite(product.id)}
+                      >
+                        <img
+                          className="icon-heart1 dis-block trans-04"
+                          src="/assets/images/icons/icon-heart-01.png"
+                          alt="ICON"
+                        />
+                        <img
+                          className="icon-heart2 dis-block trans-04 ab-t-l"
+                          src="/assets/images/icons/icon-heart-02.png"
+                          alt="ICON"
+                        />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

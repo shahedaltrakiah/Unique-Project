@@ -148,8 +148,11 @@ function Products() {
                     Add To Cart
                   </button>
                 </div>
-                
-                <div className="block2-txt flex-w flex-t p-t-14">
+
+                <div
+                  className="block2-txt flex-w flex-t p-t-14 "
+                  style={{width: '190px', marginLeft: '30px'}}
+                >
                   <div className="block2-txt-child1 flex-col-l">
                     <Link
                       to={`/product/${product.id}`}

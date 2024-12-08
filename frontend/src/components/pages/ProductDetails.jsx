@@ -41,12 +41,12 @@ function ProductDetails() {
     try {
       let cart = getCartItems();
       const existingProduct = cart.find((item) => item.id === product.id);
-  
+
       if (!existingProduct) {
         cart.push(product); // Add the full product to the cart
         Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
         setCartItems(cart); // Update cart items state
-  
+
         Swal.fire({
           title: "Product Added!",
           text: "The product has been added to your cart successfully.",
@@ -135,16 +135,16 @@ function ProductDetails() {
           {/* Add to Cart and Wishlist */}
           <div className="product-actions">
             <button
-              className="btn-add-to-cart"
+              className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
               onClick={() => handleAddToCart(product)}
             >
-              Add to Cart
+              Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
             </button>
             <button
-              className="btn-add-to-wishlist"
+              className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
               onClick={() => handleAddToFavorite(product.id)}
             >
-              <i className="fa fa-heart"></i> Wishlist
+              Add to &nbsp; <i className="fa fa-heart"></i>
             </button>
           </div>
         </div>

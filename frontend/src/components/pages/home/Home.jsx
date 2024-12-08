@@ -1,6 +1,7 @@
 import Banner from "./Banner";
 import Products from "./Products";
 import Testimonials from "./Testimonials";
+
 function Home() {
   return (
     <>

@@ -20,27 +20,36 @@ const Layout = () => {
     "/login": "Login",
     "/register": "Register",
     "/wishlist": "Wishlist",
-    "/Profile": " My Profile",
-    "/profileOrder": "My Order",
-    "/orderDetails": "",
+    "/profile": "Profile",
+    "/Profile": "Profile Info",
+    "/profileOrder": "Order",
     "/MyProducts": "My Products",
-    "/sell": "Sell Your Product",
-    "/thankyou" : "Thank You",
-    "/product/:id": "Product Details",
+    "/sell": "Sell Now",
+    "/thankyou": "Thank You",
   };
+
+  // Check for dynamic product route
+  const isProductDetails = /^\/product\/\d+$/.test(location.pathname);
 
   return (
     <>
       <NavBar />
       <CartSidebar />
       <Model />
+
       {/* Render Hero only on the Home Page */}
-      {location.pathname === "/" && <Hero />}{" "}
+      {location.pathname === "/" && <Hero />}
 
       {/* Breadcrumb for all other pages */}
-      {location.pathname !== "/" &&  (
+      {location.pathname !== "/" && (
         <div className="breadcrumb-container">
-          <Breadcrumb text={breadcrumbs[location.pathname] || "Page"} />
+          <Breadcrumb
+            text={
+              isProductDetails
+                ? "Product Details"
+                : breadcrumbs[location.pathname] || "Page"
+            }
+          />
         </div>
       )}
       <main>
