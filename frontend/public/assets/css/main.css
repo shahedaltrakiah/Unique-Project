@@ -3490,3 +3490,22 @@ li {
   font-weight: 300;
   margin: 0 0 20px;
 }
+
+/* Container styling */
+.thank-you-container {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 20px 40px;
+  border-radius: 10px;
+}
+
+/* Icon styling */
+.icon-container {
+  margin-bottom: 20px;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  color: #717FE0; /* Green color */
+}

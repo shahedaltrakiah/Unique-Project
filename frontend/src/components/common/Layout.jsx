@@ -25,6 +25,7 @@ const Layout = () => {
     "/orderDetails": "",
     "/MyProducts": "My Products",
     "/sell": "Sell Your Product",
+    "/thankyou" : "Thank You",
   };
 
   return (
@@ -34,8 +35,9 @@ const Layout = () => {
       <Model />
       {/* Render Hero only on the Home Page */}
       {location.pathname === "/" && <Hero />}{" "}
+
       {/* Breadcrumb for all other pages */}
-      {location.pathname !== "/" && (
+      {location.pathname !== "/" &&  (
         <div className="breadcrumb-container">
           <Breadcrumb text={breadcrumbs[location.pathname] || "Page"} />
         </div>

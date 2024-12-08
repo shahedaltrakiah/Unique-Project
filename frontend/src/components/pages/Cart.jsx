@@ -150,7 +150,7 @@ function Cart() {
                 <div className="size-209 p-t-15">
                   <button
                   className="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
-                  onClick={() => navigate("/checkout")}
+                  onClick={() => navigate("/checkout")} style={{width:'270px'}}
                   >
                     Proceed to Checkout
                   </button>

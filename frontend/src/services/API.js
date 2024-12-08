@@ -235,7 +235,7 @@ const apiService = {
   //     throw error;
   //   }
   // },
-  
+
 
   // send Message contact Us
 
@@ -261,53 +261,53 @@ const apiService = {
     }
   },
 
-// Fetch all products by category
-// getProductsByCategory: async (categoryId, page = 1) => {
-//   try {
-//     const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
-//     return response.data; // Returns products filtered by category
-//   } catch (error) {
-//     console.error("Error fetching products by category:", error);
-//     throw error; // Propagate the error
-//   }
-// },
+  // Fetch all products by category
+  // getProductsByCategory: async (categoryId, page = 1) => {
+  //   try {
+  //     const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
+  //     return response.data; // Returns products filtered by category
+  //   } catch (error) {
+  //     console.error("Error fetching products by category:", error);
+  //     throw error; // Propagate the error
+  //   }
+  // },
 
-// Fetch products for the home page (limited with pagination)
-getHomeProducts: async (page = 1) => {
-  try {
-    const response = await apiClient.get(`/home-products?page=${page}`);
-    return response.data; // Return paginated data
-  } catch (error) {
-    console.error("Error fetching home products:", error);
-    throw error;
-  }
-},
+  // Fetch products for the home page (limited with pagination)
+  getHomeProducts: async (page = 1) => {
+    try {
+      const response = await apiClient.get(`/home-products?page=${page}`);
+      return response.data; // Return paginated data
+    } catch (error) {
+      console.error("Error fetching home products:", error);
+      throw error;
+    }
+  },
 
-// Fetch products for the shop page (all products or filtered by category)
-getShopProducts: async (params = {}) => {
-  try {
-    const response = await apiClient.get(`/shop-products`, { params }); // Pass query params dynamically
-    return response.data; // Return all or filtered data
-  } catch (error) {
-    console.error("Error fetching shop products:", error);
-    throw error;
-  }
-},
+  // Fetch products for the shop page (all products or filtered by category)
+  getShopProducts: async (params = {}) => {
+    try {
+      const response = await apiClient.get(`/shop-products`, { params }); // Pass query params dynamically
+      return response.data; // Return all or filtered data
+    } catch (error) {
+      console.error("Error fetching shop products:", error);
+      throw error;
+    }
+  },
 
   placeOrder: async (orderData) => {
     try {
-        const token = localStorage.getItem("auth_token");
-        if (!token) throw new Error("User is not logged in");
+      const token = localStorage.getItem("auth_token");
+      if (!token) throw new Error("User is not logged in");
 
-        const response = await apiClient.post("/orders", orderData, {
-            headers: {
-                Authorization: `Bearer ${token}`, // إضافة التوكن
-            },
-        });
-        return response.data;
+      const response = await apiClient.post("/orders", orderData, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      return response.data;
     } catch (error) {
-        handleApiError(error);
-        throw error;
+      handleApiError(error);
+      throw error;
     }
   },
 

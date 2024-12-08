@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie"; // Import the Cookies library
 import apiService from "../../services/API";
 
+
 function Checkout() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,22 +44,38 @@ function Checkout() {
     };
   
     try {
-      // Log the order data for debugging
-      console.log("Product IDs:", productIds);
-  
+      // Log the order data for debugging  
       const response = await apiService.placeOrder({ products: productIds });
-      console.log("API response:", response);
   
-      if (response && response.message === "Order placed successfully") {
-        alert("Order placed successfully!");
-        Cookies.remove("cart");
+      if (response) {
+        Swal.fire({
+          icon: "success",
+          title: "Order placed successfully!",
+          text: "Redirecting you to the Thank You page...",
+          timer: 3000, // Time in milliseconds before redirection
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).then(() => {
+          // Remove cart data after successful order
+          Cookies.remove("cart");
+          window.location.href = "/thankyou";
+        });
       } else {
         console.log("Failed response:", response);
-        alert("Failed to place order: " + (response?.message || "Unknown error"));
+        Swal.fire({
+          icon: "error",
+          title: "Failed to place order",
+          text: response?.message || "Unknown error",
+        });
+        
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      alert("Error placing your order. Please try again.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error placing your order. Please try again.",
+      });
     }
   };
 
@@ -135,16 +152,13 @@ function Checkout() {
 
                 {/* Address */}
                 <div className="bor8 bg0 m-b-12">
-                  <label htmlFor="address" className="stext-111 cl8 p-b-5">
-                    Address
-                  </label>
                   <input
-                    className="stext-111 cl8 plh3 size-115 p-lr-15 h-36"
+                    className="stext-111 cl8 plh3 size-111 p-lr-15"
                     type="text"
                     name="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)} // Adding state
-                    placeholder=""
+                    placeholder="Address"
                   />
                 </div>
 
