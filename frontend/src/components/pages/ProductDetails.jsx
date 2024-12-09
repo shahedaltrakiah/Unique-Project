@@ -53,8 +53,7 @@ function ProductDetails() {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          // Reload the page after showing the success message
-          window.location.href = "/";
+          window.location.href = `/product/${productId}`; 
         });
       } else {
         Swal.fire({
@@ -102,8 +101,7 @@ function ProductDetails() {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          // Reload the page after showing the success message
-          window.location.href = "/";
+          window.location.href = `/product/${productId}`; 
         });
       }
     } catch (err) {
@@ -127,10 +125,7 @@ function ProductDetails() {
               product.product_images.map((image) => (
                 <div key={image.id} className="item-slick3">
                   <div className="wrap-pic-w pos-relative">
-                    <img
-                      src={`/assets/images/${image.image}`}
-                      alt={product.name}
-                    />
+                    <img src={`${image.image}`} alt={product.name} />
                     <a
                       className="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
                       href={`${image.image}`}
@@ -150,7 +145,7 @@ function ProductDetails() {
         <div className="product-images">
           <div className="main-image">
             <img
-              src={`/assets/images/${product.image}`}
+              src={`${product.image}`}
               alt={product.name}
               className="product-main-image"
             />
@@ -163,8 +158,8 @@ function ProductDetails() {
           <span className="product-price">Price: {product.price}JD</span>
           <span className="product-price">Size: {product.size}</span>
 
-         {/* Add to Cart and Wishlist */}
-         <div className="product-actions">
+          {/* Add to Cart and Wishlist */}
+          <div className="product-actions">
             <button
               className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
               onClick={() => handleAddToCart(product)}

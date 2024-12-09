@@ -12,7 +12,6 @@ function MyProducts() {
     price: "",
     status: "available",
     size: "S",
-    image: "",
   });
 
   // Fetch products on component mount
@@ -39,11 +38,10 @@ function MyProducts() {
   };
 
   // Handle the delete product click
-  // Handle the delete product click
   const handleDeleteClick = (productId) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "Do you really want to delete this product? This action cannot be undone.",
+      text: "You won't be able to revert this action!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -52,19 +50,29 @@ function MyProducts() {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log("Deleting product with ID:", productId); // Debugging log
         apiService
           .deleteProduct(productId)
           .then(() => {
-            setProducts(products.filter((product) => product.id !== productId));
-            Swal.fire("Deleted!", "The product has been deleted.", "success");
+            console.log("Product deleted successfully"); // Debugging log
+            setProducts((products) =>
+              products.filter((product) => product.id !== productId)
+            );
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "The product has been deleted successfully.",
+              confirmButtonText: "OK",
+            });
           })
           .catch((err) => {
             console.error("Error deleting product:", err);
-            Swal.fire(
-              "Failed!",
-              "Failed to delete the product. Please try again.",
-              "error"
-            );
+            Swal.fire({
+              icon: "error",
+              title: "Failed to Delete",
+              text: "An error occurred while deleting the product. Please try again.",
+              confirmButtonText: "OK",
+            });
           });
       }
     });
@@ -72,57 +80,58 @@ function MyProducts() {
 
   // Handle form input changes
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image" && files.length > 0) {
-      setFormData({
-        ...formData,
-        [name]: files[0], // Store the image file
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   // Handle saving the changes to the product
   const handleSaveChanges = async () => {
     if (!formData.id) {
-      Swal.fire("Error!", "Product ID is missing!", "error");
+      Swal.fire({
+        icon: "warning",
+        title: "Missing Product ID",
+        text: "Product ID is required to update the product.",
+        confirmButtonText: "OK",
+      });
       return;
     }
 
     try {
-      const updateData = new FormData();
-      updateData.append("name", formData.name);
-      updateData.append("description", formData.description);
-      updateData.append("price", formData.price);
-      updateData.append("status", formData.status);
-      updateData.append("size", formData.size);
-      if (formData.image) {
-        updateData.append("image", formData.image);
-      }
-
-      const response = await apiService.updateProduct(formData.id, updateData);
+      const response = await apiService.updateProduct(formData.id, formData);
 
       if (response) {
-        Swal.fire("Success!", "Product updated successfully!", "success");
+        Swal.fire({
+          icon: "success",
+          title: "Product Updated!",
+          text: "The product has been updated successfully.",
+          confirmButtonText: "OK",
+        });
+
         setProducts((prevProducts) =>
           prevProducts.map((product) =>
-            product.id === formData.id ? { ...product, ...response } : product
+            product.id === formData.id ? { ...product, ...formData } : product
           )
         );
       } else {
-        Swal.fire("Failed!", "Failed to update the product.", "error");
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Delete",
+          text:
+            error.response?.data?.message || "An unexpected error occurred.",
+          confirmButtonText: "OK",
+        });
       }
     } catch (error) {
       console.error("Error updating product:", error);
-      Swal.fire(
-        "Failed!",
-        "An error occurred while updating the product. Please try again.",
-        "error"
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text: "An error occurred while updating the product. Please try again later.",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -133,7 +142,7 @@ function MyProducts() {
           <ProfileSidebar />
         </div>
 
-        <div className="col-md-9 profile-card ">
+        <div className="col-md-9">
           <h3 className="title mt-4 mb-4">Products List</h3>
           {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -173,15 +182,14 @@ function MyProducts() {
                       data-bs-toggle="modal"
                       data-bs-target="#editProductModal"
                     >
-                      <i className="fas fa-edit"></i>{" "}
-                      {/* Font Awesome Edit Icon */}
+                      <i className="fas fa-edit"></i> {/* Edit icon */}
                     </button>
+
                     <button
                       className="btn btn-danger"
                       onClick={() => handleDeleteClick(product.id)}
                     >
-                      <i className="fas fa-trash"></i>{" "}
-                      {/* Font Awesome Trash Icon */}
+                      <i className="fas fa-trash"></i> {/* Delete icon */}
                     </button>
                   </td>
                 </tr>
@@ -285,7 +293,7 @@ function MyProducts() {
                       </div>
                       {/* Image Upload */}
                       <div className="mb-3">
-                        <label className="form-label">Image</label>
+                        <label className="form-label">Product Image</label>
                         <input
                           type="file"
                           className="form-control"
