@@ -54,8 +54,7 @@ function ProductDetails() {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          // Reload the page after showing the success message
-          window.location.href = "/";
+          window.location.href = `/product/${productId}`; 
         });
       } else {
         Swal.fire({
@@ -103,8 +102,7 @@ function ProductDetails() {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          // Reload the page after showing the success message
-          window.location.href = "/";
+          window.location.href = `/product/${productId}`; 
         });
       }
     } catch (err) {

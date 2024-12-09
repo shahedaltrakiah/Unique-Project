@@ -151,7 +151,7 @@ function Products() {
 
                 <div
                   className="block2-txt flex-w flex-t p-t-14 "
-                  style={{width: '190px', marginLeft: '30px'}}
+                  style={{width: '230px', marginLeft:"10px"}}
                 >
                   <div className="block2-txt-child1 flex-col-l">
                     <Link

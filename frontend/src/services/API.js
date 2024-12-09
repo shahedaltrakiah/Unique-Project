@@ -55,22 +55,27 @@ const apiService = {
       throw error;
     }
   },
-  
+
   // Create Product
-  createProduct: async (data) => {
+  updateProduct: async (id, data) => {
     try {
       const token = localStorage.getItem("auth_token");
-      if (!token) {
-        throw new Error("User is not logged in");
-      }
-      const response = await apiClient.post("/products", data, {
+      if (!token) throw new Error("Authentication token is missing.");
+
+      const response = await apiClient.put(`/products/${id}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json", //  ؛I DELETETD THE UPDATE IMAGE SO=>NOOOOO longer multipart/form-data
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log("API Response:", response.data);
       return response.data;
     } catch (error) {
+      console.error(
+        "Error updating product:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   },
@@ -171,6 +176,7 @@ const apiService = {
 
   deleteProduct: async (id) => {
     try {
+      console.log("Deleting product with ID:", id); // Debugging log
       const response = await apiClient.delete(`/products/${id}`);
       return response.data;
     } catch (error) {
@@ -178,6 +184,7 @@ const apiService = {
       throw error;
     }
   },
+  
 
   getUserData: async (token) => {
     try {
@@ -195,16 +202,16 @@ const apiService = {
     try {
       const token = localStorage.getItem("auth_token");
       if (!token) throw new Error("Authentication token is missing.");
-  
+
       const response = await apiClient.put(`/products/${id}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       console.log("API Response:", response.data);
-      return response.data; 
+      return response.data;
     } catch (error) {
       console.error(
         "Error updating product:",
@@ -213,7 +220,7 @@ const apiService = {
       throw error;
     }
   },
-  
+
 
   updateUserProfile: async (userData) => {
     try {
@@ -239,7 +246,7 @@ const apiService = {
     }
   },
 
-  
+
   // send Message contact Us
   sendMessage: async (data) => {
     try {
@@ -263,7 +270,7 @@ const apiService = {
     }
   },
 
-  
+
   // Fetch products for the home page (limited with pagination)
   getHomeProducts: async (page = 1) => {
     try {
@@ -293,7 +300,7 @@ const apiService = {
 
       const response = await apiClient.post("/orders", orderData, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       return response.data;
