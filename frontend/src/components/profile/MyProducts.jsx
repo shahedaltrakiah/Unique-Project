@@ -5,15 +5,15 @@ import ProfileSidebar from "./ProfileSidebar";
 function MyProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
-//   const [formData, setFormData] = useState({
-//     id: null, // Ensure formData also contains the product id for updating
-//     name: "",
-//     description: "",
-//     price: "",
-//     status: "available",
-//     size: "S",
-//     image: null,
-//   });
+  const [formData, setFormData] = useState({
+    id: null,
+    name: "",
+    description: "",
+    price: "",
+    status: "available",
+    size: "S",
+    image: "",
+  });
 
   // Fetch products on component mount
   useEffect(() => {
@@ -25,83 +25,106 @@ function MyProducts() {
         setError("Failed to load products.");
       });
   }, []);
-  
+
   // Handle the click to edit product
-//   const handleEditClick = (product) => {
-//     console.log(product);
-//     setFormData({
-//       id: product.id, // Set product id to formData
-//       name: product.name,
-//       description: product.description,
-//       price: product.price,
-//       status: product.status,
-//       size: product.size,
-//       image: product.image,
-//     });
-//   };
+  const handleEditClick = (product) => {
+    setFormData({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      status: product.status,
+      size: product.size,
+    });
+  };
 
   // Handle the delete product click
+  // Handle the delete product click
   const handleDeleteClick = (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      apiService
-        .deleteProduct(productId)
-        .then(() => {
-          setProducts(products.filter((product) => product.id !== productId));
-        })
-        .catch((err) => {
-          console.error("Error deleting product:", err);
-          alert("Failed to delete product. Please try again.");
-        });
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to delete this product? This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        apiService
+          .deleteProduct(productId)
+          .then(() => {
+            setProducts(products.filter((product) => product.id !== productId));
+            Swal.fire("Deleted!", "The product has been deleted.", "success");
+          })
+          .catch((err) => {
+            console.error("Error deleting product:", err);
+            Swal.fire(
+              "Failed!",
+              "Failed to delete the product. Please try again.",
+              "error"
+            );
+          });
+      }
+    });
   };
 
   // Handle form input changes
-//   const handleInputChange = (e) => {
-//     const { name, value, type, files } = e.target;
-//     if (type === "file") {
-//       setFormData({
-//         ...formData,
-//         [name]: files[0], // Save the file object in the state
-//       });
-//     } else {
-//       setFormData({
-//         ...formData,
-//         [name]: value,
-//       });
-//     }
-//   };
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image" && files.length > 0) {
+      setFormData({
+        ...formData,
+        [name]: files[0], // Store the image file
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
 
   // Handle saving the changes to the product
-//   const handleSaveChanges = async () => {
-//     if (!formData.id) return; // Ensure product id is present
+  const handleSaveChanges = async () => {
+    if (!formData.id) {
+      Swal.fire("Error!", "Product ID is missing!", "error");
+      return;
+    }
 
-//     const updatedFormData = new FormData();
-//     updatedFormData.append("name", formData.name);
-//     updatedFormData.append("description", formData.description);
-//     updatedFormData.append("price", formData.price);
-//     updatedFormData.append("status", formData.status);
-//     updatedFormData.append("size", formData.size);
-//     console.log(formData);
+    try {
+      const updateData = new FormData();
+      updateData.append("name", formData.name);
+      updateData.append("description", formData.description);
+      updateData.append("price", formData.price);
+      updateData.append("status", formData.status);
+      updateData.append("size", formData.size);
+      if (formData.image) {
+        updateData.append("image", formData.image);
+      }
 
-//     // Add image if it exists
-//     if (formData.image && formData.image instanceof File) {
-//       updatedFormData.append("image", formData.image);
-//     }
-//     console.log(updatedFormData);
+      const response = await apiService.updateProduct(formData.id, updateData);
 
-//     try {
-//       const response = await apiService.updateProduct(formData.id, formData);
-
-//       if (response.data?.product) {
-//         alert("Product updated successfully!");
-//       } else {
-//         alert("Failed to update product.");
-//       }
-//     } catch (error) {
-//       console.error("Error updating product:", error);
-//       alert("Failed to update product. Please check your input and try again.");
-//     }
-//   };
+      if (response) {
+        Swal.fire("Success!", "Product updated successfully!", "success");
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === formData.id ? { ...product, ...response } : product
+          )
+        );
+      } else {
+        Swal.fire("Failed!", "Failed to update the product.", "error");
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+      Swal.fire(
+        "Failed!",
+        "An error occurred while updating the product. Please try again.",
+        "error"
+      );
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -110,7 +133,7 @@ function MyProducts() {
           <ProfileSidebar />
         </div>
 
-        <div className="col-md-9">
+        <div className="col-md-9 profile-card ">
           <h3 className="title mt-4 mb-4">Products List</h3>
           {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -130,7 +153,7 @@ function MyProducts() {
                 <tr key={product.id}>
                   <td>
                     <img
-                      src={`assets/images/${product.image}`}
+                      src={`${product.image}`}
                       alt={product.name}
                       style={{
                         width: "50px",
@@ -144,19 +167,21 @@ function MyProducts() {
                   <td>{product.price.toFixed(2)}</td>
                   <td>{product.status}</td>
                   <td>
-                    {/* <button
+                    <button
                       className="btn btn-primary"
                       onClick={() => handleEditClick(product)}
                       data-bs-toggle="modal"
                       data-bs-target="#editProductModal"
                     >
-                      Edit
-                    </button> */}
+                      <i className="fas fa-edit"></i>{" "}
+                      {/* Font Awesome Edit Icon */}
+                    </button>
                     <button
                       className="btn btn-danger"
                       onClick={() => handleDeleteClick(product.id)}
                     >
-                      Delete
+                      <i className="fas fa-trash"></i>{" "}
+                      {/* Font Awesome Trash Icon */}
                     </button>
                   </td>
                 </tr>
@@ -165,7 +190,7 @@ function MyProducts() {
           </table>
 
           {/* Edit Product Modal */}
-          {/* <div
+          <div
             className="modal fade"
             id="editProductModal"
             tabIndex="-1"
@@ -174,8 +199,15 @@ function MyProducts() {
           >
             <div className="modal-dialog modal-dialog-centered">
               <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="editProductModalLabel">
+                <div
+                  className="modal-header"
+                  style={{ backgroundColor: "#717fe0" }}
+                >
+                  <h5
+                    className="modal-title"
+                    id="editProductModalLabel"
+                    style={{ color: "white" }}
+                  >
                     Edit Product
                   </h5>
                   <button
@@ -188,90 +220,90 @@ function MyProducts() {
                 <div className="modal-body">
                   {formData ? (
                     <>
-                      <div className="mb-3">
-                        <label className="form-label">Name</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                        />
+                      {/* Name and Status in the same line */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <label className="form-label">Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div className="col-md-6">
+                          <label className="form-label">Status</label>
+                          <select
+                            className="form-select"
+                            name="status"
+                            value={formData.status}
+                            onChange={handleInputChange}
+                          >
+                            <option value="available">Available</option>
+                            <option value="sold">Sold</option>
+                          </select>
+                        </div>
                       </div>
 
+                      {/* Size and Price in the same line */}
+                      <div className="row mb-3">
+                        <div className="col-md-6">
+                          <label className="form-label">Size</label>
+                          <select
+                            className="form-select"
+                            name="size"
+                            value={formData.size}
+                            onChange={handleInputChange}
+                          >
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                          </select>
+                        </div>
+                        <div className="col-md-6">
+                          <label className="form-label">Price (JD)</label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            name="price"
+                            value={formData.price}
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                      {/* Description alone */}
                       <div className="mb-3">
                         <label className="form-label">Description</label>
                         <textarea
                           className="form-control"
-                          rows="4"
+                          rows="3"
                           name="description"
                           value={formData.description}
                           onChange={handleInputChange}
                         />
                       </div>
-
+                      {/* Image Upload */}
                       <div className="mb-3">
-                        <label className="form-label">Main Image</label>
+                        <label className="form-label">Image</label>
                         <input
                           type="file"
                           className="form-control"
                           name="image"
-                          onChange={handleInputChange}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              image: e.target.files[0],
+                            })
+                          }
                         />
-                        {formData.image && !(formData.image instanceof File) && (
-                          <div className="mt-2">
-                            <img
-                              src={formData.image}
-                              alt="Product"
-                              className="img-thumbnail"
-                              style={{ width: "100px" }}
-                            />
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="form-label">Size</label>
-                        <select
-                          className="form-select"
-                          name="size"
-                          value={formData.size}
-                          onChange={handleInputChange}
-                        >
-                          <option value="S">S</option>
-                          <option value="M">M</option>
-                          <option value="L">L</option>
-                        </select>
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="form-label">Price (JD)</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="price"
-                          value={formData.price}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="form-label">Status</label>
-                        <select
-                          className="form-select"
-                          name="status"
-                          value={formData.status}
-                          onChange={handleInputChange}
-                        >
-                          <option value="available">Available</option>
-                          <option value="sold">Sold</option>
-                        </select>
                       </div>
                     </>
                   ) : (
                     <p>Loading product details...</p>
                   )}
                 </div>
+
                 <div className="modal-footer">
                   <button
                     type="button"
@@ -282,7 +314,7 @@ function MyProducts() {
                   </button>
                   <button
                     type="button"
-                    className="btn btn-success"
+                    className="btn btn-save"
                     onClick={handleSaveChanges}
                   >
                     Save Changes
@@ -290,8 +322,8 @@ function MyProducts() {
                 </div>
               </div>
             </div>
-          </div>*/}
-        </div> 
+          </div>
+        </div>
       </div>
     </div>
   );

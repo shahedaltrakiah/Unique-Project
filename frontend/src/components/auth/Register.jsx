@@ -19,7 +19,18 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    if (!emailRegex.test(formData.email)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address (e.g., user@example.com).",
+      });
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       Swal.fire({
         icon: "error",
@@ -28,20 +39,22 @@ const Register = () => {
       });
       return;
     }
-  
+
     try {
-      const response = await apiService.registerUser(formData); 
-  
+      // Send registration data
+      const response = await apiService.registerUser(formData);
+
       localStorage.setItem("auth_token", response.token);
-  
+
       Swal.fire({
         icon: "success",
         title: "Registration Successful!",
         text: "You have been registered successfully.",
       }).then(() => {
-        window.location.href = "/";
+        window.location.href = "/"; // Redirect to homepage or dashboard
       });
-  
+
+      // Clear form data
       setFormData({
         name: "",
         email: "",
@@ -51,10 +64,51 @@ const Register = () => {
         phone: "",
       });
     } catch (error) {
+      // Handle validation errors here
+      if (error.response && error.response.status === 422) {
+        const errors = error.response.data.error;
+
+        if (errors.email) {
+          Swal.fire({
+            icon: "error",
+            title: "Email Error",
+            text: errors.email.join(", "),
+          });
+        } else if (errors.password) {
+          Swal.fire({
+            icon: "error",
+            title: "Password Error",
+            text: errors.password.join(", "),
+          });
+        } else if (errors.phone) {
+          Swal.fire({
+            icon: "error",
+            title: "Phone Error",
+            text: errors.phone.join(", "),
+          });
+        } else if (errors.name) {
+          Swal.fire({
+            icon: "error",
+            title: "Name Error",
+            text: errors.name.join(", "),
+          });
+        } else if (errors.address) {
+          Swal.fire({
+            icon: "error",
+            title: "Address Error",
+            text: errors.address.join(", "),
+          });
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: "An unexpected error occurred.",
+        });
+      }
     }
   };
-  
-  
+
   return (
     <section className="bg0 p-t-104 p-b-116">
       <div className="container">

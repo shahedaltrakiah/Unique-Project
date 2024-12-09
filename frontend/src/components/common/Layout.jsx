@@ -26,6 +26,7 @@ const Layout = () => {
     "/MyProducts": "My Products",
     "/sell": "Sell Now",
     "/thankyou": "Thank You",
+    "/ForgotPassword": "Forget Password",
   };
 
   // Check for dynamic product route

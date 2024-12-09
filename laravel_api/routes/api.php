@@ -10,8 +10,6 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CategoryController;
 
 
-
-
 // register user
 Route::post('register', [AuthController::class, 'register']);
 
@@ -63,26 +61,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // Get list of favorites
     Route::get('favorites/user', [FavoriteController::class, 'index']);
 
-
+    Route::post('forgot-password', [AuthController::class, 'sendResetLinkEmail']);
 
 
 });
 
+// get product
+Route::get('/product/{id}', [ProductController::class, 'getProduct']);
 
- // get all products for home
-//  Route::get('products', [ProductController::class, 'index']);
-
- // get product
- Route::get('/product/{id}', [ProductController::class, 'getProduct']);
-
- // get all categories
- Route::get('categories', [CategoryController::class, 'index']);
-
- // get products by category
- //Route::get('products/category/{id}', [ProductController::class, 'getProductsByCategory']);
-
-// Get all products without pagination for shop
-//Route::get('products-all', [ProductController::class, 'getAllProducts']);
+// get all categories
+Route::get('categories', [CategoryController::class, 'index']);
 
 // Get products for the home page
 Route::get('home-products', [ProductController::class, 'getHomeProducts']);
