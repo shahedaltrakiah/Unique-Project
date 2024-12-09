@@ -313,10 +313,6 @@ const Sell = () => {
                     alignItems: "flex-start",
                   }}
                 >
-                  <i
-                    className="fa fa-images how-pos4"
-                    style={{ marginBottom: "10px" }}
-                  ></i>
                   <input
                     id="sub-images"
                     className="stext-1111 cl2 plh3 size-116 p-l-62 p-r-30"
