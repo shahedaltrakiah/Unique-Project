@@ -116,63 +116,61 @@ function ProductDetails() {
 
   return (
     <div className="product-details-container">
-      <div className="product-details-row">
-        <div className="wrap-slick3 flex-sb flex-w">
-          <div className="wrap-slick3-dots" />
-          <div className="wrap-slick3-arrows flex-sb-m flex-w" />
-          <div className="slick3 gallery-lb">
-            {product.product_images && product.product_images.length > 0 ? (
-              product.product_images.map((image) => (
-                <div key={image.id} className="item-slick3">
-                  <div className="wrap-pic-w pos-relative">
-                    <img src={`${image.image}`} alt={product.name} />
-                    <a
-                      className="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                      href={`${image.image}`}
-                    >
-                      <i className="fa fa-expand" />
-                    </a>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No additional images available.</p>
-            )}
-          </div>
-        </div>
+      {/* Sub Images Column */}
+      <div className="product-sub-images">
+        {product.product_images && product.product_images.length > 0 ? (
+          product.product_images.map((image) => (
+            <div key={image.id} className="sub-image-item">
+              <div className="wrap-pic-w pos-relative">
+                <img src={`${image.image}`} alt={product.name} />
+                <a className="image-expand-link" href={`${image.image}`}>
+                  <i className="fa fa-expand" />
+                </a>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No additional images available.</p>
+        )}
+      </div>
 
-        {/* Product Images */}
-        <div className="product-images">
-          <div className="main-image">
-            <img
-              src={`${product.image}`}
-              alt={product.name}
-              className="product-main-image"
-            />
-          </div>
+      {/* Main Image */}
+      <div className="product-main-image-container">
+        <div className="wrap-pic-w pos-relative">
+          <img
+            src={`${product.image}`}
+            alt={product.name}
+            className="product-main-image"
+          />
+          <a className="image-expand-link" href={`${product.image}`}>
+            <i className="fa fa-expand" />
+          </a>
         </div>
-        {/* Product Info */}
-        <div className="product-info">
-          <h2 className="product-name">{product.name}</h2>
-          <p className="product-description">{product.description}</p>
+      </div>
+
+      {/* Product Info */}
+      <div className="product-info">
+        <h2 className="product-name">{product.name}</h2>
+        <p className="product-description">{product.description}</p>
+        <div className="product-details">
           <span className="product-price">Price: {product.price}JD</span>
-          <span className="product-price">Size: {product.size}</span>
+          <span className="product-size">Size: {product.size}</span>
+        </div>
 
-          {/* Add to Cart and Wishlist */}
-          <div className="product-actions">
-            <button
-              className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
-              onClick={() => handleAddToCart(product)}
-            >
-              Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
-            </button>
-            <button
-              className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
-              onClick={() => handleAddToFavorite(product.id)}
-            >
-              Add to &nbsp; <i className="fa fa-heart"></i>
-            </button>
-          </div>
+        {/* Add to Cart and Wishlist */}
+        <div className="product-actions">
+          <button
+            className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
+            onClick={() => handleAddToCart(product)}
+          >
+            Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
+          </button>
+          <button
+            className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
+            onClick={() => handleAddToFavorite(product.id)}
+          >
+            Add to &nbsp; <i className="fa fa-heart"></i>
+          </button>
         </div>
       </div>
     </div>
