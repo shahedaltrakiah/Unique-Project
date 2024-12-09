@@ -231,7 +231,9 @@ class ProductController extends Controller
     {
         try {
             // Fetch only the first 8 products with pagination
-            $products = Product::with('category')->where('status', '=' , 'available')->paginate(8);
+            $products =  Product::with('category')
+            ->where('status', '=', 'available')
+            ->orderBy('created_at', 'desc')->paginate(8);
 
             return response()->json($products, 200);
         } catch (\Exception $e) {
@@ -243,8 +245,10 @@ class ProductController extends Controller
     public function getShopProducts(Request $request)
     {
         try {
-            $query = Product::with('category')->where('status' , '=' , 'available');
-
+            $query = Product::with('category')
+            ->where('status', '=', 'available')
+            ->orderBy('created_at', 'desc');
+        
             // Filter by category if provided
             if ($request->has('category_id')) {
                 $query->where('category_id', $request->category_id);
