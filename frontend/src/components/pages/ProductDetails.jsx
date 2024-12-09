@@ -127,7 +127,7 @@ function ProductDetails() {
                     />
                     <a
                       className="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                      href={`/assets/images/${image.image}`}
+                      href={`${image.image}`}
                     >
                       <i className="fa fa-expand" />
                     </a>

@@ -56,7 +56,7 @@ function CartSidebar() {
               cartItems.map((item) => (
                 <li className="header-cart-item flex-w flex-t m-b-12" key={item.id}>
                   <div className="header-cart-item-img">
-                    <img src={`assets/images/${item.image}`} alt={item.name} />
+                    <img src={`${item.image}`} alt={item.name} />
                   </div>
                   <div className="header-cart-item-txt p-t-8">
                     <a

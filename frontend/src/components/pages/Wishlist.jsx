@@ -178,7 +178,7 @@ function Wishlist() {
                             <td className="column-1" style={{ textAlign: "center" }}>
                               <div className="how-itemcart1">
                                 <img
-                                  src={`/assets/images/${favorite.product.image}`}
+                                  src={`${favorite.product.image}`}
                                   alt={favorite.product.name}
                                   style={{ marginLeft: "30px" }}
                                 />

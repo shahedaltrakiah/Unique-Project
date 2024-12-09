@@ -120,7 +120,7 @@ function ProfileOrder() {
                                 <p>Price: JD {product.price.toFixed(2)}</p>
                               </div>
                               <img
-                                src={`assets/images/${product.image}`}
+                                src={`${product.image}`}
                                 alt={product.name}
                                 className="img-thumbnail"
                                 style={{ width: "80px", height: "80px" }}

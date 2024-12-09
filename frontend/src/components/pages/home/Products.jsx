@@ -138,7 +138,7 @@ function Products() {
               <div className="block2">
                 <div className="block2-pic hov-img0">
                   <img
-                    src={`assets/images/${product.image}`}
+                    src={`${product.image}`}
                     alt={product.name}
                   />
                   <button
