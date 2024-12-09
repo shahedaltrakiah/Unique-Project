@@ -52,6 +52,9 @@ function ProductDetails() {
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
+        }).then(() => {
+          // Reload the page after showing the success message
+          window.location.href = "/";
         });
       } else {
         Swal.fire({
@@ -98,6 +101,9 @@ function ProductDetails() {
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
+        }).then(() => {
+          // Reload the page after showing the success message
+          window.location.href = "/";
         });
       }
     } catch (err) {
@@ -122,7 +128,7 @@ function ProductDetails() {
                 <div key={image.id} className="item-slick3">
                   <div className="wrap-pic-w pos-relative">
                     <img
-                      src={`${image.image}`}
+                      src={`/assets/images/${image.image}`}
                       alt={product.name}
                     />
                     <a
@@ -144,7 +150,7 @@ function ProductDetails() {
         <div className="product-images">
           <div className="main-image">
             <img
-              src={`${product.image}`}
+              src={`/assets/images/${product.image}`}
               alt={product.name}
               className="product-main-image"
             />
@@ -154,22 +160,22 @@ function ProductDetails() {
         <div className="product-info">
           <h2 className="product-name">{product.name}</h2>
           <p className="product-description">{product.description}</p>
-          <span className="product-price">Price: {product.price}</span>
-          <span className="product-size">Size: {product.size}</span>
+          <span className="product-price">Price: {product.price}JD</span>
+          <span className="product-price">Size: {product.size}</span>
 
-          {/* Add to Cart and Wishlist */}
-          <div className="product-actions">
+         {/* Add to Cart and Wishlist */}
+         <div className="product-actions">
             <button
-              className="btn-add-to-cart"
+              className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
               onClick={() => handleAddToCart(product)}
             >
-              Add to Cart
+              Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
             </button>
             <button
-              className="btn-add-to-wishlist"
+              className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
               onClick={() => handleAddToFavorite(product.id)}
             >
-              <i className="fa fa-heart"></i> Wishlist
+              Add to &nbsp; <i className="fa fa-heart"></i>
             </button>
           </div>
         </div>

@@ -9,31 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // public function index(Request $request)
-    // {
-    //     try {
-    //         // Build the query
-    //         $query = Product::with('category');
-    
-    //         // Filter by category if category_id is provided
-    //         if ($request->has('category_id')) {
-    //             $query->where('category_id', $request->category_id);
-    //         }
-    
-    //         // Check if all products are requested (no pagination)
-    //         if ($request->query('all')) {
-    //             $products = $query->get(); // Fetch all products
-    //         } else {
-    //             $products = $query->paginate(8); // Paginated fetch
-    //         }
-    
-    //         return response()->json($products, 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'An error occurred while fetching products.', 'message' => $e->getMessage()], 500);
-    //     }
-    // }
-    
-
 
     public function userProducts()
     {
@@ -64,7 +39,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-
             // Validate the token (ensure the user is authenticated)
             $user = auth()->user();
             if (!$user) {
@@ -83,16 +57,22 @@ class ProductController extends Controller
                 'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            // Store the main image
-            $mainImagePath = $request->file('image')->store('products', 'public');
+            // Sanitize the product name and create a file-friendly version
+            $productName = preg_replace('/[^A-Za-z0-9-]/', '-', strtolower($validated['name']));  // Only alphanumeric characters and hyphens
+            $imageExtension = $request->file('image')->getClientOriginalExtension();  // Get the image's original extension
+            $imageName = $productName . '-' . time() . '.' . $imageExtension;  // Combine product name, timestamp, and extension for uniqueness
 
-            // Create the product in the database
+            // Store the main image with the new name and generate its URL
+            $mainImagePath = $request->file('image')->storeAs('products', $imageName, 'public');
+            $mainImageUrl = asset('storage/' . $mainImagePath);
+
+            // Create the product in the database with the main image URL
             $product = Product::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'size' => $validated['size'],
-                'image' => $mainImagePath,
+                'image' => $mainImageUrl,  // Save the URL of the image with the new name
                 'category_id' => $validated['category_id'],
                 'status' => $validated['status'],
                 'user_id' => Auth::id(),
@@ -101,12 +81,20 @@ class ProductController extends Controller
             // Handle sub-images if provided
             if ($request->has('sub_images')) {
                 foreach ($request->file('sub_images') as $subImage) {
-                    $subImagePath = $subImage->store('product_sub_images', 'public');
+                    $subImageExtension = $subImage->getClientOriginalExtension();  // Get sub-image extension
+                    $subImageName = $productName . '-sub-' . time() . '.' . $subImageExtension;  // Generate a unique name for each sub-image
+
+                    // Store the sub-image with the new name and generate its URL
+                    $subImagePath = $subImage->storeAs('product_sub_images', $subImageName, 'public');
+                    $subImageUrl = asset('storage/' . $subImagePath);
+
+                    // Save sub-image URL to the database, ensuring it's saved to the correct column (image in product_images table)
                     $product->productImages()->create([
-                        'path' => $subImagePath,
+                        'image' => $subImageUrl, // Save the sub-image URL to the image column
                     ]);
                 }
             }
+
 
             return response()->json(['message' => 'Product added successfully', 'product' => $product], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -121,7 +109,6 @@ class ProductController extends Controller
             ], 500);
         }
     }
-
 
     public function getProduct($id)
     {
@@ -145,70 +132,45 @@ class ProductController extends Controller
         }
     }
 
-
     public function update(Request $request, $id)
     {
         try {
-            // Validate the token (ensure the user is authenticated)
-            $user = Auth::user();
+            $user = auth()->user();
             if (!$user) {
                 return response()->json(['error' => 'User is not logged in'], 401);
             }
 
-            // Validate incoming request data
-            $validated = $request->validate([
-                'name' => 'nullable|string|max:255',
-                'description' => 'nullable|string',
-                'price' => 'nullable|numeric',
-                'category_id' => 'nullable|exists:categories,id',
-                'status' => 'nullable|in:available,sold',
-                'size' => 'nullable|string|max:50',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'sub_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-
-            // Find the product
             $product = Product::findOrFail($id);
-
-            // Ensure the product belongs to the authenticated user
             if ($product->user_id !== $user->id) {
-                return response()->json(['error' => 'You are not authorized to update this product'], 403);
+                return response()->json(['error' => 'Unauthorized access'], 403);
             }
 
-            // Handle the main image update if a new one is provided
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric',
+                'status' => 'required|in:available,sold',
+                'size' => 'required|string|max:50',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            // Update the product fields
+            $product->update($validated);
+
+            // If a new image is uploaded, process and update it
             if ($request->hasFile('image')) {
-                // Delete the old main image if it exists
+                // Delete the old image
                 if ($product->image) {
                     Storage::disk('public')->delete($product->image);
                 }
-                // Store the new main image
-                $product->image = $request->file('image')->store('products', 'public');
-            }
 
-            // Update product attributes (mass assignment)
-            $product->name = $validated['name'] ?? $product->name;
-            $product->description = $validated['description'] ?? $product->description;
-            $product->price = $validated['price'] ?? $product->price;
-            $product->size = $validated['size'] ?? $product->size;
-            $product->category_id = $validated['category_id'] ?? $product->category_id;
-            $product->status = $validated['status'] ?? $product->status;
-
-            // Save the product with updated attributes
-            $product->save();
-
-            // Handle sub-images if provided
-            if ($request->has('sub_images')) {
-                foreach ($request->file('sub_images') as $subImage) {
-                    $subImagePath = $subImage->store('product_sub_images', 'public');
-                    // Store each sub-image associated with the product
-                    $product->productImages()->create([
-                        'path' => $subImagePath,
-                    ]);
-                }
+                // Store the new image
+                $newImagePath = $request->file('image')->store('products', 'public');
+                $product->image = $newImagePath;
+                $product->save();
             }
 
             return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'error' => 'Validation failed',
@@ -221,6 +183,7 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
 
     public function delete($id)
     {
@@ -251,52 +214,38 @@ class ProductController extends Controller
         }
     }
 
-    // public function getProductsByCategory($id)
-    // {
-    // try {
-    //     // Retrieve products filtered by category ID
-    //     $products = Product::where('category_id', $id)->with('category')->paginate(8);;
-
-    //     // Return success response
-    //     return response()->json($products, 200);
-    // } catch (\Exception $e) {
-    //     // Handle unexpected exceptions
-    //     return response()->json(['error' => 'An error occurred while fetching products by category.', 'message' => $e->getMessage()], 500);
-    // }
-    // }
-
     // Fetch limited products for the home page
-public function getHomeProducts()
-{
-    try {
-        // Fetch only the first 8 products with pagination
-        $products = Product::with('category')->paginate(8);
+    public function getHomeProducts()
+    {
+        try {
+            // Fetch only the first 8 products with pagination
+            $products = Product::with('category')->paginate(8);
 
-        return response()->json($products, 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'An error occurred while fetching home products.', 'message' => $e->getMessage()], 500);
-    }
-}
-
-// Fetch all products for the shop page
-public function getShopProducts(Request $request)
-{
-    try {
-        $query = Product::with('category');
-
-        // Filter by category if provided
-        if ($request->has('category_id')) {
-            $query->where('category_id', $request->category_id);
+            return response()->json($products, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching home products.', 'message' => $e->getMessage()], 500);
         }
-
-        // Fetch all products without pagination
-        $products = $query->get();
-
-        return response()->json($products, 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'An error occurred while fetching shop products.', 'message' => $e->getMessage()], 500);
     }
-}
+
+    // Fetch all products for the shop page
+    public function getShopProducts(Request $request)
+    {
+        try {
+            $query = Product::with('category');
+
+            // Filter by category if provided
+            if ($request->has('category_id')) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            // Fetch all products without pagination
+            $products = $query->get();
+
+            return response()->json($products, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching shop products.', 'message' => $e->getMessage()], 500);
+        }
+    }
 
 
 

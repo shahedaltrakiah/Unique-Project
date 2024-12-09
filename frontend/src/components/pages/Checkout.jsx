@@ -74,7 +74,7 @@ function Checkout() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error placing your order. Please try again.",
+        text: error,
       });
     }
   };
