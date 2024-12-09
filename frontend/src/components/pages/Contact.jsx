@@ -11,16 +11,80 @@ const Contact = () => {
     subject: "",
     message: "",
   });
+
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name': {
+        // Make sure there are no numbers in the name
+        if (/\d/.test(value)) {
+          return 'The name must contain only letters';
+        }
+        break;
+      }
+      case 'phone': {
+        //Ensure that the phone number contains only numbers and is 10 digits long
+        if (!/^\d+$/.test(value)) {
+          return 'Phone number must contain numbers only';
+        }
+        if (value.length !== 10) {
+          return 'Phone number must be 10 digits';
+        }
+        break;
+      }
+      case 'email': {
+        // Check email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          return 'Invalid email';
+        }
+        break;
+      }
+      default:
+        break;
+    }
+    return '';
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    // Validate field as you type
+    const fieldError = validateField(name, value);
+    
+    setErrors(prev => ({
+      ...prev,
+      [name]: fieldError
+    }));
+
+    setFormData({ ...formData, [name]: value });
+  };
+  
   const handleContact = async (e) => {
     e.preventDefault();
+    
+    // Final check before sending
+    const newErrors = {};
+    
+     // Check all fields
+    Object.keys(formData).forEach(key => {
+      if (key !== 'password') {  
+        const error = validateField(key, formData[key]);
+        if (error) {
+          newErrors[key] = error;
+        }
+      }
+    });
+
+    // If there are errors, stop sending.
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -49,7 +113,7 @@ const Contact = () => {
       console.error(error);
 
       Swal.fire({
-        title: "Error!",
+        title:"Error!",
         text: "Failed to send your message. Please try again.",
         icon: "error",
         confirmButtonText: "OK",
@@ -68,9 +132,11 @@ const Contact = () => {
                       style={{ width: "2350px" }}>
             <form onSubmit={handleContact}>
               <h4 className="mtext-105 cl2 txt-center p-b-30">Send Us A Message</h4>
+              
+              {/* حقل الاسم مع رسالة الخطأ */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <input
-                  className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
+                  className={`stext-111 cl2 plh3 size-116 p-l-62 p-r-30 ${errors.name ? 'border-red-500' : ''}`}
                   type="text"
                   name="name"
                   placeholder="Your Name"
@@ -80,9 +146,13 @@ const Contact = () => {
                 />
                 <i className="fa fa-user how-pos4"></i>
               </div>
+              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+
+
+              {/* حقل البريد الإلكتروني مع رسالة الخطأ */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <input
-                  className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
+                  className={`stext-111 cl2 plh3 size-116 p-l-62 p-r-30 ${errors.email ? 'border-red-500' : ''}`}
                   type="text"
                   name="email"
                   placeholder="Your Email Address"
@@ -92,9 +162,13 @@ const Contact = () => {
                 />
                 <i className="fa fa-envelope how-pos4"></i>
               </div>
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+
+
+              {/* حقل رقم الهاتف مع رسالة الخطأ */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <input
-                  className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
+                  className={`stext-111 cl2 plh3 size-116 p-l-62 p-r-30 ${errors.phone ? 'border-red-500' : ''}`}
                   type="text"
                   name="phone"
                   placeholder="Your Phone Number"
@@ -104,6 +178,10 @@ const Contact = () => {
                 />
                 <i className="fa fa-phone how-pos4"></i>
               </div>
+              {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+
+
+              {/* باقي الحقول كما هي */}
               <div className="bor8 m-b-20 how-pos4-parent">
                 <input
                   className="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
@@ -126,8 +204,9 @@ const Contact = () => {
                   required
                 />
               </div>
-              <button className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
-               >
+              <button 
+                className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"
+              >
                 {isLoading ? "Submitting..." : "Submit"}
               </button>
             </form>
@@ -139,4 +218,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
