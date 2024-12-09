@@ -11,7 +11,6 @@ function Shop() {
   const [cartItems, setCartItems] = useState([]); // Cart items state
   const [categories, setCategories] = useState([]); // Categories state
 
-
   const location = useLocation(); // To access query parameters
   const queryParams = new URLSearchParams(location.search); // Parse query parameters
   const categoryIdFromUrl = queryParams.get("category"); // Extract category ID from URL
@@ -87,18 +86,20 @@ function Shop() {
           showConfirmButton: false,
         });
       }
-    } catch (err) {
-      console.error("Error adding to favorites:", err);
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
       Swal.fire({
-        title: "Failed to add product to favorites.",
-        icon: "error",
+        icon: "warning",
+        title:
+          error.response?.data?.error ||
+          "Failed to add product to favorites. Please try again.",
         showConfirmButton: true,
       });
     }
   };
 
-   // Fetch categories for mapping category IDs to names
-   useEffect(() => {
+  // Fetch categories for mapping category IDs to names
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await apiService.getCategories(); // Fetch categories from API
@@ -130,9 +131,7 @@ function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const params = category?.id
-          ? { category_id: category.id }
-          : {}; // Add category_id if category exists
+        const params = category?.id ? { category_id: category.id } : {}; // Add category_id if category exists
         const response = await apiService.getShopProducts(params); // Fetch products
         setProducts(response); // Update products state
       } catch (err) {
@@ -168,10 +167,7 @@ function Shop() {
               >
                 <div className="block2">
                   <div className="block2-pic hov-img0">
-                    <img
-                      src={`${product.image}`}
-                      alt={product.name}
-                    />
+                    <img src={`${product.image}`} alt={product.name} />
                     <button
                       onClick={() => handleAddToCart(product)}
                       className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
@@ -181,7 +177,7 @@ function Shop() {
                   </div>
                   <div
                     className="block2-txt flex-w flex-t p-t-14"
-                    style={{ width: "190px", marginLeft: "30px" }}
+                    style={{ width: "230px", marginLeft: "10px" }}
                   >
                     <div className="block2-txt-child1 flex-col-l">
                       <Link

@@ -53,7 +53,7 @@ function ProductDetails() {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          window.location.href = `/product/${productId}`; 
+          window.location.href = `/product/${productId}`;
         });
       } else {
         Swal.fire({
@@ -77,6 +77,8 @@ function ProductDetails() {
 
   const handleAddToFavorite = async (productId) => {
     const token = localStorage.getItem("auth_token");
+
+    // Check if user is logged in
     if (!token) {
       Swal.fire({
         title: "Please log in to add to favorites!",
@@ -94,21 +96,32 @@ function ProductDetails() {
 
     try {
       const response = await apiService.addToFavorites(productId, token);
-      if (response.data) {
+
+      // Success: Product added to favorites
+      if (response.status === 201) {
         Swal.fire({
           title: "Product added to favorites!",
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
-        }).then(() => {
-          window.location.href = `/product/${productId}`; 
         });
       }
-    } catch (err) {
-      console.error("Error adding to favorites:", err);
+      // Conflict: Product already in favorites
+      else if (response.status === 409) {
+        Swal.fire({
+          title: "Product already in favorites!",
+          icon: "info",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
       Swal.fire({
-        title: "Failed to add product to favorites.",
-        icon: "error",
+        icon: "warning",
+        title:
+          error.response?.data?.error ||
+          "Failed to add product to favorites. Please try again.",
         showConfirmButton: true,
       });
     }
@@ -154,7 +167,13 @@ function ProductDetails() {
         <p className="product-description">{product.description}</p>
         <div className="product-details">
           <span className="product-price">Price: {product.price}JD</span>
-          <span className="product-size">Size: {product.size}</span>
+          {product.category && product.category.toLowerCase() !== "bag" ? (
+            <span className="product-size">Size: {product.size}</span>
+          ) : (
+            <span className="product-category">
+              This is a bag, no size available.
+            </span>
+          )}
         </div>
 
         {/* Add to Cart and Wishlist */}

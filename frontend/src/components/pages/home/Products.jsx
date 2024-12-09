@@ -94,15 +94,16 @@ function Products() {
           timer: 1500,
           showConfirmButton: false,
         }).then(() => {
-          // Reload the page after showing the success message
           window.location.href = "/";
         });
       }
-    } catch (err) {
-      console.error("Error adding to favorites:", err);
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
       Swal.fire({
-        title: "Failed to add product to favorites.",
-        icon: "error",
+        icon: "warning",
+        title:
+          error.response?.data?.error ||
+          "Failed to add product to favorites. Please try again.",
         showConfirmButton: true,
       });
     }
@@ -137,10 +138,7 @@ function Products() {
             >
               <div className="block2">
                 <div className="block2-pic hov-img0">
-                  <img
-                    src={`${product.image}`}
-                    alt={product.name}
-                  />
+                  <img src={`${product.image}`} alt={product.name} />
                   <button
                     onClick={() => handleAddToCart(product)}
                     className="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1"
@@ -151,7 +149,7 @@ function Products() {
 
                 <div
                   className="block2-txt flex-w flex-t p-t-14 "
-                  style={{width: '230px', marginLeft:"10px"}}
+                  style={{ width: "230px", marginLeft: "10px" }}
                 >
                   <div className="block2-txt-child1 flex-col-l">
                     <Link
