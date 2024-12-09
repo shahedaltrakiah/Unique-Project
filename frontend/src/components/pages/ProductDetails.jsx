@@ -9,6 +9,7 @@ function ProductDetails() {
   const [product, setProduct] = useState(null); // State to hold product details
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]); // Cart items state
+  const [expandedImage, setExpandedImage] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -116,66 +117,105 @@ function ProductDetails() {
     }
   };
 
+  const handleImageExpand = (imageUrl) => {
+    setExpandedImage(imageUrl);
+  };
+
+  const handleCloseExpandedImage = () => {
+    setExpandedImage(null);
+  };
+
   return (
-    <div className="product-details-container">
-      {/* Sub Images Column */}
-      <div className="product-sub-images">
-        {product.product_images && product.product_images.length > 0 ? (
-          product.product_images.map((image) => (
-            <div key={image.id} className="sub-image-item">
-              <div className="wrap-pic-w pos-relative">
-                <img src={`${image.image}`} alt={product.name} />
-                <a className="image-expand-link" href={`${image.image}`}>
-                  <i className="fa fa-expand" />
-                </a>
+    <div className="product-details-container relative flex">
+    {/* Image Expansion Overlay */}
+    {expandedImage && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="relative flex max-w-[90%] max-h-[90%]">
+          <button 
+            onClick={handleCloseExpandedImage} 
+            className="absolute -top-8 right-0 text-2xl z-60 text-gray-700 hover:text-black"
+          >
+            ×
+          </button>
+          <img 
+            src={expandedImage} 
+            alt="Expanded product" 
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      </div>
+    )}
+
+    {/* Sub Images Column */}
+    <div className="product-sub-images">
+      {product.product_images && product.product_images.length > 0 ? (
+        product.product_images.map((image) => (
+          <div key={image.id} className="sub-image-item">
+            <div className="wrap-pic-w pos-relative">
+              <img 
+                src={`${image.image}`} 
+                alt={product.name} 
+                className="cursor-pointer"
+                onClick={() => handleImageExpand(image.image)}
+              />
+              <div 
+                className="image-expand-link cursor-pointer"
+                onClick={() => handleImageExpand(image.image)}
+              >
+                <i className="fa fa-expand" />
               </div>
             </div>
-          ))
-        ) : (
-          <p>No additional images available.</p>
-        )}
-      </div>
+          </div>
+        ))
+      ) : (
+        <p>No additional images available.</p>
+      )}
+    </div>
 
-      {/* Main Image */}
-      <div className="product-main-image-container">
-        <div className="wrap-pic-w pos-relative">
-          <img
-            src={`${product.image}`}
-            alt={product.name}
-            className="product-main-image"
-          />
-          <a className="image-expand-link" href={`${product.image}`}>
-            <i className="fa fa-expand" />
-          </a>
-        </div>
-      </div>
-
-      {/* Product Info */}
-      <div className="product-info">
-        <h2 className="product-name">{product.name}</h2>
-        <p className="product-description">{product.description}</p>
-        <div className="product-details">
-          <span className="product-price">Price: {product.price}JD</span>
-          <span className="product-size">Size: {product.size}</span>
-        </div>
-
-        {/* Add to Cart and Wishlist */}
-        <div className="product-actions">
-          <button
-            className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
-            onClick={() => handleAddToCart(product)}
-          >
-            Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
-          </button>
-          <button
-            className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
-            onClick={() => handleAddToFavorite(product.id)}
-          >
-            Add to &nbsp; <i className="fa fa-heart"></i>
-          </button>
+    {/* Main Image */}
+    <div className="product-main-image-container">
+      <div className="wrap-pic-w pos-relative">
+        <img
+          src={`${product.image}`}
+          alt={product.name}
+          className="product-main-image cursor-pointer"
+          onClick={() => handleImageExpand(product.image)}
+        />
+        <div 
+          className="image-expand-link cursor-pointer"
+          onClick={() => handleImageExpand(product.image)}
+        >
+          <i className="fa fa-expand" />
         </div>
       </div>
     </div>
+
+    {/* Product Info */}
+    <div className="product-info">
+      <h2 className="product-name">{product.name}</h2>
+      <p className="product-description">{product.description}</p>
+      <div className="product-details">
+        <span className="product-price">Price: {product.price}JD</span>
+        <span className="product-size">Size: {product.size}</span>
+      </div>
+
+      {/* Add to Cart and Wishlist */}
+      <div className="product-actions">
+        <button
+          className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
+          onClick={() => handleAddToCart(product)}
+        >
+          Add to &nbsp; <i className="zmdi zmdi-shopping-cart" />
+        </button>
+        <button
+          className="flex-c-m stext-101 cl0 size-107 bg10 bor2 hov-btn1 p-lr-15 trans-04 m-b-10"
+          onClick={() => handleAddToFavorite(product.id)}
+        >
+          Add to &nbsp; <i className="fa fa-heart"></i>
+        </button>
+      </div>
+    </div>
+  </div>
   );
 }
 
