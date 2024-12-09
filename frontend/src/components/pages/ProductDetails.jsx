@@ -166,13 +166,7 @@ function ProductDetails() {
         <p className="product-description">{product.description}</p>
         <div className="product-details">
           <span className="product-price">Price: {product.price}JD</span>
-          {product.category && product.category.toLowerCase() !== "bag" ? (
-            <span className="product-size">Size: {product.size}</span>
-          ) : (
-            <span className="product-category">
-              This is a bag, no size available.
-            </span>
-          )}
+          <span className="product-size">Size: {product.size}</span>
         </div>
 
         {/* Add to Cart and Wishlist */}
