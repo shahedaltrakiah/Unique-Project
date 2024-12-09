@@ -57,25 +57,20 @@ const apiService = {
   },
 
   // Create Product
-  updateProduct: async (id, data) => {
+  createProduct: async (data) => {
     try {
       const token = localStorage.getItem("auth_token");
-      if (!token) throw new Error("Authentication token is missing.");
-
-      const response = await apiClient.put(`/products/${id}`, data, {
+      if (!token) {
+        throw new Error("User is not logged in");
+      }
+      const response = await apiClient.post("/products", data, {
         headers: {
-          "Content-Type": "application/json", //  ؛I DELETETD THE UPDATE IMAGE SO=>NOOOOO longer multipart/form-data
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("API Response:", response.data);
       return response.data;
     } catch (error) {
-      console.error(
-        "Error updating product:",
-        error.response?.data || error.message
-      );
       throw error;
     }
   },
@@ -205,7 +200,7 @@ const apiService = {
 
       const response = await apiClient.put(`/products/${id}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json", //  ؛I DELETETD THE UPDATE IMAGE SO=>NOOOOO longer multipart/form-data
           Authorization: `Bearer ${token}`,
         },
       });
