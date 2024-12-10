@@ -108,6 +108,8 @@ function MyProducts() {
           title: "Product Updated!",
           text: "The product has been updated successfully.",
           confirmButtonText: "OK",
+        }).then(() => {
+          window.location.href = "/MyProducts";
         });
 
         setProducts((prevProducts) =>

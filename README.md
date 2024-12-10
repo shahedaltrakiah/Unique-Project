@@ -1,9 +1,9 @@
 **Unique: A specialized e-commerce platform for selling pre-loved clothing, featuring a dynamic catalog, a user-friendly shopping cart, and secure checkout functionality.**
 ## Screenshots
 
-### Customer Interface
+###  Interface
 
-<img width="932" alt="Screenshot 2024-12-08 121720" src="https://github.com/user-attachments/assets/14e80871-def2-4d4a-add4-2bc38f5e6e96">
+<source src="https://github.com/user-attachments/assets/UniqueStore.mp4" type="video/mp4">
 
 
 ## Features

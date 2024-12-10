@@ -69,9 +69,19 @@ function Checkout() {
       const response = await apiService.placeOrder({ products: productIds });
 
       if (response) {
+        Swal.fire({
+          icon: "success",
+          title: "Order placed successfully!",
+          text: "Redirecting you to the Thank You page...",
+          timer: 3000, // Time in milliseconds before redirection
+          timerProgressBar: true,
+          showConfirmButton: false,
+        }).then(() => {
+          // Remove cart data after successful order
           Cookies.remove("cart");
           window.location.href = "/thankyou";
-      } else {
+        });}
+         else {
         console.log("Failed response:", response);
         Swal.fire({
           icon: "error",
