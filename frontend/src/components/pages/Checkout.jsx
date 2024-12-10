@@ -48,18 +48,8 @@ function Checkout() {
       const response = await apiService.placeOrder({ products: productIds });
   
       if (response) {
-        Swal.fire({
-          icon: "success",
-          title: "Order placed successfully!",
-          text: "Redirecting you to the Thank You page...",
-          timer: 3000, // Time in milliseconds before redirection
-          timerProgressBar: true,
-          showConfirmButton: false,
-        }).then(() => {
-          // Remove cart data after successful order
           Cookies.remove("cart");
           window.location.href = "/thankyou";
-        });
       } else {
         console.log("Failed response:", response);
         Swal.fire({
@@ -181,7 +171,7 @@ function Checkout() {
                 {showAddress && (
                   <div className="bor8 bg0 m-b-12">
                     <textarea
-                      className="stext-111 cl8 plh3 size-115 p-lr-15 h-100"
+                      className="stext-111 cl8 "
                       name="altAddress"
                       placeholder="Enter alternative address"
                     ></textarea>
