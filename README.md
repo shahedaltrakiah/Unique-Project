@@ -1,9 +1,8 @@
-**Unique: A specialized e-commerce platform for selling pre-loved clothing, featuring a dynamic catalog, a user-friendly shopping cart, and secure checkout functionality.**
-## Screenshots
+**Unique Store: A specialized e-commerce platform for selling pre-loved clothing, featuring a dynamic catalog, a user-friendly shopping cart, and secure checkout functionality.**
 
-###  Interface
+## Interface
 
-<source src="https://github.com/user-attachments/assets/UniqueStore.mp4" type="video/mp4">
+[Watch the video](https://github.com/user-attachments/assets/UniqueStore.mp4)
 
 
 ## Features
@@ -15,6 +14,6 @@
 
 ## Technologies Used
 - **Frontend**: HTML, CSS, JavaScript, Bootstrap
-- **Backend**: LARAVEL, React 
+- **Backend**: Laravel, React 
 - **Database**: MySQL
 - **Version Control**: Git
