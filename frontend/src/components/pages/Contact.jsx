@@ -146,7 +146,7 @@ const Contact = () => {
                 />
                 <i className="fa fa-user how-pos4"></i>
               </div>
-              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+              {errors.name && <div style={{ color: "red"}}>{errors.name}</div>}
 
 
               {/* حقل البريد الإلكتروني مع رسالة الخطأ */}
@@ -162,7 +162,7 @@ const Contact = () => {
                 />
                 <i className="fa fa-envelope how-pos4"></i>
               </div>
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              {errors.email && <div style={{ color: "red"}}>{errors.email}</div>}
 
 
               {/* حقل رقم الهاتف مع رسالة الخطأ */}
@@ -178,7 +178,7 @@ const Contact = () => {
                 />
                 <i className="fa fa-phone how-pos4"></i>
               </div>
-              {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+              {errors.phone &&<div style={{ color: "red"}}>{errors.phone}</div>}
 
 
               {/* باقي الحقول كما هي */}
