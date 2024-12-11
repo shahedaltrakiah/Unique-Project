@@ -12,10 +12,19 @@ body {
 }
 
 h3 {
-    color: #3B5D50;
+    color: #717fe0;
     font-weight: bold;
 }
 
+.btn-save {
+    background-color: #717fe0;
+    color: white;
+}
+
+.btn-save:hover{
+    background-color: #5c6ace;
+    color: white;
+}
 
 /* Profile Section */
 .profile-card {
@@ -25,6 +34,7 @@ h3 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
     position: relative;
+    border: 1px solid rgba(128, 128, 128, 0.55);
 }
 
 .profile-info {
@@ -119,12 +129,12 @@ h3 {
 }
 
 .modal-header {
-    background-color: #3B5D50;
+    background-color: #5c6ace;
     color: white;
 }
 
 .text-primary {
-    color: #3B5D50;
+    color: #5c6ace;
     font-weight: bold;
 }
 
@@ -142,7 +152,7 @@ h3 {
 
 .list-group-item {
     background-color: transparent;
-    border: 1px solid #3B5D50;
+    border: 1px solid #717fe0;
     border-radius: 5px;
     margin-bottom: 10px;
 }
@@ -153,7 +163,7 @@ h3 {
 }
 
 .modal-header {
-    background-color: #3B5D50;
+    background-color: #717fe0;
     color: white;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -175,18 +185,18 @@ h3 {
 
 .order-details h5 {
     font-weight: bold;
-    color: #3B5D50;
+    color: #717fe0;
 }
 
 .order-details p {
-    margin: 0;
+    margin-bottom: 5px;
 }
 
 .order-items {
     max-height: 150px;
     overflow-y: auto;
     margin-top: 10px;
-    border: 1px solid #3B5D50;
+    border: 1px solid #717fe0;
     border-radius: 5px;
     padding: 10px;
     background-color: #fff;

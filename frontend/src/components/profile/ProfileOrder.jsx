@@ -30,7 +30,7 @@ function ProfileOrder() {
       <div className="col-md-3">
           <ProfileSidebar />
         </div>        
-        <div className="col-md-9">
+        <div className="col-md-9 profile-card"> 
           <h3 className="title mt-4 mb-4">Order History</h3>
 
           {error && <p style={{ color: "red" }}>{error}</p>}
@@ -78,8 +78,9 @@ function ProfileOrder() {
             >
               <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="orderDetailsModalLabel">
+                  <div className="modal-header" style={{backgroundColor: "#717fe0"}}>
+                    <h5 className="modal-title" id="orderDetailsModalLabel"
+                    style={{color:'white'}}>
                       Order Details
                     </h5>
                     <button
@@ -91,8 +92,8 @@ function ProfileOrder() {
                   </div>
                   <div className="modal-body">
                     <div className="order-details">
-                      <p>
-                        <strong>Order ID:</strong> {selectedOrder.id}
+                      <p style={{fontSize:'20px', color:'#717fe0'}}>
+                        <strong>Order ID:</strong> #{selectedOrder.id}
                       </p>
                       <p>
                         <strong>Address:</strong> {selectedOrder.address}
@@ -101,8 +102,9 @@ function ProfileOrder() {
                         <strong>Phone:</strong> {selectedOrder.phone}
                       </p>
                       <p>
-                        <strong>Total Amount:</strong> JD{" "}
-                        {selectedOrder.total_amount.toFixed(2)}
+                        <strong>Total Amount:</strong> 
+                        <span className="text-danger"> JD{" "}
+                        {selectedOrder.total_amount.toFixed(2)}</span>
                       </p>
                       <p>
                         <strong>Products:</strong>
@@ -120,7 +122,7 @@ function ProfileOrder() {
                                 <p>Price: JD {product.price.toFixed(2)}</p>
                               </div>
                               <img
-                                src={`assets/images/${product.image}`}
+                                src={`${product.image}`}
                                 alt={product.name}
                                 className="img-thumbnail"
                                 style={{ width: "80px", height: "80px" }}

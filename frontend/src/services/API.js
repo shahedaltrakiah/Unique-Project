@@ -46,6 +46,16 @@ const apiService = {
     }
   },
 
+  // Forgot Password
+  forgotPassword: async (data) => {
+    try {
+      const response = await apiClient.post("/forgot-password", data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // Create Product
   createProduct: async (data) => {
     try {
@@ -161,6 +171,7 @@ const apiService = {
 
   deleteProduct: async (id) => {
     try {
+      console.log("Deleting product with ID:", id); // Debugging log
       const response = await apiClient.delete(`/products/${id}`);
       return response.data;
     } catch (error) {
@@ -168,6 +179,7 @@ const apiService = {
       throw error;
     }
   },
+  
 
   getUserData: async (token) => {
     try {
@@ -183,19 +195,23 @@ const apiService = {
 
   updateProduct: async (id, data) => {
     try {
+      const token = localStorage.getItem("auth_token");
+      if (!token) throw new Error("Authentication token is missing.");
 
-      // console.log(id);
-      console.log(data);
-      const token = localStorage.getItem("auth_token"); // Ensure the token name matches
       const response = await apiClient.put(`/products/${id}`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json", //  ؛I DELETETD THE UPDATE IMAGE SO=>NOOOOO longer multipart/form-data
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data; // Ensure response.data contains the updated product
+
+      console.log("API Response:", response.data);
+      return response.data;
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error(
+        "Error updating product:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   },
@@ -225,20 +241,8 @@ const apiService = {
     }
   },
 
-  // Fetch products with optional query parameters
-  // getProducts: async (params = {}) => {
-  //   try {
-  //     const response = await apiClient.get("/products", { params }); // Pass query params dynamically
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Error fetching products:", error);
-  //     throw error;
-  //   }
-  // },
-
 
   // send Message contact Us
-
   sendMessage: async (data) => {
     try {
       const response = await apiClient.post("/messages", data);
@@ -261,16 +265,6 @@ const apiService = {
     }
   },
 
-  // Fetch all products by category
-  // getProductsByCategory: async (categoryId, page = 1) => {
-  //   try {
-  //     const response = await apiClient.get(`/products/category/${categoryId}?page=${page}`);
-  //     return response.data; // Returns products filtered by category
-  //   } catch (error) {
-  //     console.error("Error fetching products by category:", error);
-  //     throw error; // Propagate the error
-  //   }
-  // },
 
   // Fetch products for the home page (limited with pagination)
   getHomeProducts: async (page = 1) => {
@@ -301,7 +295,7 @@ const apiService = {
 
       const response = await apiClient.post("/orders", orderData, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
       return response.data;
@@ -312,7 +306,6 @@ const apiService = {
   },
 
 };
-
 
 // Error Handler
 const handleApiError = (error) => {

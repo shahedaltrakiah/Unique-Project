@@ -62,7 +62,7 @@ function Cart() {
                         >
                           <div className="how-itemcart1">
                             <img
-                              src={`assets/images/${item.image}`}
+                              src={`${item.image}`}
                               alt={item.name}
                               style={{ marginLeft: "20px" }}
                             />

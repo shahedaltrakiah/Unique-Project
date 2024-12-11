@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie"; // Import the Cookies library
 import apiService from "../../services/API";
 
-
 function Checkout() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,29 +10,51 @@ function Checkout() {
   const [showAddress, setShowAddress] = useState(false);
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
   const [cartItems, setCartItems] = useState([]); // State for cart items
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  const token = localStorage.getItem("auth_token");
 
   // Fetch cart items and user info from cookies when the component mounts
   useEffect(() => {
     const storedCart = JSON.parse(Cookies.get("cart") || "[]");
-    const user = JSON.parse(Cookies.get("user") || "{}");
-
     setCartItems(storedCart);
-    setName(user.name || "");
-    setEmail(user.email || "");
-    setAddress(user.address || "");
-  }, []);
+    if (token) {
+      apiService
+        .getUserData(token) // Pass the token to get user data
+        .then((data) => {
+          console.log("User Data:", data); // Log the fetched data to confirm it's being received
+          // Ensure we are setting the user data correctly here
+          setUserData({
+            name: data.data.name,
+            email: data.data.email,
+            phone: data.data.phone,
+            address: data.data.address,
+          });
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching user data:", err);
+          setError("Failed to load user data.");
+          setLoading(false);
+        });
+    } else {
+      setError("Missing auth_token.");
+      setLoading(false);
+    }
+  }, [token]);
 
   // Calculate Subtotal from cart items
   const calculateSubtotal = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price,
-      0
-    ).toFixed(2);
+    return cartItems.reduce((total, item) => total + item.price, 0).toFixed(2);
   };
 
   const handlePlaceOrder = async () => {
-    const productIds = cartItems.map(item => item.id);
-  
+    const productIds = cartItems.map((item) => item.id);
+
     const orderData = {
       name,
       address,
@@ -42,11 +63,11 @@ function Checkout() {
       phone: document.querySelector('input[name="phone"]').value,
       items: productIds,
     };
-  
+
     try {
-      // Log the order data for debugging  
+      // Log the order data for debugging
       const response = await apiService.placeOrder({ products: productIds });
-  
+
       if (response) {
         Swal.fire({
           icon: "success",
@@ -59,24 +80,30 @@ function Checkout() {
           // Remove cart data after successful order
           Cookies.remove("cart");
           window.location.href = "/thankyou";
-        });
-      } else {
+        });}
+         else {
         console.log("Failed response:", response);
         Swal.fire({
           icon: "error",
           title: "Failed to place order",
           text: response?.message || "Unknown error",
         });
-        
       }
     } catch (error) {
       console.error("Error placing order:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error placing your order. Please try again.",
+        text: error,
       });
     }
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -95,8 +122,9 @@ function Checkout() {
                     className="stext-111 cl8 plh3 size-111 p-lr-15"
                     type="text"
                     name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)} // Adding state
+                    disabled
+                    value={userData.name}
+                    onChange={handleInputChange} // Adding state
                     placeholder="Name"
                   />
                 </div>
@@ -107,8 +135,9 @@ function Checkout() {
                     className="stext-111 cl8 plh3 size-111 p-lr-15"
                     type="email"
                     name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)} // Adding state
+                    disabled
+                    value={userData.email}
+                    onChange={handleInputChange} // Adding state
                     placeholder="Email Address"
                   />
                 </div>
@@ -119,36 +148,12 @@ function Checkout() {
                     className="stext-111 cl8 plh3 size-111 p-lr-15"
                     type="text"
                     name="phone"
+                    disabled
+                    value={userData.phone}
+                    onChange={handleInputChange}
                     placeholder="Phone Number"
                   />
                 </div>
-
-                {/* Toggle for Adding a Different Phone Number */}
-                <div className="flex-w p-t-15 p-b-15">
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={showPhoneNumber}
-                      onChange={() => setShowPhoneNumber(!showPhoneNumber)}
-                    />
-                    <span className="slider round"></span>
-                  </label>
-                  <span className="stext-111 cl8 m-l-15">
-                    Add a different phone number
-                  </span>
-                </div>
-
-                {/* Conditional Additional Phone Number Field */}
-                {showPhoneNumber && (
-                  <div className="bor8 bg0 m-b-20">
-                    <input
-                      className="stext-111 cl8 plh3 size-111 p-lr-15"
-                      type="text"
-                      name="altPhone"
-                      placeholder="Alternate Phone Number"
-                    />
-                  </div>
-                )}
 
                 {/* Address */}
                 <div className="bor8 bg0 m-b-12">
@@ -156,37 +161,12 @@ function Checkout() {
                     className="stext-111 cl8 plh3 size-111 p-lr-15"
                     type="text"
                     name="address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)} // Adding state
+                    disabled
+                    value={userData.address}
+                    onChange={handleInputChange} // Adding state
                     placeholder="Address"
                   />
                 </div>
-
-                {/* Toggle for Adding a Different Address */}
-                <div className="flex-w p-t-15 p-b-15">
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={showAddress}
-                      onChange={() => setShowAddress(!showAddress)}
-                    />
-                    <span className="slider round"></span>
-                  </label>
-                  <span className="stext-111 cl8 m-l-15">
-                    Add a different address
-                  </span>
-                </div>
-
-                {/* Conditional Additional Address Field */}
-                {showAddress && (
-                  <div className="bor8 bg0 m-b-12">
-                    <textarea
-                      className="stext-111 cl8 plh3 size-115 p-lr-15 h-100"
-                      name="altAddress"
-                      placeholder="Enter alternative address"
-                    ></textarea>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -198,12 +178,20 @@ function Checkout() {
                 {/* Display the products in the cart */}
                 {cartItems.length > 0 ? (
                   cartItems.map((item, index) => (
-                    <div key={index} className="flex-w flex-t bor12 p-b-13 p-t-20">
+                    <div
+                      key={index}
+                      className="flex-w flex-t bor12 p-b-13 p-t-20"
+                    >
                       <div className="size-208">
-                        <span className="stext-110 cl2 p-b-20">{item.name}</span>
+                        <span className="stext-110 cl2 p-b-20">
+                          {item.name}
+                        </span>
                       </div>
                       <div className="size-209">
-                        <span className="mtext-110 cl2" style={{ marginLeft: "90px" }}>
+                        <span
+                          className="mtext-110 cl2"
+                          style={{ marginLeft: "90px" }}
+                        >
                           {item.price.toFixed(2)}JD
                         </span>
                       </div>
@@ -219,7 +207,10 @@ function Checkout() {
                     <span className="mtext-101 cl2">Total:</span>
                   </div>
                   <div className="size-209 p-t-1">
-                    <span className="mtext-110 cl2" style={{ marginLeft: "90px" }}>
+                    <span
+                      className="mtext-110 cl2"
+                      style={{ marginLeft: "90px" }}
+                    >
                       {calculateSubtotal()}JD
                     </span>
                   </div>

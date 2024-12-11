@@ -139,19 +139,34 @@ function Wishlist() {
                   <table className="table-shopping-cart">
                     <thead>
                       <tr className="table_head">
-                        <th className="column-1" style={{ textAlign: "center" }}>
+                        <th
+                          className="column-1"
+                          style={{ textAlign: "center" }}
+                        >
                           Product Image
                         </th>
-                        <th className="column-2" style={{ textAlign: "center" }}>
+                        <th
+                          className="column-2"
+                          style={{ textAlign: "center" }}
+                        >
                           Product Name
                         </th>
-                        <th className="column-3" style={{ textAlign: "center" }}>
+                        <th
+                          className="column-3"
+                          style={{ textAlign: "center" }}
+                        >
                           Unit Price
                         </th>
-                        <th className="column-4" style={{ textAlign: "center" }}>
+                        <th
+                          className="column-4"
+                          style={{ textAlign: "center" }}
+                        >
                           Add
                         </th>
-                        <th className="column-5" style={{ textAlign: "center" }}>
+                        <th
+                          className="column-5"
+                          style={{ textAlign: "center" }}
+                        >
                           Remove
                         </th>
                       </tr>
@@ -175,25 +190,38 @@ function Wishlist() {
                       ) : (
                         wishlist.map((favorite) => (
                           <tr className="table_row" key={favorite.id}>
-                            <td className="column-1" style={{ textAlign: "center" }}>
+                            <td
+                              className="column-1"
+                              style={{ textAlign: "center" }}
+                            >
                               <div className="how-itemcart1">
                                 <img
-                                  src={`/assets/images/${favorite.product.image}`}
+                                  src={`${favorite.product.image}`}
                                   alt={favorite.product.name}
                                   style={{ marginLeft: "30px" }}
                                 />
                               </div>
                             </td>
-                            <td className="column-2" style={{ textAlign: "center" }}>
+                            <td
+                              className="column-2"
+                              style={{ textAlign: "center" }}
+                            >
                               {favorite.product.name.charAt(0).toUpperCase() +
                                 favorite.product.name.slice(1)}
                             </td>
-                            <td className="column-3" style={{ textAlign: "center" }}>
+                            <td
+                              className="column-3"
+                              style={{ textAlign: "center" }}
+                            >
                               {favorite.product.price} JD
                             </td>
-                            <td className="column-4" style={{ textAlign: "center" }}>
+                            <td
+                              className="column-4"
+                              style={{ textAlign: "center" }}
+                            >
                               <button
-                                className="btn-add-to-cart"
+                                className="flex-c-m stext-101 cl0 size-107 bg1 bor2 hov-btn1 
+                                p-lr-15 trans-04 m-b-10" style={{marginLeft:"60px"}}
                                 onClick={() =>
                                   handleAddToCart(favorite.product)
                                 }
@@ -201,11 +229,17 @@ function Wishlist() {
                                 Add to Cart
                               </button>
                             </td>
-                            <td className="column-5" style={{ textAlign: "center" }}>
+                            <td
+                              className="column-5"
+                              style={{ textAlign: "center" }}
+                            >
                               <button
                                 className="btn-remove"
                                 onClick={(event) =>
-                                  handleRemoveFromWishlist(favorite.product.id, event)
+                                  handleRemoveFromWishlist(
+                                    favorite.product.id,
+                                    event
+                                  )
                                 }
                               >
                                 <i className="fa fa-times"></i>

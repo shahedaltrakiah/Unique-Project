@@ -80,7 +80,7 @@ const Login = () => {
                 }}
               >
                 <Link
-                  to="/forgot-password"
+                  to="/ForgotPassword"
                   className="stext-111 cl2 hov-cl1 trans-04"
                   style={{ fontSize: "14px" }}
                 >

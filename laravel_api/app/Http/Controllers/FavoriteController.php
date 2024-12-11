@@ -22,17 +22,30 @@ class FavoriteController extends Controller
                 'product_id' => 'required|exists:products,id',
             ]);
 
+            // Check if the product is already in the user's favorites
+            $exists = Favorite::where('user_id', $user->id)
+                ->where('product_id', $validated['product_id'])
+                ->exists();
+
+            if ($exists) {
+                return response()->json(['error' => 'Product is already in favorites'], 409); // Conflict status code
+            }
+
             // Add the product to favorites
             Favorite::create([
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
                 'product_id' => $validated['product_id'],
             ]);
 
             return response()->json(['message' => 'Product added to favorites'], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to add product to favorites', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Failed to add product to favorites',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
+
 
 
     public function destroy($id)

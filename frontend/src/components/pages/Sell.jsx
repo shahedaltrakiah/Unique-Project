@@ -80,9 +80,20 @@ const Sell = () => {
         confirmButtonText: "OK",
       });
       console.log(response);
+
+      // Reset form data after successful submission
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        category: "",
+        size: "",
+        image: null,
+        sub_images: [],
+      });
     } catch (error) {
       console.error(error);
-    
+
       if (error.message === "User is not logged in") {
         Swal.fire({
           title: "Error!",
@@ -98,7 +109,7 @@ const Sell = () => {
           confirmButtonText: "OK",
         });
       }
-    }    
+    }
   };
 
   return (
@@ -302,10 +313,6 @@ const Sell = () => {
                     alignItems: "flex-start",
                   }}
                 >
-                  <i
-                    className="fa fa-images how-pos4"
-                    style={{ marginBottom: "10px" }}
-                  ></i>
                   <input
                     id="sub-images"
                     className="stext-1111 cl2 plh3 size-116 p-l-62 p-r-30"
@@ -323,6 +330,7 @@ const Sell = () => {
                   />
                 </div>
               </div>
+              
               <button
                 type="submit"
                 className="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer"

@@ -15,6 +15,7 @@ import Layout from "../components/common/Layout";
 import ProductDetails from "../components/pages/ProductDetails";
 import Thankyou from "../components/pages/Thankyou";
 import Filter from "../components/pages/Filter";
+import ForgotPassword from "../components/auth/ForgotPassword";
 
 
 const routes = [
@@ -30,6 +31,7 @@ const routes = [
         { path: "/contact", element: <Contact /> },
         { path: "/login", element: <Login /> },
         { path: "/register", element: <Register /> },
+        {path: "/ForgotPassword", element: <ForgotPassword/>},
         { path: "/wishlist", element: <Wishlist /> },
         { path: "/profile", element: <Profile /> },
         { path: "/profileOrder", element: <ProfileOrder /> },
