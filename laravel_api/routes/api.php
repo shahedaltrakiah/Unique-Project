@@ -19,6 +19,18 @@ Route::post('login', [AuthController::class, 'login']);
 // store messages
 Route::post('/messages', [MessageController::class, 'store']);
 
+// get product
+Route::get('/product/{id}', [ProductController::class, 'getProduct']);
+
+// get all categories
+Route::get('categories', [CategoryController::class, 'index']);
+
+// Get products for the home page
+Route::get('home-products', [ProductController::class, 'getHomeProducts']);
+
+// Get all products for the shop page
+Route::get('shop-products', [ProductController::class, 'getShopProducts']);
+
 // auth routes
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -65,15 +77,3 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 });
-
-// get product
-Route::get('/product/{id}', [ProductController::class, 'getProduct']);
-
-// get all categories
-Route::get('categories', [CategoryController::class, 'index']);
-
-// Get products for the home page
-Route::get('home-products', [ProductController::class, 'getHomeProducts']);
-
-// Get all products for the shop page
-Route::get('shop-products', [ProductController::class, 'getShopProducts']);
